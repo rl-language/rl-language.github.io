@@ -1,18 +1,22 @@
 # The inversion of control problem
 
-When **Complex interactive programs** are subjected to [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) (**IOC**), they [become superlinearly harder](#the-mental-burden) to reason about, refactor and mantain.
+When **complex interactive programs** are subjected to [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) (**IOC**), they [become superlinearly harder](#the-mental-burden) to reason about, refactor, and maintain.
 
-Here are pratical examples real world code that got harder to reason about because subject to **IOC**:
-* blender statefull [GHOST event manager](https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc) . The event manager is statefull but can only act in response to call backs.
-* anaconda installer statefull [UI pages](https://github.com/rhinstaller/anaconda/blob/main/pyanaconda/ui/gui/spokes/storage.py). Anaconda UI pages can interleave in any order, and the main loop if controlled by the rendering engine.
-* google deep mind [hanabi](https://github.com/google-deepmind/hanabi-learning-environment/tree/master/hanabi_learning_environment). The game has inherently many things the player can do, and must offer serialization to tensor to train a neural network to play it. The main loop is owned by the machine learning components.
-* lightzero 756 lines long implementation of [tic tac toe](https://github.com/opendilab/LightZero/blob/main/zoo/board_games/tictactoe/envs/tictactoe_env.py).
+Here are practical examples of real-world code that became harder to reason about due to **IOC**:
+
+
+* Blender’s stateful [GHOST event manager](https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc). Because the event loop owns the timing of every mouse‑move, key‑press, and redraw, a small logic change (say, deferring key‑repeat) can subtly reorder callbacks. Reproducing a bug in similar **scenarios may require replaying** an entire input trace, and unit tests must mock dozens of event types to reach a single branch.
+* Anaconda installer’s stateful [UI pages](https://github.com/rhinstaller/anaconda/blob/main/pyanaconda/ui/gui/spokes/storage.py). The installer UI pages (spokes) can appear in any order depending on earlier answers. Tests that assert “if option X then page Y collects field Z” must replicate many permutations; a new optional component multiplies the permutation space, inflating test suites and increasing the risk of missed edge cases.
+* Google DeepMind’s [Hanabi](https://github.com/google-deepmind/hanabi-learning-environment/tree/master/hanabi_learning_environment). The game offers many possible player actions and must serialize state into tensors for neural‑network training. Performing local modifications to **data structures** can affect the surrounding classes, the tensor serialization code, and the order in which game actions execute—turning each change into a global problem.
+* LightZero's 756-line implementation of [Tic Tac Toe](https://github.com/opendilab/LightZero/blob/main/zoo/board_games/tictactoe/envs/tictactoe_env.py).
 
 
 ## Complex interactive programs
-**Complex interactive programs** are programs that contains procedures that have graph like behaviours and:
-* the graph is large (**Complex**).
-* must await for some input from some other component of the system before they can decide how to evolve, AND the user cares about their content. (**interactive**). The source of input does not need to be a human, it can be any source, including randonmess.
+
+**Complex interactive programs** are programs that contain procedures with graph-like behavior and:
+
+* the graph is large (**complex**),
+* they must await input from some other component of the system before deciding how to proceed, **and** the user cares about their content (**interactive**). The source of input does not have to be a human; it can be anything, including randomness.
 
 Examples:
 
@@ -73,30 +77,32 @@ digraph CheckoutFlow {
 
 ```
 
-* **Webstore checkout page**: when a user clicks on the payment mechanism of a web page, the pages they will be shown will depend on what they have filled into previous pages. Some pages are unique to certain payment circuits. If the user has specified they live in a different country some extra data can be requested. The user is allowed to navigate back to previous pages.
-* **Installer wizards**: the user selection of conponents to install impacts the future pages they will be shown and extra data they are required to provide.
-* **Online govermental forms**: the goverment cares not about your code quality, and if they assert that a user must fill 20 pages of documents that depend on previous documents they provided, that will be the way you implement it.
-* **Video games**: Enemies in a first person shooter have a graph-like state machine that describe states such as `running`, `shooting`, `falling` that are driven by external events. Video games can contain hundred of such state machines at the same time, or the state machine can have hundreds of states.
+* **Webstore checkout page**: when a user clicks on the payment mechanism of a web page, the pages they are shown depend on what they filled in on previous pages. Some pages are unique to certain payment circuits. If the user has specified they live in a different country, additional data may be requested. The user is allowed to navigate back to previous pages.
 
+* **Installer wizards**: the user's selection of components to install impacts the future pages they will be shown, as well as the additional data they are required to provide.
 
-Experienced programmers know that graphs should be avoided when are not necessary, but sometimes they are mandatory. The previous examples are all examples of situations where the business logic mandated the existence of graphs in the design of your solution.
+* **Online governmental forms**: the government does not care about your code quality. If they require a user to fill out 20 pages of forms where each page depends on the data entered in previous ones, that is how you must implement it.
+
+* **Video games**: enemies in a first-person shooter have graph-like state machines describing states such as `running`, `shooting`, `falling`, driven by external events. Video games may contain hundreds of such state machines simultaneously, or individual machines with hundreds of states.
+
+Experienced programmers know that graphs should be avoided when unnecessary — but sometimes, they are mandatory. The previous examples all illustrate situations where the business logic **requires** the use of graphs in the design of your solution.
+
 
 ## Inversion of control
 
-The wikipedia page describes [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) in detail enough, so i suggest reading it before continuing, but as a recap: **inversion of control** arises when any program takes over the main loop of the process, and relegates programmer to implement callbacks that the main loop owner will call according to some logic.
+The Wikipedia page on [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) describes the concept in sufficient detail, so I suggest reading it before continuing. As a recap: **inversion of control** arises when a program takes over the main loop of execution and relegates the programmer to implementing callbacks, which the main loop owner invokes according to its internal logic.
 
-This is pervasive and intended, graphical engines, web engines, reinforcement learning environments, and more, they all use this pattern to decouple the engine internals from the business logic implementation.
-
+This pattern is pervasive and intentional. Graphics engines, web engines, reinforcement learning environments, and more all use it to decouple engine internals from business logic implementation.
 
 ## The problem
 
-Lets write again the problem statement
+Let’s restate the problem:
 
-* When **Complex interactive programs** are subjected to [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control), they become superlinearly harder to reason about, refactor and mantain.
+* When **complex interactive programs** are subjected to [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control), they become superlinearly harder to reason about, refactor, and maintain.
 
-The assertion relies on the observation that giving up the main loop in a **Interactive system** (complex or not), entails that the program will be turned into a [state machine](https://en.wikipedia.org/wiki/Automata-based_programming), unless the programming language has some mechanism to solve the problem.
+This assertion is based on the observation that giving up control of the main loop in an **interactive system** (complex or not) effectively forces the program to be implemented as a [state machine](https://en.wikipedia.org/wiki/Automata-based_programming), unless the programming language provides a mechanism to avoid it.
 
-Let us make a example, say we have a python **Interactive program** such a a implementation of tic tac toe that owns the main loop.
+Let us consider an example: suppose we have a Python **interactive program**, such as an implementation of Tic Tac Toe that owns the main loop.
 
 ```python
 def play():
@@ -109,9 +115,10 @@ def play():
         board.switch_current_player()
 ```
 
-What happens to it if the language did not had facilities such coroutines or similar constructs (which is the case in `C`), and we had to give up the main loop to say, a graphical engine?
 
-The only viable implementation would be a class and that can be updated at will by the graphical engine whenever the user clicks on a cell.
+What happens if the language does not have facilities like coroutines or similar constructs (as is the case in `C`), and we must give up control of the main loop to, say, a graphical engine?
+
+The only viable implementation would be a class that can be updated at will by the graphical engine whenever the user clicks on a cell.
 
 ```python
 class TicTacToe:
@@ -139,10 +146,10 @@ class Engine:
           render_frame(game.board)
 ```
 
-This looked simple enough. Let us compose it into a more complex **interactive sequence**. Before looking at the solution.
+This looked simple enough. Let us compose it into a more complex **interactive sequence**.
 
 ```python
-# plays up to 4 times
+# plays up to 2 times
 def play_twice():
     game1 = TicTacToe()
     while not game1.is_done():
@@ -189,11 +196,11 @@ class PlayTwice:
             return
 ```
 
-As you can see, turning this functions into classes by hand yields very quickly very ugly code.
-As an exercise, convert into a class the following piece of code:
+As you can see, manually converting these functions into classes quickly results in very messy code.
+As an exercise, convert the following piece of code into a class:
 
 ```python
-# plays one game, then asks the user if they whish play again.
+# plays the game up to 4 times
 def play_four_times()
     game1 = PlayTwice()
     while not game1.resume_index == End:
@@ -248,19 +255,20 @@ digraph PlayFourTimes {
 ```
 
 ### The mental burden
-I think that it is intuitive to any programmer that apporaching the problem this way does not scale. The conversion between the function and the class is actually linear and a well known pattern that implements a state machine.
 
-Of course we are not the first to notice such problem, this problem is related but not equivalent to [callback hell](http://callbackhell.com), and the always green [non strutured programming](https://en.wikipedia.org/wiki/Non-structured_programming), since managing the state machine in complex programs is like managing the program counter manually with jumps.
+I think it is intuitive to most programmers that this approach does not scale. Converting a function into a class is *syntactically* linear and follows a familiar “turn it into a state machine” recipe—but the real cost shows up later.
 
-The superlinearity arises from mantainance. Every time you have to modifying in any way the class version of the code you have to remember how the state got expanded out from the original imperative code, and therefore each modification almost always require to reason about the whole class instead of consindering the control flow locally, turning the mental cost of mantaining such datastrucutre into a mental O(num requested inputs * number of refactoring).
+The **superlinearity** appears in maintenance. Each time you tweak the class‑based version, you must remember how the original imperative control flow was exploded into explicit states. A single new input or edge case can force you to revisit every branch that stores or resumes state. Concretely, if your program asks for **k** distinct inputs and you refactor it **r** times, the test‑case permutations can grow toward **k × r**—and that’s before you multiply by invalid or corner‑case inputs.
 
-Sometimes the number of times the program requests a input is low, like in the case of tic tac toe, sometimes the you almost never change the code after the first time you write it, in those situations you don't suffer much the **inversion fo control problem**.
+Sometimes **k** is small (e.g. Tic Tac Toe) or **r** is near 1 after initial authoring, so the pain stays minimal. But once either axis grows—say, a wizard with dozens of optional fields or a game with hundreds of enemy states—the maintenance burden balloons.
+
+We are hardly the first to flag this. The issue is related—though not identical—to [callback hell](http://callbackhell.com) and the classic pitfalls of [non‑structured programming](https://en.wikipedia.org/wiki/Non-structured_programming), because steering a large explicit state machine feels like hand‑coding the program counter with jumps.
 
 
 ## Mitigations: coroutines
 
-The most common solution to the problem are asyncronous language features.
-In particular [co-routines](https://en.wikipedia.org/wiki/Coroutine), depending on their implementation, can sometimes fully solve the problem.
+The most common solution to the problem is the use of asynchronous language features.
+In particular, [coroutines](https://en.wikipedia.org/wiki/Coroutine)—depending on their implementation—can sometimes fully solve the problem.
 
 ```python
 def play(board):
@@ -286,14 +294,27 @@ class Engine:
 
 Indeed, coroutines do exactly what we did by hand. They turned the imperative code into something that could be stopped and started according to the logic of the main loop holder.
 
-## The limits of co-routines
+## The limits of coroutines
 
-Typechecked languages coroutines are often less able to cope with **Complex Interactive Programs**. Unchecked interpeted languages such as python can perform expensive introspection tricks to solve the problem. Still, every coroutine implementation I am aware of suffer from at least one of these issues:
+Coroutines in type-checked languages are often less suited for **complex interactive programs**. dynamic languages, such as Python and JavaScript, can perform expensive introspection tricks to work around this. Still, every coroutine implementation I am aware of suffers from at least one of the following issues:
 
-* **Cannot copy coroutines** I am not aware of any implementation of coroutines that allows for copiable coroutines. This means that if you have a **Interactive Program** that you wish to copy, say chess, that implementation must be a regular class instead. Copying chess is critical to techinques such as [monte carlo tree search](https://en.wikipedia.org/wiki/Monte_Carlo_tree_search).
+* **Cannot copy coroutines** — Very few languages, such as scheme, can perform copies of ongoing coroutines.  This means that if you have an **interactive program** you wish to duplicate—say, a chess engine—the implementation must instead be a regular class. Copying is critical for techniques such as [Monte Carlo Tree Search](https://en.wikipedia.org/wiki/Monte_Carlo_tree_search).
 
-* **Cannot inspect the content of the coroutine** Most typechecked implementations, such as the Cpp ones, do not  allow to inspect the content of the coroutine without exfiltrating the pointer to the variables somehow. Inspecting coroutines is critical when the state of the coroutine is relevant to the decision maker, for example in reinforcement learning you would like to deliver parts of the coroutine state to the GPU for the GPU to take decisions.
+* **Cannot inspect the content of the coroutine** — Most type-checked implementations, such as those in C++, do not allow inspection of a coroutine’s internal state without exfiltrating pointers to its variables, at least not in a protable way. Inspection is critical when the coroutine’s state influences a decision-maker—for example, in reinforcement learning, where you may want to send part of the coroutine’s state to the GPU to inform decisions.
 
-* **Cannot compose coroutines** Most languages are able to compose coroutines with stackfull coroutines implementations, but some languages such as Lua or CPP before Cpp 20 (boost coro), do not. Composing coroutines is critical when the size of the **Interactive Program** scales.
+* **Cannot compose coroutines** — Most languages support coroutine composition with stackful coroutine implementations, but some (like Lua or C++ before C++20, unless using Boost.Coroutine) do not. Composition is essential when the size of the **interactive program** grows.
 
-Notice that if you do need one of these properties and you do not have acccess to them, you are **forced** to write the class just like we did before, suffering the full **Inversion of Control problem**.
+Notice that if you require any of these properties and your language does not support them, you are **forced** to implement the logic as a class—just like we did earlier—thus fully suffering from the **inversion of control problem**.
+
+## Conclusion
+
+The inversion‑of‑control pattern is not going away—graphics engines, web frameworks, RL platforms, and countless other systems deeply suffer from it.  What *can* change is the toolset we bring to the fight.  Ordinary coroutines already hint at a better world, yet their mainstream incarnations fall short when we need to
+
+* **copy** a running coroutine to explore alternate futures,
+* **inspect** its frame to feed state into a learner or debugger, and
+* **compose** many coroutines without turning every caller into one.
+
+Without these three properties we slide back to hand‑rolled, class‑shaped state machines, inheriting the superlinear maintenance costs they impose.
+
+
+ToDo, how to solve

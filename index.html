@@ -86,20 +86,20 @@
              
   <section id="rulebook-documentation">
 <h1>Rulebook documentation<a class="headerlink" href="#rulebook-documentation" title="Link to this heading"></a></h1>
-<p><strong>Rulebook</strong> is a language to bolt onto other languages to solve the <a class="reference external" href="./the_inversion_of_control_problem.html">inversion of control problem</a> in <strong>complex interactive programs</strong> (reinforcement learning environments, videogames, UIs with graph like transitions, multistep procedures, …).</p>
+<p><strong>Rulebook</strong> is a language to bolt onto other languages to solve the <a class="reference external" href="./the_inversion_of_control_problem.html">inversion of control problem</a> in <strong>complex interactive programs</strong> (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, …).</p>
 <p><strong>Rulebook</strong>:</p>
 <ul class="simple">
-<li><p>solves <strong>inversion of control problem</strong> at the language level, no other language does.</p></li>
-<li><p>requires <strong>asymptotically</strong> less code write <strong>complex interactive programs</strong>.</p></li>
-<li><p>is designed to <strong>aid</strong>, but not replace, and can <strong>interoperate</strong> with c, cpp, c#, python and godot script.</p></li>
+<li><p>solves the <strong>inversion of control problem</strong> at the language level — no other language does.</p></li>
+<li><p>requires <strong>asymptotically</strong> less code to write <strong>complex interactive programs</strong>.</p></li>
+<li><p>is designed to <strong>aid</strong>, not replace, and can <strong>interoperate</strong> with C, C++, C#, Python, and Godot Script.</p></li>
 </ul>
-<p>Furthermore, by solving the <strong>Inversion of Control Problem</strong>, <strong>Rulebook</strong> obtains.</p>
+<p>Furthermore, by solving the <strong>inversion of control problem</strong>, <strong>Rulebook</strong> enables:</p>
 <ul class="simple">
 <li><p><strong>storable</strong> and <strong>resumable</strong> coroutines.</p></li>
-<li><p><strong>automatic testing</strong> with fuzzers and reinforcement learning.</p></li>
+<li><p><strong>automatic testing</strong> using fuzzers and reinforcement learning.</p></li>
 <li><p><strong>automatic tracing</strong> of executions.</p></li>
-<li><p><strong>automatic remote execution</strong> over network.</p></li>
-<li><p><strong>allow for self-configuring UIs</strong>, where the UIs can inspect the underlying program it presenting and configure itself accordingly.</p></li>
+<li><p><strong>automatic remote execution</strong> over the network.</p></li>
+<li><p><strong>self-configuring UIs</strong>, where UIs can inspect the underlying program they present and configure themselves accordingly.</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
@@ -109,15 +109,16 @@
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#inversion-of-control">Inversion of control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-problem">The problem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#mitigations-coroutines">Mitigations: coroutines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-limits-of-co-routines">The limits of co-routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-limits-of-coroutines">The limits of coroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#conclusion">Conclusion</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<p><strong>Reinforcement learning environments</strong> are often subject to <strong>Inversion of Control Problem</strong>, since they must be stopped and resumed every time the artificial agent wishes to take a action. The following documents in detail what rulebook does in that domain. In particular we show how:</p>
+<p><strong>Reinforcement learning environments</strong> are often subject to the <strong>Inversion of Control Problem</strong>, since they must be stopped and resumed every time the artificial agent wishes to take an action. The following documents in detail what <strong>Rulebook</strong> does in that domain. In particular, we show:</p>
 <ul class="simple">
-<li><p>How to interoperate <strong>rulebook</strong> with <strong>python</strong>.</p></li>
-<li><p>How you can write almost arbitrary functions, turn them into a <strong>GYM</strong> environment and have your custom agents learn from such environments.</p></li>
+<li><p>how to interoperate <strong>Rulebook</strong> with <strong>Python</strong>.</p></li>
+<li><p>how you can write almost arbitrary functions, turn them into a <strong>GYM</strong> environment, and have your custom agents learn from such environments.</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>

@@ -54,7 +54,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#mitigations-coroutines">Mitigations: coroutines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-limits-of-co-routines">The limits of co-routines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-limits-of-coroutines">The limits of coroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
 </ul>
@@ -97,20 +98,20 @@
              
   <section id="the-inversion-of-control-problem">
 <h1>The inversion of control problem<a class="headerlink" href="#the-inversion-of-control-problem" title="Link to this heading"></a></h1>
-<p>When <strong>Complex interactive programs</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor and mantain.</p>
-<p>Here are pratical examples real world code that got harder to reason about because subject to <strong>IOC</strong>:</p>
+<p>When <strong>complex interactive programs</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor, and maintain.</p>
+<p>Here are practical examples of real-world code that became harder to reason about due to <strong>IOC</strong>:</p>
 <ul class="simple">
-<li><p>blender statefull <a class="reference external" href="https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc">GHOST event manager</a> . The event manager is statefull but can only act in response to call backs.</p></li>
-<li><p>anaconda installer statefull <a class="reference external" href="https://github.com/rhinstaller/anaconda/blob/main/pyanaconda/ui/gui/spokes/storage.py">UI pages</a>. Anaconda UI pages can interleave in any order, and the main loop if controlled by the rendering engine.</p></li>
-<li><p>google deep mind <a class="reference external" href="https://github.com/google-deepmind/hanabi-learning-environment/tree/master/hanabi_learning_environment">hanabi</a>. The game has inherently many things the player can do, and must offer serialization to tensor to train a neural network to play it. The main loop is owned by the machine learning components.</p></li>
-<li><p>lightzero 756 lines long implementation of <a class="reference external" href="https://github.com/opendilab/LightZero/blob/main/zoo/board_games/tictactoe/envs/tictactoe_env.py">tic tac toe</a>.</p></li>
+<li><p>Blender’s stateful <a class="reference external" href="https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc">GHOST event manager</a>. Because the event loop owns the timing of every mouse‑move, key‑press, and redraw, a small logic change (say, deferring key‑repeat) can subtly reorder callbacks. Reproducing a bug in similar <strong>scenarios may require replaying</strong> an entire input trace, and unit tests must mock dozens of event types to reach a single branch.</p></li>
+<li><p>Anaconda installer’s stateful <a class="reference external" href="https://github.com/rhinstaller/anaconda/blob/main/pyanaconda/ui/gui/spokes/storage.py">UI pages</a>. The installer UI pages (spokes) can appear in any order depending on earlier answers. Tests that assert “if option X then page Y collects field Z” must replicate many permutations; a new optional component multiplies the permutation space, inflating test suites and increasing the risk of missed edge cases.</p></li>
+<li><p>Google DeepMind’s <a class="reference external" href="https://github.com/google-deepmind/hanabi-learning-environment/tree/master/hanabi_learning_environment">Hanabi</a>. The game offers many possible player actions and must serialize state into tensors for neural‑network training. Performing local modifications to <strong>data structures</strong> can affect the surrounding classes, the tensor serialization code, and the order in which game actions execute—turning each change into a global problem.</p></li>
+<li><p>LightZero’s 756-line implementation of <a class="reference external" href="https://github.com/opendilab/LightZero/blob/main/zoo/board_games/tictactoe/envs/tictactoe_env.py">Tic Tac Toe</a>.</p></li>
 </ul>
 <section id="complex-interactive-programs">
 <h2>Complex interactive programs<a class="headerlink" href="#complex-interactive-programs" title="Link to this heading"></a></h2>
-<p><strong>Complex interactive programs</strong> are programs that contains procedures that have graph like behaviours and:</p>
+<p><strong>Complex interactive programs</strong> are programs that contain procedures with graph-like behavior and:</p>
 <ul class="simple">
-<li><p>the graph is large (<strong>Complex</strong>).</p></li>
-<li><p>must await for some input from some other component of the system before they can decide how to evolve, AND the user cares about their content. (<strong>interactive</strong>). The source of input does not need to be a human, it can be any source, including randonmess.</p></li>
+<li><p>the graph is large (<strong>complex</strong>),</p></li>
+<li><p>they must await input from some other component of the system before deciding how to proceed, <strong>and</strong> the user cares about their content (<strong>interactive</strong>). The source of input does not have to be a human; it can be anything, including randomness.</p></li>
 </ul>
 <p>Examples:</p>
 <div class="graphviz"><img src="_images/graphviz-77377c28510ff3a070aeb8f4b1a5070078154442.png" alt="digraph CheckoutFlow {
@@ -167,26 +168,26 @@
     }
 }" class="graphviz" /></div>
 <ul class="simple">
-<li><p><strong>Webstore checkout page</strong>: when a user clicks on the payment mechanism of a web page, the pages they will be shown will depend on what they have filled into previous pages. Some pages are unique to certain payment circuits. If the user has specified they live in a different country some extra data can be requested. The user is allowed to navigate back to previous pages.</p></li>
-<li><p><strong>Installer wizards</strong>: the user selection of conponents to install impacts the future pages they will be shown and extra data they are required to provide.</p></li>
-<li><p><strong>Online govermental forms</strong>: the goverment cares not about your code quality, and if they assert that a user must fill 20 pages of documents that depend on previous documents they provided, that will be the way you implement it.</p></li>
-<li><p><strong>Video games</strong>: Enemies in a first person shooter have a graph-like state machine that describe states such as <code class="docutils literal notranslate"><span class="pre">running</span></code>, <code class="docutils literal notranslate"><span class="pre">shooting</span></code>, <code class="docutils literal notranslate"><span class="pre">falling</span></code> that are driven by external events. Video games can contain hundred of such state machines at the same time, or the state machine can have hundreds of states.</p></li>
+<li><p><strong>Webstore checkout page</strong>: when a user clicks on the payment mechanism of a web page, the pages they are shown depend on what they filled in on previous pages. Some pages are unique to certain payment circuits. If the user has specified they live in a different country, additional data may be requested. The user is allowed to navigate back to previous pages.</p></li>
+<li><p><strong>Installer wizards</strong>: the user’s selection of components to install impacts the future pages they will be shown, as well as the additional data they are required to provide.</p></li>
+<li><p><strong>Online governmental forms</strong>: the government does not care about your code quality. If they require a user to fill out 20 pages of forms where each page depends on the data entered in previous ones, that is how you must implement it.</p></li>
+<li><p><strong>Video games</strong>: enemies in a first-person shooter have graph-like state machines describing states such as <code class="docutils literal notranslate"><span class="pre">running</span></code>, <code class="docutils literal notranslate"><span class="pre">shooting</span></code>, <code class="docutils literal notranslate"><span class="pre">falling</span></code>, driven by external events. Video games may contain hundreds of such state machines simultaneously, or individual machines with hundreds of states.</p></li>
 </ul>
-<p>Experienced programmers know that graphs should be avoided when are not necessary, but sometimes they are mandatory. The previous examples are all examples of situations where the business logic mandated the existence of graphs in the design of your solution.</p>
+<p>Experienced programmers know that graphs should be avoided when unnecessary — but sometimes, they are mandatory. The previous examples all illustrate situations where the business logic <strong>requires</strong> the use of graphs in the design of your solution.</p>
 </section>
 <section id="inversion-of-control">
 <h2>Inversion of control<a class="headerlink" href="#inversion-of-control" title="Link to this heading"></a></h2>
-<p>The wikipedia page describes <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> in detail enough, so i suggest reading it before continuing, but as a recap: <strong>inversion of control</strong> arises when any program takes over the main loop of the process, and relegates programmer to implement callbacks that the main loop owner will call according to some logic.</p>
-<p>This is pervasive and intended, graphical engines, web engines, reinforcement learning environments, and more, they all use this pattern to decouple the engine internals from the business logic implementation.</p>
+<p>The Wikipedia page on <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> describes the concept in sufficient detail, so I suggest reading it before continuing. As a recap: <strong>inversion of control</strong> arises when a program takes over the main loop of execution and relegates the programmer to implementing callbacks, which the main loop owner invokes according to its internal logic.</p>
+<p>This pattern is pervasive and intentional. Graphics engines, web engines, reinforcement learning environments, and more all use it to decouple engine internals from business logic implementation.</p>
 </section>
 <section id="the-problem">
 <h2>The problem<a class="headerlink" href="#the-problem" title="Link to this heading"></a></h2>
-<p>Lets write again the problem statement</p>
+<p>Let’s restate the problem:</p>
 <ul class="simple">
-<li><p>When <strong>Complex interactive programs</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a>, they become superlinearly harder to reason about, refactor and mantain.</p></li>
+<li><p>When <strong>complex interactive programs</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a>, they become superlinearly harder to reason about, refactor, and maintain.</p></li>
 </ul>
-<p>The assertion relies on the observation that giving up the main loop in a <strong>Interactive system</strong> (complex or not), entails that the program will be turned into a <a class="reference external" href="https://en.wikipedia.org/wiki/Automata-based_programming">state machine</a>, unless the programming language has some mechanism to solve the problem.</p>
-<p>Let us make a example, say we have a python <strong>Interactive program</strong> such a a implementation of tic tac toe that owns the main loop.</p>
+<p>This assertion is based on the observation that giving up control of the main loop in an <strong>interactive system</strong> (complex or not) effectively forces the program to be implemented as a <a class="reference external" href="https://en.wikipedia.org/wiki/Automata-based_programming">state machine</a>, unless the programming language provides a mechanism to avoid it.</p>
+<p>Let us consider an example: suppose we have a Python <strong>interactive program</strong>, such as an implementation of Tic Tac Toe that owns the main loop.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">():</span>
     <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="p">()</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
@@ -197,8 +198,8 @@
         <span class="n">board</span><span class="o">.</span><span class="n">switch_current_player</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>What happens to it if the language did not had facilities such coroutines or similar constructs (which is the case in <code class="docutils literal notranslate"><span class="pre">C</span></code>), and we had to give up the main loop to say, a graphical engine?</p>
-<p>The only viable implementation would be a class and that can be updated at will by the graphical engine whenever the user clicks on a cell.</p>
+<p>What happens if the language does not have facilities like coroutines or similar constructs (as is the case in <code class="docutils literal notranslate"><span class="pre">C</span></code>), and we must give up control of the main loop to, say, a graphical engine?</p>
+<p>The only viable implementation would be a class that can be updated at will by the graphical engine whenever the user clicks on a cell.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TicTacToe</span><span class="p">:</span>
   <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="p">()</span>
@@ -224,8 +225,8 @@
           <span class="n">render_frame</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">board</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This looked simple enough. Let us compose it into a more complex <strong>interactive sequence</strong>. Before looking at the solution.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plays up to 4 times</span>
+<p>This looked simple enough. Let us compose it into a more complex <strong>interactive sequence</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plays up to 2 times</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">play_twice</span><span class="p">():</span>
     <span class="n">game1</span> <span class="o">=</span> <span class="n">TicTacToe</span><span class="p">()</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">game1</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
@@ -270,9 +271,9 @@
             <span class="k">return</span>
 </pre></div>
 </div>
-<p>As you can see, turning this functions into classes by hand yields very quickly very ugly code.
-As an exercise, convert into a class the following piece of code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plays one game, then asks the user if they whish play again.</span>
+<p>As you can see, manually converting these functions into classes quickly results in very messy code.
+As an exercise, convert the following piece of code into a class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plays the game up to 4 times</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">play_four_times</span><span class="p">()</span>
     <span class="n">game1</span> <span class="o">=</span> <span class="n">PlayTwice</span><span class="p">()</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">game1</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">==</span> <span class="n">End</span><span class="p">:</span>
@@ -324,16 +325,16 @@ As an exercise, convert into a class the following piece of code:</p>
 }" class="graphviz" /></div>
 <section id="the-mental-burden">
 <h3>The mental burden<a class="headerlink" href="#the-mental-burden" title="Link to this heading"></a></h3>
-<p>I think that it is intuitive to any programmer that apporaching the problem this way does not scale. The conversion between the function and the class is actually linear and a well known pattern that implements a state machine.</p>
-<p>Of course we are not the first to notice such problem, this problem is related but not equivalent to <a class="reference external" href="http://callbackhell.com">callback hell</a>, and the always green <a class="reference external" href="https://en.wikipedia.org/wiki/Non-structured_programming">non strutured programming</a>, since managing the state machine in complex programs is like managing the program counter manually with jumps.</p>
-<p>The superlinearity arises from mantainance. Every time you have to modifying in any way the class version of the code you have to remember how the state got expanded out from the original imperative code, and therefore each modification almost always require to reason about the whole class instead of consindering the control flow locally, turning the mental cost of mantaining such datastrucutre into a mental O(num requested inputs * number of refactoring).</p>
-<p>Sometimes the number of times the program requests a input is low, like in the case of tic tac toe, sometimes the you almost never change the code after the first time you write it, in those situations you don’t suffer much the <strong>inversion fo control problem</strong>.</p>
+<p>I think it is intuitive to most programmers that this approach does not scale. Converting a function into a class is <em>syntactically</em> linear and follows a familiar “turn it into a state machine” recipe—but the real cost shows up later.</p>
+<p>The <strong>superlinearity</strong> appears in maintenance. Each time you tweak the class‑based version, you must remember how the original imperative control flow was exploded into explicit states. A single new input or edge case can force you to revisit every branch that stores or resumes state. Concretely, if your program asks for <strong>k</strong> distinct inputs and you refactor it <strong>r</strong> times, the test‑case permutations can grow toward <strong>k × r</strong>—and that’s before you multiply by invalid or corner‑case inputs.</p>
+<p>Sometimes <strong>k</strong> is small (e.g. Tic Tac Toe) or <strong>r</strong> is near 1 after initial authoring, so the pain stays minimal. But once either axis grows—say, a wizard with dozens of optional fields or a game with hundreds of enemy states—the maintenance burden balloons.</p>
+<p>We are hardly the first to flag this. The issue is related—though not identical—to <a class="reference external" href="http://callbackhell.com">callback hell</a> and the classic pitfalls of <a class="reference external" href="https://en.wikipedia.org/wiki/Non-structured_programming">non‑structured programming</a>, because steering a large explicit state machine feels like hand‑coding the program counter with jumps.</p>
 </section>
 </section>
 <section id="mitigations-coroutines">
 <h2>Mitigations: coroutines<a class="headerlink" href="#mitigations-coroutines" title="Link to this heading"></a></h2>
-<p>The most common solution to the problem are asyncronous language features.
-In particular <a class="reference external" href="https://en.wikipedia.org/wiki/Coroutine">co-routines</a>, depending on their implementation, can sometimes fully solve the problem.</p>
+<p>The most common solution to the problem is the use of asynchronous language features.
+In particular, <a class="reference external" href="https://en.wikipedia.org/wiki/Coroutine">coroutines</a>—depending on their implementation—can sometimes fully solve the problem.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="n">board</span><span class="p">):</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
         <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="k">yield</span><span class="p">()</span>
@@ -357,15 +358,26 @@ In particular <a class="reference external" href="https://en.wikipedia.org/wiki/
 </div>
 <p>Indeed, coroutines do exactly what we did by hand. They turned the imperative code into something that could be stopped and started according to the logic of the main loop holder.</p>
 </section>
-<section id="the-limits-of-co-routines">
-<h2>The limits of co-routines<a class="headerlink" href="#the-limits-of-co-routines" title="Link to this heading"></a></h2>
-<p>Typechecked languages coroutines are often less able to cope with <strong>Complex Interactive Programs</strong>. Unchecked interpeted languages such as python can perform expensive introspection tricks to solve the problem. Still, every coroutine implementation I am aware of suffer from at least one of these issues:</p>
+<section id="the-limits-of-coroutines">
+<h2>The limits of coroutines<a class="headerlink" href="#the-limits-of-coroutines" title="Link to this heading"></a></h2>
+<p>Coroutines in type-checked languages are often less suited for <strong>complex interactive programs</strong>. dynamic languages, such as Python and JavaScript, can perform expensive introspection tricks to work around this. Still, every coroutine implementation I am aware of suffers from at least one of the following issues:</p>
 <ul class="simple">
-<li><p><strong>Cannot copy coroutines</strong> I am not aware of any implementation of coroutines that allows for copiable coroutines. This means that if you have a <strong>Interactive Program</strong> that you wish to copy, say chess, that implementation must be a regular class instead. Copying chess is critical to techinques such as <a class="reference external" href="https://en.wikipedia.org/wiki/Monte_Carlo_tree_search">monte carlo tree search</a>.</p></li>
-<li><p><strong>Cannot inspect the content of the coroutine</strong> Most typechecked implementations, such as the Cpp ones, do not  allow to inspect the content of the coroutine without exfiltrating the pointer to the variables somehow. Inspecting coroutines is critical when the state of the coroutine is relevant to the decision maker, for example in reinforcement learning you would like to deliver parts of the coroutine state to the GPU for the GPU to take decisions.</p></li>
-<li><p><strong>Cannot compose coroutines</strong> Most languages are able to compose coroutines with stackfull coroutines implementations, but some languages such as Lua or CPP before Cpp 20 (boost coro), do not. Composing coroutines is critical when the size of the <strong>Interactive Program</strong> scales.</p></li>
+<li><p><strong>Cannot copy coroutines</strong> — Very few languages, such as scheme, can perform copies of ongoing coroutines.  This means that if you have an <strong>interactive program</strong> you wish to duplicate—say, a chess engine—the implementation must instead be a regular class. Copying is critical for techniques such as <a class="reference external" href="https://en.wikipedia.org/wiki/Monte_Carlo_tree_search">Monte Carlo Tree Search</a>.</p></li>
+<li><p><strong>Cannot inspect the content of the coroutine</strong> — Most type-checked implementations, such as those in C++, do not allow inspection of a coroutine’s internal state without exfiltrating pointers to its variables, at least not in a protable way. Inspection is critical when the coroutine’s state influences a decision-maker—for example, in reinforcement learning, where you may want to send part of the coroutine’s state to the GPU to inform decisions.</p></li>
+<li><p><strong>Cannot compose coroutines</strong> — Most languages support coroutine composition with stackful coroutine implementations, but some (like Lua or C++ before C++20, unless using Boost.Coroutine) do not. Composition is essential when the size of the <strong>interactive program</strong> grows.</p></li>
 </ul>
-<p>Notice that if you do need one of these properties and you do not have acccess to them, you are <strong>forced</strong> to write the class just like we did before, suffering the full <strong>Inversion of Control problem</strong>.</p>
+<p>Notice that if you require any of these properties and your language does not support them, you are <strong>forced</strong> to implement the logic as a class—just like we did earlier—thus fully suffering from the <strong>inversion of control problem</strong>.</p>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>The inversion‑of‑control pattern is not going away—graphics engines, web frameworks, RL platforms, and countless other systems deeply suffer from it.  What <em>can</em> change is the toolset we bring to the fight.  Ordinary coroutines already hint at a better world, yet their mainstream incarnations fall short when we need to</p>
+<ul class="simple">
+<li><p><strong>copy</strong> a running coroutine to explore alternate futures,</p></li>
+<li><p><strong>inspect</strong> its frame to feed state into a learner or debugger, and</p></li>
+<li><p><strong>compose</strong> many coroutines without turning every caller into one.</p></li>
+</ul>
+<p>Without these three properties we slide back to hand‑rolled, class‑shaped state machines, inheriting the superlinear maintenance costs they impose.</p>
+<p>ToDo, how to solve</p>
 </section>
 </section>
 
