@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>machine_learning.rl &mdash; rlc-doc 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="none.rl" href="none.html" />
+    <link rel="prev" title="learn.rl" href="learn.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            rlc-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rationale.html">The RL language rationale.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">stdlib</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="algorithms/index.html">algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections/index.html">collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math/index.html">math</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialization/index.html">serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="action.html">action.rl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bounded_arg.html">bounded_arg.rl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enum_utils.html">enum_utils.rl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="learn.html">learn.rl</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">machine_learning.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-hidden">Class Hidden</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fields">Fields</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#class-hiddeninformation">Class HiddenInformation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Fields</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#free-functions">Free Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="none.html">none.rl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python.html">python.rl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="range.html">range.rl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="string.html">string.rl</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">rlc-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">stdlib</a></li>
+      <li class="breadcrumb-item active">machine_learning.rl</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/stdlib/machine_learning.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="machine-learning-rl">
+<h1>machine_learning.rl<a class="headerlink" href="#machine-learning-rl" title="Link to this heading"></a></h1>
+<section id="class-hidden">
+<h2>Class Hidden<a class="headerlink" href="#class-hidden" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> A Hidden object rapresents a object that is not visibile to machine
+ learning algorithms. For example a machine learning algorithms learning
+ to play black jack should not have access to the deck of cards, so it can be wrapped into a hidden to achieve that effect
+</pre></div>
+</div>
+<section id="fields">
+<h3>Fields<a class="headerlink" href="#fields" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">value</span></code></p></li>
+</ul>
+</section>
+<section id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">assign(T</span> <span class="pre">content)</span> </code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-hiddeninformation">
+<h2>Class HiddenInformation<a class="headerlink" href="#class-hiddeninformation" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>Fields<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">value</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Int</span> <span class="pre">owner</span></code></p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Methods<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">assign(T</span> <span class="pre">content)</span> </code></p></li>
+</ul>
+</section>
+</section>
+<section id="free-functions">
+<h2>Free Functions<a class="headerlink" href="#free-functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">write_in_observation_tensor&lt;T&gt;(Hidden&lt;T&gt;</span> <span class="pre">obj,</span> <span class="pre">Int</span> <span class="pre">observer_id,</span> <span class="pre">Vector&lt;Float&gt;</span> <span class="pre">output,</span> <span class="pre">Int</span> <span class="pre">index)</span> </code></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> since the underlying object is hidden, this function does nothing.
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">size_as_observation_tensor&lt;T&gt;(Hidden&lt;T&gt;</span> <span class="pre">obj)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Int</span></code></p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> since the underlying object is hidden, always returns zero 
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">append_to_vector&lt;T&gt;(Hidden&lt;T&gt;</span> <span class="pre">to_add,</span> <span class="pre">Vector&lt;Byte&gt;</span> <span class="pre">output)</span> </code></p></li>
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">parse_from_vector&lt;T&gt;(Hidden&lt;T&gt;</span> <span class="pre">to_add,</span> <span class="pre">Vector&lt;Byte&gt;</span> <span class="pre">output,</span> <span class="pre">Int</span> <span class="pre">index)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Bool</span></code></p></li>
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">append_to_string&lt;T&gt;(Hidden&lt;T&gt;</span> <span class="pre">to_add,</span> <span class="pre">String</span> <span class="pre">output)</span> </code></p></li>
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">parse_string&lt;T&gt;(Hidden&lt;T&gt;</span> <span class="pre">to_add,</span> <span class="pre">String</span> <span class="pre">input,</span> <span class="pre">Int</span> <span class="pre">index)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Bool</span></code></p></li>
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">write_in_observation_tensor&lt;T&gt;(HiddenInformation&lt;T&gt;</span> <span class="pre">obj,</span> <span class="pre">Int</span> <span class="pre">observer_id,</span> <span class="pre">Vector&lt;Float&gt;</span> <span class="pre">output,</span> <span class="pre">Int</span> <span class="pre">index)</span> </code></p></li>
+<li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">size_as_observation_tensor&lt;T&gt;(HiddenInformation&lt;T&gt;</span> <span class="pre">obj)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Int</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="learn.html" class="btn btn-neutral float-left" title="learn.rl" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="none.html" class="btn btn-neutral float-right" title="none.rl" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

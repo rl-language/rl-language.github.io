@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The RL language rationale. &mdash; rlc-doc 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial for reinforcement learning people" href="tutorial.html" />
+    <link rel="prev" title="Where we are going and what RL will do once we get there." href="project_rationale.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            rlc-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The RL language rationale.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-complexity-of-writing-games-and-rule-heavy-simulations">The Complexity of writing games and rule heavy simulations.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-rl-does-it">How RL does it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-on-top-of-it">Building on top of it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faq">FAQ:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#but-is-it-fast">But is it fast?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#but-is-it-easy-to-learn">But is it easy to learn?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#but-is-it-garbage-collected">But is it garbage collected?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#but-is-it-safe">But is it safe?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#but-is-it-portable">But is it portable?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#but-is-it-easy-to-integrate-with-other-codebases">But is it easy to integrate with other codebases?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#but-did-we-really-needed-another-language-but-couldn-t-this-have-been-a-macro-template-generic">But did we really needed another language? / But couldn’t this have been a macro/template/generic?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#but-what-is-the-catch">But what is the catch?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rlc-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The RL language rationale.</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/rationale.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-rl-language-rationale">
+<h1>The RL language rationale.<a class="headerlink" href="#the-rl-language-rationale" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> (or <code class="docutils literal notranslate"><span class="pre">rl</span></code> for short) is a domain specific-language that tries to reduce the complexity of writing simulations, such as those used in reinforcement learning, game programming, and similar other domains. This document explains the rationale behind it.</p>
+<p>If you want to jump directly into the code, try it out as described in the main page instead instead. If you want to read about the project rationale, read it <a class="reference internal" href="#./where_we_are_going.md"><span class="xref myst">here</span></a>. If you want to see a quick description of what the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> tool is capable of, instead of the <code class="docutils literal notranslate"><span class="pre">rl</span></code> language, you can see video <a class="reference external" href="https://www.youtube.com/watch?v=tMnBo3TGIbU">here</a>.</p>
+<section id="the-complexity-of-writing-games-and-rule-heavy-simulations">
+<h2>The Complexity of writing games and rule heavy simulations.<a class="headerlink" href="#the-complexity-of-writing-games-and-rule-heavy-simulations" title="Link to this heading"></a></h2>
+<p>Most games and many simulations have a very programmatic nature, yet they rarely are implemented in a way that resembles their procedural essence. Consider the game Tic Tac Toe, Wikipedia specifies the rules of the game as the following:</p>
+<blockquote>
+<div><p>Tic-tac-toe […] is a paper-and-pencil game for two players who take turns marking the spaces in a three-by-three grid with X or O. The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row is the winner.</p>
+</div></blockquote>
+<p>How would you implement it in your favorite language?</p>
+<p>Maybe you thought of a python function such as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">tic_tac_toe</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Winner</span><span class="p">:</span>
+  <span class="n">board</span> <span class="o">=</span> <span class="n">TicTacToeBoard</span><span class="p">()</span>
+  <span class="k">while</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">is_set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="n">board</span><span class="o">.</span><span class="n">set_as_current_player</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line</span><span class="p">():</span>
+      <span class="k">return</span> <span class="n">Winner</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">)</span>
+    <span class="n">board</span><span class="o">.</span><span class="n">change_current_player</span><span class="p">()</span>
+  <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>This implementation closely mirrors the <code class="docutils literal notranslate"><span class="pre">Wikipedia</span></code> description and is very straightforward for a human being to reason about it.</p>
+<p>As written right now, it is almost useless.</p>
+<p>Maybe you are a reinforcement learning engineer and wish to use that function to let an AI system learn how to play it. Maybe you are a game programmer and want to integrate it into your game.
+Let us ignore the low-hanging fruit of performances that would push you to rewrite the code in another language and focus instead on the issue that would be common to all languages:</p>
+<p>When the function suspends at the line <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">input()</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">input()</span></code>, the state of game:</p>
+<ul class="simple">
+<li><p><strong>is not inspectable</strong>: you cannot trivially inspect the <code class="docutils literal notranslate"><span class="pre">board</span></code> variable from outside this function.</p></li>
+<li><p><strong>is not serializable</strong>: you cannot copy the state of the game and resume it somewhere else unless you fork the entire process.</p></li>
+<li><p><strong>is not precondition checkable</strong>: you cannot check if <code class="docutils literal notranslate"><span class="pre">x</span></code> or <code class="docutils literal notranslate"><span class="pre">y</span></code> are valid without providing them on standard input and letting the game crash.</p></li>
+<li><p><strong>controls the main loop</strong>: the game takes over the main loop of the program until the game terminates. If your application wishes to retain control over it, the <code class="docutils literal notranslate"><span class="pre">tic_tac_toe</span></code> function must be run in a different thread or process.</p></li>
+</ul>
+<p>These issues are clearly unacceptable, and any experienced programmer will instinctively know that the usable implementation will be more similar to something like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TicTacToe</span><span class="p">:</span>
+  <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="n">TicTacToeBoard</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">next_resumption_point</span> <span class="o">=</span> <span class="n">NormalTurn</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">winner</span> <span class="o">=</span> <span class="kc">None</span>
+
+  <span class="k">def</span><span class="w"> </span><span class="nf">is_done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_resumption_point</span> <span class="o">==</span> <span class="n">Ended</span>
+
+  <span class="k">def</span><span class="w"> </span><span class="nf">can_mark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_resumpion_point</span> <span class="o">==</span> <span class="n">NormalTurn</span> <span class="ow">and</span>
+           <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="ow">and</span>
+           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">is_set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+  <span class="k">def</span><span class="w"> </span><span class="nf">mark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_mark</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">set_marked_by_current_player</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line</span><span class="p">():</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">next_resumption_point</span> <span class="o">==</span> <span class="n">Ended</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">winner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_player</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>Now we have a usable implementation!</p>
+<ul class="simple">
+<li><p>you can inspect a <code class="docutils literal notranslate"><span class="pre">TicTacToe</span></code>object and figure out who is the current player and so on.</p></li>
+<li><p>you can copy, save, and restore a game before it is completed.</p></li>
+<li><p>you can check if an action can be executed with some given parameters using the method <code class="docutils literal notranslate"><span class="pre">can_mark</span></code></p></li>
+<li><p>you retain control over the main loop and can use this class as follows</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">state</span> <span class="o">=</span> <span class="n">TicTacToe</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">can_mark</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+  <span class="n">state</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
+  <span class="nb">print</span> <span class="s2">&quot;the game is over&quot;</span>
+</pre></div>
+</div>
+<p>Indeed, this is exactly how game code and code similar to games is written. Here is the <a class="reference external" href="https://github.com/google-deepmind/open_spiel/blob/master/open_spiel/games/tic_tac_toe/tic_tac_toe.cc#L95">TicTacToe</a> apply action from <code class="docutils literal notranslate"><span class="pre">Google</span> <span class="pre">Deepmind</span> <span class="pre">open_spiel</span></code></p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">TicTacToeState::DoApplyAction</span><span class="p">(</span><span class="n">Action</span><span class="w"> </span><span class="n">move</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">SPIEL_CHECK_EQ</span><span class="p">(</span><span class="n">board_</span><span class="p">[</span><span class="n">move</span><span class="p">],</span><span class="w"> </span><span class="n">CellState</span><span class="o">::</span><span class="n">kEmpty</span><span class="p">);</span>
+<span class="w">  </span><span class="n">board_</span><span class="p">[</span><span class="n">move</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PlayerToState</span><span class="p">(</span><span class="n">CurrentPlayer</span><span class="p">());</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">HasLine</span><span class="p">(</span><span class="n">current_player_</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">outcome_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_player_</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">current_player_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">current_player_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">num_moves_</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Action</span><span class="o">&gt;</span><span class="w"> </span><span class="n">TicTacToeState</span><span class="o">::</span><span class="n">LegalActions</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsTerminal</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">  </span><span class="c1">// Can move in any empty cell.</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Action</span><span class="o">&gt;</span><span class="w"> </span><span class="n">moves</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">cell</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">kNumCells</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">cell</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">board_</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CellState</span><span class="o">::</span><span class="n">kEmpty</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">moves</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">cell</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">moves</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>That is pretty much identical to our Python implementation, except it has a function that returns all legal actions instead of a function that tells you if an action is legal or not.</p>
+<p>Indeed, this is the case for most projects trying to solve this issue:</p>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Game_Description_Language">Game Description Language</a> also distinguishes <code class="docutils literal notranslate"><span class="pre">legal</span> <span class="pre">moves</span></code>, <code class="docutils literal notranslate"><span class="pre">update</span> <span class="pre">rules</span></code>, and <code class="docutils literal notranslate"><span class="pre">termination</span></code>.</p></li>
+<li><p>Games with millions of copies sold, such as <a class="reference external" href="https://ck2.paradoxwikis.com/Ze_Lunatic_(Conclave)">CK2</a> have their own custom language where they can express <code class="docutils literal notranslate"><span class="pre">events</span></code> that are composed of <code class="docutils literal notranslate"><span class="pre">trigger</span> <span class="pre">conditions</span></code> that must be satisfied before they can manifest, <code class="docutils literal notranslate"><span class="pre">decisions</span></code> the player can select and <code class="docutils literal notranslate"><span class="pre">effects</span></code> that are applied if that <code class="docutils literal notranslate"><span class="pre">decision</span></code> is taken, and <code class="docutils literal notranslate"><span class="pre">flags</span></code> used to coordinate different events.</p></li>
+</ul>
+<p>We live in a world where billion dollar companies write code for custom hardware accellerators in Python and then turn around and implement TicTacToe in C.</p>
+<p>The four properties identified before, <code class="docutils literal notranslate"><span class="pre">inspectability</span></code>, <code class="docutils literal notranslate"><span class="pre">serializability</span></code>, <code class="docutils literal notranslate"><span class="pre">precondition</span> <span class="pre">checkability</span></code>, and <code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">main</span> <span class="pre">loop</span> <span class="pre">ownership</span></code> generate this pattern discovered again and again by different programmers in different contexts. Simulations and games that exist in the mind of developers as normal-looking programs end up rewritten in such a way that those four properties are respected, by explicating the underlying control flow diagram that describes them.</p>
+<p>We assert that the current state of the art is not sustainable because unrolling the state machines involved in large programs generates a combinatorial explosion in program complexity that makes them hard to refactor and reason about. Almost only trivial games are implementable this way.</p>
+</section>
+<section id="how-rl-does-it">
+<h2>How RL does it<a class="headerlink" href="#how-rl-does-it" title="Link to this heading"></a></h2>
+<p>Here is how <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/tool/rlc/test/tic_tac_toe.rl">TicTacToe</a> is implemented in the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> (<code class="docutils literal notranslate"><span class="pre">rl</span> <span class="pre">compiler</span></code>) test suite.</p>
+<p>The code that implements the game is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TicTacToe</span><span class="p">:</span>
+	<span class="n">let</span> <span class="n">board</span> <span class="p">:</span> <span class="n">Board</span>
+	<span class="k">while</span> <span class="err">!</span><span class="n">board</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
+		<span class="n">act</span> <span class="n">mark</span><span class="p">(</span><span class="n">Int</span> <span class="n">x</span><span class="p">,</span> <span class="n">Int</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="n">y</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="n">board</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+		<span class="p">}</span>
+		<span class="n">board</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">())</span>
+		<span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line_player</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">()):</span>
+			<span class="k">return</span>
+
+		<span class="n">board</span><span class="o">.</span><span class="n">next_turn</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And the program main function is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+	<span class="c1"># creates a new game</span>
+	<span class="n">let</span> <span class="n">game</span> <span class="o">=</span> <span class="n">play</span><span class="p">()</span>
+	<span class="n">game</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="c1"># X _ _</span>
+	<span class="c1"># _ _ _</span>
+	<span class="c1"># _ _ _</span>
+	<span class="n">game</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="c1"># X O _</span>
+	<span class="c1"># _ _ _</span>
+	<span class="c1"># _ _ _</span>
+	<span class="n">game</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="c1"># X O _</span>
+	<span class="c1"># _ X _</span>
+	<span class="c1"># _ _ _</span>
+	<span class="n">game</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="c1"># X O O</span>
+	<span class="c1"># _ X _</span>
+	<span class="c1"># _ _ _</span>
+	<span class="n">game</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+	<span class="c1"># X O O</span>
+	<span class="c1"># _ X _</span>
+	<span class="c1"># _ _ X</span>
+
+	<span class="c1"># returns 1 because player 1 indeed</span>
+	<span class="c1"># had three marks in a line</span>
+	<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>What is going on here? The rules of the game are written just like the naive Python function at the start of the document, but the main function is written as we had written the explicit class.
+This is exactly what <code class="docutils literal notranslate"><span class="pre">rlc</span></code> does: <strong>it takes a procedural description of a simulation, and returns a library that behaves as if it was a class</strong>.</p>
+<p>The line<code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">play()</span> <span class="pre">-&gt;</span> <span class="pre">TicTacToe:</span></code>declares an <code class="docutils literal notranslate"><span class="pre">action</span> <span class="pre">procedure</span></code>, which the compiler will translate into something that behaves like a class declaration for the class <code class="docutils literal notranslate"><span class="pre">TicTacToe</span></code>, and emits as well a function declaration <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">play()</span> <span class="pre">-&gt;</span> <span class="pre">TicTackToe</span></code>.</p>
+<p>The line <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">mark(Int</span> <span class="pre">x,</span> <span class="pre">Int</span> <span class="pre">y)</span> <span class="pre">{</span></code> is not an <code class="docutils literal notranslate"><span class="pre">action</span> <span class="pre">procedure</span></code>, it is instead an <code class="docutils literal notranslate"><span class="pre">action</span> <span class="pre">statement</span></code> because it appears within a function. What it does is declare 2 functions: one is <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">mark(Int</span> <span class="pre">x,</span> <span class="pre">Int</span> <span class="pre">y)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Void</span></code> and the second one is <code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">can_mark(Int</span> <span class="pre">x,</span> <span class="pre">Int</span> <span class="pre">y)</span> <span class="pre">-&gt;</span> <span class="pre">Bool</span></code>.</p>
+<p>Then the compiler inspects the rest of the <code class="docutils literal notranslate"><span class="pre">action</span> <span class="pre">procedure</span></code> and by powerful magic, it moves the content inside the just declared functions. At the end of the compilation, the library will look something like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># What follow is pseudocode, it all happens inside the</span>
+<span class="c1"># compiler and the output is assembly, not python or other rl.</span>
+<span class="c1"># It will be as efficient as having written this in C instead of python</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TicTacToe</span><span class="p">:</span>
+  <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="err">!</span><span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span> <span class="c1"># copied from the loop in the original program</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">resumption_index</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 0 means we reached the first action statement, mark</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">resumption_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1"># -1 means we reached the end of the function</span>
+
+  <span class="k">def</span><span class="w"> </span><span class="nf">can_mark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bool</span><span class="p">:</span>
+    <span class="c1"># implied by `act mark` being rechable from the entry point of `play()`</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resumption_index</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># taken from the mark action statement</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">board</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+  <span class="k">def</span><span class="w"> </span><span class="nf">mark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_mark</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># can be disabled for extra performances</span>
+
+    <span class="c1"># taken from the lines that follow `act mark` in the rl code</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line_player</span><span class="p">(</span><span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">()):</span>
+        <span class="c1"># implied by the fact that there was a return in the original code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resumption_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span>
+
+	<span class="n">board</span><span class="o">.</span><span class="n">next_turn</span><span class="p">()</span>
+    <span class="c1"># emit the condition of the loop again</span>
+    <span class="k">if</span> <span class="err">!</span><span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">is_full</span><span class="p">():</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">resumption_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">resumption_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+ <span class="k">def</span><span class="w"> </span><span class="nf">is_done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resumption_index</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>This is it, the whole Raison d’etre of the <code class="docutils literal notranslate"><span class="pre">rl</span></code> language is just that, to automatize the tedious and error-prone process of translating a procedure-like description of a simulation into a class-like description.</p>
+</section>
+<section id="building-on-top-of-it">
+<h2>Building on top of it<a class="headerlink" href="#building-on-top-of-it" title="Link to this heading"></a></h2>
+<p>We saw that <code class="docutils literal notranslate"><span class="pre">rl</span></code> has been created to solve the 4 issues of <code class="docutils literal notranslate"><span class="pre">inspectability</span></code>, <code class="docutils literal notranslate"><span class="pre">serializability</span></code>, <code class="docutils literal notranslate"><span class="pre">precondition</span> <span class="pre">checkability</span></code>, and <code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">main</span> <span class="pre">loop</span> <span class="pre">ownership</span></code> described earlier.  Of course, having a tool able to perform this transformation is not the end of the story. Since that simple implementation <code class="docutils literal notranslate"><span class="pre">TicTacToe</span></code> describes in a compact way</p>
+<ul class="simple">
+<li><p>Initial condition</p></li>
+<li><p>Terminal conditions</p></li>
+<li><p>Actions, and actions parameters and actions preconditions</p></li>
+</ul>
+<p>then instrumentation can be written to generically exploit one or more of these elements. For example, since the compiler knows everything about how that simulation may evolve, even without human intervention, we can:</p>
+<ul class="simple">
+<li><p>generate the wrapper for the simulation in different languages and for different frameworks (C, CPP, C# and Python currently supported)</p></li>
+<li><p>generate fuzzers that try random valid moves and look for bugs.</p></li>
+<li><p>generate the network layer that allows to remotely interact with the simulation <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/examples/engine_driver.py">example here</a>.</p></li>
+<li><p>statically prove that some actions can never be executed and thus the code is not right, just like unrechable code.</p></li>
+<li><p>automatically serialize and deserialize the state of the simulation.</p></li>
+</ul>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>In this document we described the issue <code class="docutils literal notranslate"><span class="pre">rl</span></code> is trying to tackle, how <code class="docutils literal notranslate"><span class="pre">rl</span></code> does it, and what extra benefit one obtains when using <code class="docutils literal notranslate"><span class="pre">rl</span></code>. If you want to try it out in a live environment, the main page specifies how do that <a class="reference internal" href="#../README.md"><span class="xref myst">here</span></a>.</p>
+</section>
+<section id="faq">
+<h2>FAQ:<a class="headerlink" href="#faq" title="Link to this heading"></a></h2>
+<section id="but-is-it-fast">
+<h3>But is it fast?<a class="headerlink" href="#but-is-it-fast" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Rlc</span></code> is a <code class="docutils literal notranslate"><span class="pre">LLVM</span></code> based compiler, the performances will be comparable as having written the program in <code class="docutils literal notranslate"><span class="pre">C</span></code>. When procedurers are rewritten, no malloc is introduce. No heap allocation happens, unless it happens in some function called within the body.</p>
+</section>
+<section id="but-is-it-easy-to-learn">
+<h3>But is it easy to learn?<a class="headerlink" href="#but-is-it-easy-to-learn" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Rl</span></code> strives to be as easy as possible. We aim for this language to be usable both by proficient and new programmers.</p>
+</section>
+<section id="but-is-it-garbage-collected">
+<h3>But is it garbage collected?<a class="headerlink" href="#but-is-it-garbage-collected" title="Link to this heading"></a></h3>
+<p>No, we emit destructors similarly to <code class="docutils literal notranslate"><span class="pre">cpp</span></code> and <code class="docutils literal notranslate"><span class="pre">rust</span></code>. We are considering if and how to adopt a full borrow checker such as the <code class="docutils literal notranslate"><span class="pre">rust</span></code>.</p>
+</section>
+<section id="but-is-it-safe">
+<h3>But is it safe?<a class="headerlink" href="#but-is-it-safe" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Rl</span></code> is fully type-checked, consider it as safe as <code class="docutils literal notranslate"><span class="pre">C#</span></code> or <code class="docutils literal notranslate"><span class="pre">Java</span></code>, indeed it can only work because it is type-checked. If the compiler did not had a understanding of the types involved in actions it could not rewrite them without leaking memory and so on.</p>
+</section>
+<section id="but-is-it-portable">
+<h3>But is it portable?<a class="headerlink" href="#but-is-it-portable" title="Link to this heading"></a></h3>
+<p>The language is designed to behave the same independently from the underlying machine, furthermore since it is based on <code class="docutils literal notranslate"><span class="pre">LLVM</span></code> it is trivial to make it work on all machines where <code class="docutils literal notranslate"><span class="pre">LLVM</span></code> is supported(which is most).</p>
+</section>
+<section id="but-is-it-easy-to-integrate-with-other-codebases">
+<h3>But is it easy to integrate with other codebases?<a class="headerlink" href="#but-is-it-easy-to-integrate-with-other-codebases" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">rlc</span></code>can emit <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">python</span></code> wrappers that make it easy to integrate with other programming languages. As a rule of thumb, if your code base can be integrated with <code class="docutils literal notranslate"><span class="pre">C</span></code>, it can be integrated with <code class="docutils literal notranslate"><span class="pre">rl</span></code>.</p>
+</section>
+<section id="but-did-we-really-needed-another-language-but-couldn-t-this-have-been-a-macro-template-generic">
+<h3>But did we really needed another language? / But couldn’t this have been a macro/template/generic?<a class="headerlink" href="#but-did-we-really-needed-another-language-but-couldn-t-this-have-been-a-macro-template-generic" title="Link to this heading"></a></h3>
+<p>Unfortunately we do need one. Various compiler-based and library-based solutions were attempted, but in the end, we reached the conclusion that a domain-specific language was needed. The exact technical nature of these reasons goes beyond the scope of this document, but intuitively the reason is that translating a “procedure-like” simulation into a “class-like” simulation is very similar to what a compiler does when it translates a structured function into a bunch of assembly branch instructions. On top of that, collaboration from the typecheker is required. We have not found any language that was both fast enough and had the required metaprogramming facilities to implement this.</p>
+</section>
+<section id="but-what-is-the-catch">
+<h3>But what is the catch?<a class="headerlink" href="#but-what-is-the-catch" title="Link to this heading"></a></h3>
+<p>The main catch is that not all programs can be expressed trivially in <code class="docutils literal notranslate"><span class="pre">rl</span></code>.   <code class="docutils literal notranslate"><span class="pre">rl</span></code> is a domain-specific tool, and if your problem does not lie in that domain, <code class="docutils literal notranslate"><span class="pre">C</span></code> is still your best solution. Still, the language is designed to be lean and easy to integrate, so that the parts of your code base that make sense to be expressed in <code class="docutils literal notranslate"><span class="pre">rl</span></code> will do so, and the parts that don’t, will not.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="project_rationale.html" class="btn btn-neutral float-left" title="Where we are going and what RL will do once we get there." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial for reinforcement learning people" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

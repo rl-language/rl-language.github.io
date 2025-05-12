@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rulebook documentation &mdash; rlc-doc 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The inversion of control problem" href="the_inversion_of_control_problem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            rlc-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">rlc-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Rulebook documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rulebook-documentation">
+<h1>Rulebook documentation<a class="headerlink" href="#rulebook-documentation" title="Link to this heading"></a></h1>
+<p><strong>Rulebook</strong> is a language to bolt onto other languages to solve the <a class="reference external" href="./the_inversion_of_control_problem.html">inversion of control problem</a> in <strong>complex interactive programs</strong> (reinforcement learning environments, videogames, UIs with graph like transitions, multistep procedures, …).</p>
+<p><strong>Rulebook</strong>:</p>
+<ul class="simple">
+<li><p>solves <strong>inversion of control problem</strong> at the language level, no other language does.</p></li>
+<li><p>requires <strong>asymptotically</strong> less code write <strong>complex interactive programs</strong>.</p></li>
+<li><p>is designed to <strong>aid</strong>, but not replace, and can <strong>interoperate</strong> with c, cpp, c#, python and godot script.</p></li>
+</ul>
+<p>Furthermore, by solving the <strong>Inversion of Control Problem</strong>, <strong>Rulebook</strong> obtains.</p>
+<ul class="simple">
+<li><p><strong>storable</strong> and <strong>resumable</strong> coroutines.</p></li>
+<li><p><strong>automatic testing</strong> with fuzzers and reinforcement learning.</p></li>
+<li><p><strong>automatic tracing</strong> of executions.</p></li>
+<li><p><strong>automatic remote execution</strong> over network.</p></li>
+<li><p><strong>allow for self-configuring UIs</strong>, where the UIs can inspect the underlying program it presenting and configure itself accordingly.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-programs">Complex interactive programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#inversion-of-control">Inversion of control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-problem">The problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#mitigations-coroutines">Mitigations: coroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-limits-of-co-routines">The limits of co-routines</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p><strong>Reinforcement learning environments</strong> are often subject to <strong>Inversion of Control Problem</strong>, since they must be stopped and resumed every time the artificial agent wishes to take a action. The following documents in detail what rulebook does in that domain. In particular we show how:</p>
+<ul class="simple">
+<li><p>How to interoperate <strong>rulebook</strong> with <strong>python</strong>.</p></li>
+<li><p>How you can write almost arbitrary functions, turn them into a <strong>GYM</strong> environment and have your custom agents learn from such environments.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#machine-learning">Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#games">Games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#unifing-games-and-machine-learning">Unifing games and machine learning.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rationale.html#the-complexity-of-writing-games-and-rule-heavy-simulations">The Complexity of writing games and rule heavy simulations.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rationale.html#how-rl-does-it">How RL does it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rationale.html#building-on-top-of-it">Building on top of it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rationale.html#conclusion">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rationale.html#faq">FAQ:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#training-and-running">Training and Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#building-on-top-of-it">Building on Top of It</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#performance">Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#installing-rl-language-core">Installing <code class="docutils literal notranslate"><span class="pre">rl_language_core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#example-program">Example Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#loading-the-program">Loading the Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#understanding-singlerlcenvironment">Understanding <code class="docutils literal notranslate"><span class="pre">SingleRLCEnvironment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#dumping-the-state">Dumping the State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#all-actions">All Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#valid-actions">Valid Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#applying-actions">Applying actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#score">Score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#end-of-the-game">End of the Game</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#multiplayer">Multiplayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#multiplayer-end-of-game">Multiplayer End of Game</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#random-actions">Random Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#hidden-information">Hidden Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_tutorial.html#custom-tensor-representation">Custom Tensor Representation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language-reference.html#rlc">RLC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#static-and-shared-libraries">Static and Shared Libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#c-cpp-and-python-wrappers">C/CPP and Python Wrappers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#optimization-level-and-debug-symbols">Optimization Level and Debug Symbols</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="language-reference.html#rulebook-language">Rulebook Language</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#rulebook-types">Rulebook Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#enum-types">Enum Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#array-types">Array Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#alternative-types">Alternative Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#class-types">Class Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#function-types">Function Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#action-functions">Action Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#frm-and-ctx-qualifiers">Frm and Ctx Qualifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#action-statements">Action Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#actions-statements">Actions Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#subaction-statements">Subaction Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#context-variables-in-subaction-statements">Context Variables in Subaction Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#return-statements">Return Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#if-statements">If Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#while-statements">While Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#using-statements">Using Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#declaration-statements">Declaration Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#reference-declaration-statements">Reference Declaration Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#frame-declarations-statements">Frame Declarations Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#declaration-statements-destruction">Declaration Statements Destruction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="language-reference.html#call-expressions">Call Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/algorithms/index.html">algorithms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/algorithms/equal.html">equal.rl</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/collections/index.html">collections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/collections/dictionary.html">dictionary.rl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/collections/graph.html">graph.rl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/collections/pair.html">pair.rl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/collections/vector.html">vector.rl</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/math/index.html">math</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/math/numeric.html">numeric.rl</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/serialization/index.html">serialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/serialization/key_equal.html">key_equal.rl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/serialization/print.html">print.rl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/serialization/to_byte_vector.html">to_byte_vector.rl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/serialization/to_hash.html">to_hash.rl</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/action.html">action.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/action.html#free-functions">Free Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/action.html#traits">Traits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/action.html#trait-applicableto">Trait ApplicableTo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/action.html#trait-enumerable">Trait Enumerable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/action.html#trait-customenumerationerror">Trait CustomEnumerationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/action.html#trait-tensorable">Trait Tensorable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/action.html#trait-customtensorwarnings">Trait CustomTensorWarnings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/bounded_arg.html">bounded_arg.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/bounded_arg.html#class-bint">Class BInt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/bounded_arg.html#class-linearlydistributedint">Class LinearlyDistributedInt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/bounded_arg.html#free-functions">Free Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/enum_utils.html">enum_utils.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/enum_utils.html#traits">Traits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/enum_utils.html#trait-enum">Trait Enum</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/learn.html">learn.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/learn.html#free-functions">Free Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/machine_learning.html">machine_learning.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/machine_learning.html#class-hidden">Class Hidden</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/machine_learning.html#class-hiddeninformation">Class HiddenInformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/machine_learning.html#free-functions">Free Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/none.html">none.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/none.html#class-nothing">Class Nothing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/none.html#free-functions">Free Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/python.html">python.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/python.html#class-pyobject">Class PyObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/python.html#free-functions">Free Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/range.html">range.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/range.html#class-range">Class Range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/range.html#free-functions">Free Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stdlib/string.html">string.rl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/string.html#class-string">Class String</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/string.html#free-functions">Free Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/string.html#traits">Traits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/string.html#trait-stringserializable">Trait StringSerializable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/string.html#trait-customgettypename">Trait CustomGetTypeName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stdlib/string.html#trait-stringparsable">Trait StringParsable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="the_inversion_of_control_problem.html" class="btn btn-neutral float-right" title="The inversion of control problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

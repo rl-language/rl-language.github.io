@@ -1,0 +1,788 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RLC Language Reference &mdash; rlc-doc 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="stdlib" href="stdlib/index.html" />
+    <link rel="prev" title="RLC and GYM" href="gym_tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            rlc-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RLC Language Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rlc">RLC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#static-and-shared-libraries">Static and Shared Libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-cpp-and-python-wrappers">C/CPP and Python Wrappers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optimization-level-and-debug-symbols">Optimization Level and Debug Symbols</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rulebook-language">Rulebook Language</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rulebook-types">Rulebook Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enum-types">Enum Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#array-types">Array Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alternative-types">Alternative Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-types">Class Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-types">Function Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#visibility">Visibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#template-functions">Template Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#action-functions">Action Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frm-and-ctx-qualifiers">Frm and Ctx Qualifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action-statements">Action Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#actions-statements">Actions Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subaction-statements">Subaction Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#context-variables-in-subaction-statements">Context Variables in Subaction Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#return-statements">Return Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#if-statements">If Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#while-statements">While Statements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#break-statements">Break Statements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#continue-statements">Continue Statements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#using-statements">Using Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#declaration-statements">Declaration Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-declaration-statements">Reference Declaration Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frame-declarations-statements">Frame Declarations Statements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#declaration-statements-destruction">Declaration Statements Destruction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#call-expressions">Call Expressions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rlc-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">RLC Language Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/language-reference.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rlc-language-reference">
+<h1>RLC Language Reference<a class="headerlink" href="#rlc-language-reference" title="Link to this heading"></a></h1>
+<p>This document explains the language features of <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> and the features of the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> compiler. The generated documentation of the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> standard library can be found in this repository as well.</p>
+<p>This is a technical document intended for advanced programmers. If you are a new user of Rulebook, refer instead to the <a class="reference external" href="https://github.com/rl-language/rlc">rlc repository page</a> and to the <a class="reference external" href="https://github.com/rl-language/rlc?tab=readme-ov-file">blackjack tutorial</a>.</p>
+<section id="rlc">
+<h2>RLC<a class="headerlink" href="#rlc" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">rlc</span></code> is the Rulebook compiler. It has a command-line interface similar to that of gcc and clang. Given a minimal <code class="docutils literal notranslate"><span class="pre">rl</span></code> file:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span># example.rl
+import serialization.print
+
+fun main() -&gt; Int:
+    print(&quot;hello world&quot;)
+</pre></div>
+</div>
+<p>You can compile it from the command line with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>example.rl<span class="w"> </span>-o<span class="w"> </span>compiled
+</pre></div>
+</div>
+<p>And then test that it works with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Linux / macOS</span>
+./compiled
+<span class="c1"># Windows</span>
+./compiled.exe
+</pre></div>
+</div>
+<p>The compilation pipeline works as follows:</p>
+<ul class="simple">
+<li><p>The file passed on the command line (example.rl in this case) is parsed, and so recursively are all the files named by <code class="docutils literal notranslate"><span class="pre">import</span></code> statements appearing in the input file.</p></li>
+<li><p>The program composed of all imported files is then compiled.</p></li>
+<li><p>The program is then linked against the rlcruntime library, yielding an executable file.</p></li>
+</ul>
+<section id="static-and-shared-libraries">
+<h3>Static and Shared Libraries<a class="headerlink" href="#static-and-shared-libraries" title="Link to this heading"></a></h3>
+<p>If you only wish to compile the program but not link it against the standard library, you can instead use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>example.rl<span class="w"> </span>-o<span class="w"> </span>example.a<span class="w"> </span>--compile<span class="w"> </span><span class="c1"># -o example.lib on Windows</span>
+</pre></div>
+</div>
+<p>This will produce a static library that will only depend on symbols exposed by the rlc runtime, as well as malloc and free. The compiled program will contain the symbol <code class="docutils literal notranslate"><span class="pre">rl_main</span></code>, but will not contain the symbol <code class="docutils literal notranslate"><span class="pre">main</span></code>, allowing you to redefine it if you wish. A pure <code class="docutils literal notranslate"><span class="pre">rl</span></code> program does not require invoking global functions before or after its execution. Therefore, you can just link a pure rl program in any program of your own and simply use its functions.</p>
+<p>If you wish to create a dynamic library, you can do so with the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>example.rl<span class="w"> </span>-o<span class="w"> </span>example.so<span class="w"> </span>--shared<span class="w"> </span><span class="c1"># -o example.dll on Windows</span>
+</pre></div>
+</div>
+<p>This command will link the runtime library into the .so file, generating a dependency on whatever libc rlc finds in the system. The command will not define a <code class="docutils literal notranslate"><span class="pre">main</span></code> symbol, allowing you to use the shared object as you wish.</p>
+</section>
+<section id="c-cpp-and-python-wrappers">
+<h3>C/CPP and Python Wrappers<a class="headerlink" href="#c-cpp-and-python-wrappers" title="Link to this heading"></a></h3>
+<p>At the moment, <code class="docutils literal notranslate"><span class="pre">rlc</span></code> can automatically generate C/CPP and Python wrappers, allowing you to use <code class="docutils literal notranslate"><span class="pre">rlc</span></code> programs from those languages.</p>
+<ul>
+<li><p>C headers can be generated with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>file.rl<span class="w"> </span>--header<span class="w"> </span>-o<span class="w"> </span>file.h
+</pre></div>
+</div>
+<p>This can then be included in a C/CPP program. You can take a look at the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/tool/rlc/test/wrappers/action_with_frame_vars.rl">tests</a> to see how to do this.</p>
+</li>
+</ul>
+<p>Similarly, you can run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>file.rl<span class="w"> </span>--python<span class="w"> </span>wrapper.py
+rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>lib.so<span class="w"> </span>--shared
+</pre></div>
+</div>
+<p>to produce a library you can import from Python. Once again, refer to the <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/tool/rlc/test/wrappers/action_with_frame_vars.rl">examples</a> to see how to achieve this.</p>
+</section>
+<section id="optimization-level-and-debug-symbols">
+<h3>Optimization Level and Debug Symbols<a class="headerlink" href="#optimization-level-and-debug-symbols" title="Link to this heading"></a></h3>
+<p>Optimizations can be enabled with the flag <code class="docutils literal notranslate"><span class="pre">-O2</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>file.exe<span class="w"> </span><span class="c1"># no optimizations</span>
+rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>file.exe<span class="w"> </span>-O2<span class="w"> </span><span class="c1"># optimizations</span>
+</pre></div>
+</div>
+<p>Debug symbols can be emitted with <code class="docutils literal notranslate"><span class="pre">-g</span></code>.</p>
+</section>
+</section>
+<section id="rulebook-language">
+<h2>Rulebook Language<a class="headerlink" href="#rulebook-language" title="Link to this heading"></a></h2>
+<p>This section describes the language features of the <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language.</p>
+<section id="rulebook-types">
+<h3>Rulebook Types<a class="headerlink" href="#rulebook-types" title="Link to this heading"></a></h3>
+<p>Rulebook types are composed of primitive types, array types, alternative types, function types, enum types, and class types. <code class="docutils literal notranslate"><span class="pre">rlc</span></code> types have the same ABI as <code class="docutils literal notranslate"><span class="pre">C</span></code> types, making them interoperable.</p>
+<p>Primitive types are:</p>
+<ul class="simple">
+<li><p><strong>Int</strong>, a signed 64-bit integer (<code class="docutils literal notranslate"><span class="pre">int64_t</span></code> in C)</p></li>
+<li><p><strong>Float</strong>, a 64-bit floating point number (<code class="docutils literal notranslate"><span class="pre">double</span></code> in C)</p></li>
+<li><p><strong>Byte</strong>, a signed 8-bit integer (<code class="docutils literal notranslate"><span class="pre">int8_t</span></code> in C)</p>
+<ul>
+<li><p>For these numeric types, usual operations such as <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code> are defined as built-in operations.</p></li>
+</ul>
+</li>
+<li><p><strong>Bool</strong>, an 8-bit type with the same behavior as C++ bool.</p>
+<ul>
+<li><p>For Bool types, the following built-in operations are defined: <code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, <code class="docutils literal notranslate"><span class="pre">!</span></code>. <code class="docutils literal notranslate"><span class="pre">and</span></code> and <code class="docutils literal notranslate"><span class="pre">or</span></code> are short-circuiting.</p></li>
+</ul>
+</li>
+<li><p><strong>StringLiteral</strong>, a reference to a zero-terminated string literal.</p></li>
+<li><p><strong>OwningPtrType</strong>, a special type used to implement the standard library. (ToDo: explain how it works)</p></li>
+</ul>
+</section>
+<section id="enum-types">
+<h3>Enum Types<a class="headerlink" href="#enum-types" title="Link to this heading"></a></h3>
+<p>Enum types are declared with enum declarations, and they are converted to a class type that contains a single <code class="docutils literal notranslate"><span class="pre">Int</span></code> called <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p>
+<p>The syntax of enums is:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>enum Color:
+  red
+  blue
+
+fun return_enum() -&gt; Color:
+  return Color::red
+
+fun red_value() -&gt; Int:
+  return Color::red.value
+</pre></div>
+</div>
+<p>Enums can declare functions in their body as well:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>enum Color:
+  red
+  blue
+  fun name() -&gt; String:
+    if self == Color::red:
+       return &quot;red&quot;s
+    if self == Color::blue:
+       return &quot;blue&quot;s
+    return &quot;unreachable&quot;
+
+fun red_name() -&gt; String:
+  return Color::red.name()
+</pre></div>
+</div>
+<p>Finally, enums have a special syntax to write code such as the one in the last snippet faster. You can specify an enum member clause in each field of an enum.</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>enum Color:
+  red:
+    String name = &quot;red&quot;s
+  blue:
+    String name = &quot;blue&quot;s
+
+fun red_name() -&gt; String:
+  return Color::red.name()
+</pre></div>
+</div>
+<p>The last two snippets generate the same code.</p>
+</section>
+<section id="array-types">
+<h3>Array Types<a class="headerlink" href="#array-types" title="Link to this heading"></a></h3>
+<p>Array types are composed of a compile-time known size and an underlying type:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Int[10]
+x[2] = 1
+x[1] = x[2] + 2
+</pre></div>
+</div>
+<p>Array accesses are checked by default on optimization level 0, and not checked on optimization level 2. The check can be enabled and disabled with <code class="docutils literal notranslate"><span class="pre">--emit-bound-checks=true/false</span></code>.</p>
+</section>
+<section id="alternative-types">
+<h3>Alternative Types<a class="headerlink" href="#alternative-types" title="Link to this heading"></a></h3>
+<p>Alternative types are used to describe objects that can be of two different types. For example, an object that can be a <code class="docutils literal notranslate"><span class="pre">Float</span></code> or an <code class="docutils literal notranslate"><span class="pre">Int</span></code> can be declared as:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Float | Int
+</pre></div>
+</div>
+<p>Declaration statements such as this one will initialize <code class="docutils literal notranslate"><span class="pre">x</span></code> to be an alternative that contains the first possible type of the list. In this case, the content will be <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+<p>Objects of type alternative can be assigned from any right-hand operand that is either an alternative type with the same alternatives or any of the possible types of the alternative. For example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Float | Int
+x = 0     # valid
+x = 1.0   # valid
+x = true  # invalid
+
+let y: Float | Int
+y = 3     # valid
+x = y     # valid
+</pre></div>
+</div>
+<p>Alternative types can be upcasted with the use of type guards. For example, the following snippet of code is valid and will ensure that <code class="docutils literal notranslate"><span class="pre">y</span></code> will always be of type <code class="docutils literal notranslate"><span class="pre">Float</span></code>:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Float | Int
+if x is Float:
+  using T = type(x)
+  let y: T
+  y = 0.0
+</pre></div>
+</div>
+</section>
+<section id="class-types">
+<h3>Class Types<a class="headerlink" href="#class-types" title="Link to this heading"></a></h3>
+<p>Class types are the most common type of user-defined type. A class includes both members and methods. For example, a tic-tac-toe board can be defined as follows:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>cls Board:
+    BInt&lt;0, 3&gt;[3][3] slots
+    Bool player_turn
+</pre></div>
+</div>
+<p>Member variables whose names start with <code class="docutils literal notranslate"><span class="pre">_</span></code>, such as <code class="docutils literal notranslate"><span class="pre">_player_turn</span></code>, are not accessible from outside the file in which they have been declared.</p>
+<p>The default value of a member when an object is constructed can be overridden by defining the <code class="docutils literal notranslate"><span class="pre">init</span></code> method:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>class IntegerThatStartsAt3:
+  Int x
+  fun init():
+    self.x = 3
+
+fun main() -&gt; Int:
+  let x: IntegerThatStartsAt3
+  print(x)  # prints: {x: 3}
+  return 0
+</pre></div>
+</div>
+<p>If you override the <code class="docutils literal notranslate"><span class="pre">init</span></code> method, you will need to invoke the <code class="docutils literal notranslate"><span class="pre">init</span></code> method of all the member fields yourself.</p>
+<p>The default destruction behavior can be overridden by defining a custom <code class="docutils literal notranslate"><span class="pre">drop</span></code> member function. This should be done only if you are doing some kind of low-level programming. If you override the destructor, you will need to call the destructor of the member fields yourself.</p>
+</section>
+<section id="function-types">
+<h3>Function Types<a class="headerlink" href="#function-types" title="Link to this heading"></a></h3>
+<p>ToDo: explain how they work.</p>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<p>RLC functions can be declared only in the global scope of a program. The simplest function that can be declared is a function with no arguments and no return values:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun NAME():
+  return
+</pre></div>
+</div>
+<p>The previous snippet declares a function called <code class="docutils literal notranslate"><span class="pre">NAME</span></code>, with no parameters and no return value, that does nothing.</p>
+<p>Functions that return a value must declare their intention by specifying the return type before the <code class="docutils literal notranslate"><span class="pre">:</span></code> in their signature:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun return_5() -&gt; Int:
+  return 5
+</pre></div>
+</div>
+<p>The previous snippet declares a function called <code class="docutils literal notranslate"><span class="pre">return_5</span></code> with no arguments that returns an integer.</p>
+<p>Functions can have arguments by specifying them as a comma-separated list in the signature brackets:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun sum(Int first, Int second) -&gt; Int:
+  return first + second
+</pre></div>
+</div>
+<p>Function arguments have a type and a name, and the type must be specified before the name.</p>
+<p>All arguments of functions are passed by reference. Function return types may be marked with <code class="docutils literal notranslate"><span class="pre">ref</span></code>. If they are, the value returned by the function is not returned by copy, but by reference. More on this later, in the call expressions section.</p>
+<section id="visibility">
+<h4>Visibility<a class="headerlink" href="#visibility" title="Link to this heading"></a></h4>
+<p>Functions whose names start with <code class="docutils literal notranslate"><span class="pre">_</span></code>, such as <code class="docutils literal notranslate"><span class="pre">_add</span></code>, are not visible from outside the file in which they have been declared.</p>
+</section>
+<section id="template-functions">
+<h4>Template Functions<a class="headerlink" href="#template-functions" title="Link to this heading"></a></h4>
+<p>ToDo.</p>
+</section>
+</section>
+<section id="action-functions">
+<h3>Action Functions<a class="headerlink" href="#action-functions" title="Link to this heading"></a></h3>
+<p>Action functions are the most important language feature of the <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language. Action functions look like regular functions, except that:</p>
+<ul class="simple">
+<li><p>They are prefixed with <code class="docutils literal notranslate"><span class="pre">act</span></code>, instead of <code class="docutils literal notranslate"><span class="pre">fun</span></code>.</p></li>
+<li><p>The return type is not a return type, but instead is the <code class="docutils literal notranslate"><span class="pre">action</span> <span class="pre">function</span> <span class="pre">type</span></code>, a new type declared by the action function itself.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Action</span> <span class="pre">statements</span></code> must appear in the body of the action function.</p></li>
+</ul>
+<p>For example, a simple action function you can write is:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act play() -&gt; Game:
+    act set_x(Int value)
+    frm x = value
+    act print_x()
+    print(x)
+</pre></div>
+</div>
+<p>When the compiler encounters this action declaration, it rewrites it as a class that looks like:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>cls Game:
+    Int x
+    Int resume_index
+
+    fun init():
+        self.resume_index = 0
+        self.x = 0
+
+    fun set_x(Int value) {resume_index == 0}:
+        self.x = value
+        self.resume_index = 1
+
+    fun print_x() {resume_index == 1}:
+        print(self.x)
+        resume_index = -1
+
+    fun is_done() -&gt; Bool:
+        return self.resume_index == -1
+
+fun play() -&gt; Game:
+    let game: Game
+    return game
+</pre></div>
+</div>
+<p>Why does it do that? Because then you can use the <code class="docutils literal notranslate"><span class="pre">play</span></code> function as follows:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun use_play():
+    let game = play()
+    game.set_x(4)
+    game.print_x()
+</pre></div>
+</div>
+<p>That is, when you were writing <code class="docutils literal notranslate"><span class="pre">play</span></code>, you expressed points of the program where the program was to be suspended, waiting for input from the invoker of <code class="docutils literal notranslate"><span class="pre">play</span></code>. In our particular example, it does not make much sense to do so. Here is a more realistic one:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span># Implements a vending machine that expects
+# coins to be inserted by the user
+act vending_machine(frm Int target_cost) -&gt; VendingMachine:
+    while target_cost != 0:
+        act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
+        target_cost = target_cost - coin_value
+
+fun main() -&gt; Int:
+    let machine = vending_machine(16)
+    print(can machine.insert_coin(3))  # false
+    # machine.insert_coin(3)  # would crash
+    print(can machine.insert_coin(1))  # true
+    machine.insert_coin(1)
+    machine.insert_coin(5)
+    machine.insert_coin(10)
+    print(machine.is_done())  # true
+    return 0
+</pre></div>
+</div>
+<p>The purpose of action functions is therefore to convert an imperative description of a procedure that requires inputs into a class that can be stopped and resumed at will.</p>
+<p>Action functions cannot return objects; their return type is instead used to declare a new type.</p>
+</section>
+<section id="frm-and-ctx-qualifiers">
+<h3>Frm and Ctx Qualifiers<a class="headerlink" href="#frm-and-ctx-qualifiers" title="Link to this heading"></a></h3>
+<p>Variable declarations, action statement arguments, and action function arguments can be optionally marked with the keyword <code class="docutils literal notranslate"><span class="pre">frm</span></code>.</p>
+<p>For example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost) -&gt; VendingMachine:
+    while target_cost != 0:
+        act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
+        target_cost = target_cost - coin_value
+
+fun main() -&gt; Int:
+    let machine = vending_machine(16)
+    print(machine.target_cost)  # 16
+    # print(machine.coin_value)  # does not compile
+</pre></div>
+</div>
+<p>When a variable marked <code class="docutils literal notranslate"><span class="pre">frm</span></code> is promoted to be a local variable, it becomes a member of the class declared by the action function, in this case, the class <code class="docutils literal notranslate"><span class="pre">VendingMachine</span></code>. If a variable is used across actions, it must be marked as <code class="docutils literal notranslate"><span class="pre">frm</span></code>. This is necessary because to be used across actions, the variable must be saved somewhere between actions invocations by the users. If you forget to mark a variable as <code class="docutils literal notranslate"><span class="pre">frm</span></code>, the compiler will prompt you to do so if you use it between actions.</p>
+<p>You can also mark variables not used across actions as <code class="docutils literal notranslate"><span class="pre">frm</span></code>. This is useful to expose data to the caller of the action function.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ctx</span></code> variables are different. They specify that some state of the computation needed by the action function is stored outside of the action function itself. <code class="docutils literal notranslate"><span class="pre">ctx</span></code> variables must be passed as arguments of every function call to an object that has one.</p>
+<p>For example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(ctx Int target_cost, frm Int target_cost2) -&gt; VendingMachine:
+    while target_cost != 0:
+        act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
+        target_cost = target_cost - coin_value
+        target_cost2 = target_cost
+
+fun main() -&gt; Int:
+    let x = 16
+    let y = 16
+    let machine = vending_machine(x, y)
+    machine.insert_coin(x, 1)
+    print(x)  # 15
+    print(y)  # 16
+</pre></div>
+</div>
+<p>Since <code class="docutils literal notranslate"><span class="pre">target_cost2</span></code> is marked <code class="docutils literal notranslate"><span class="pre">frm</span></code>, it is copied within the variable <code class="docutils literal notranslate"><span class="pre">machine</span></code>, thus modifying <code class="docutils literal notranslate"><span class="pre">target_cost2</span></code> does not change <code class="docutils literal notranslate"><span class="pre">y</span></code>. <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> is marked as <code class="docutils literal notranslate"><span class="pre">ctx</span></code>, and is not saved within the class <code class="docutils literal notranslate"><span class="pre">VendingMachine</span></code>. It must be passed every time a member function of <code class="docutils literal notranslate"><span class="pre">machine</span></code> (except <code class="docutils literal notranslate"><span class="pre">is_done</span></code>) is invoked.</p>
+<p>Context variables are very useful when combined with <code class="docutils literal notranslate"><span class="pre">subaction</span></code> statements.</p>
+</section>
+<section id="action-statements">
+<h3>Action Statements<a class="headerlink" href="#action-statements" title="Link to this heading"></a></h3>
+<p>Action statements are used to specify the points where user information is required. The minimal syntax is as follows:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act action_function() -&gt; ActionFunctionType:
+    ...
+    act wait_to_be_called()
+</pre></div>
+</div>
+<p>Optionally, action statements can have arguments:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act action_function() -&gt; ActionFunctionType:
+    act callme(Int x)
+
+fun f():
+    let state = action_function()
+    state.callme(1)
+</pre></div>
+</div>
+<p>Similarly, they can have preconditions:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act action_function() -&gt; ActionFunctionType:
+    act callme(Int x) {x != 0}
+
+fun f():
+    let state = action_function()
+    print(can state.callme(0))  # false
+    print(can state.callme(1))  # true
+</pre></div>
+</div>
+</section>
+<section id="actions-statements">
+<h3>Actions Statements<a class="headerlink" href="#actions-statements" title="Link to this heading"></a></h3>
+<p>Actions statements are used to express alternative actions, meaning actions that can be performed in any order. For example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost2) -&gt; VendingMachine:
+    while target_cost != 0:
+        actions:
+            act insert_5_coin()
+                target_cost = target_cost - 5
+            act insert_1_coin()
+                target_cost = target_cost - 1
+            act insert_10_coin()
+                target_cost = target_cost - 10
+
+fun main() -&gt; Int:
+    let machine = vending_machine(20)
+    machine.insert_10_coin()
+    machine.insert_10_coin()
+    return 0
+</pre></div>
+</div>
+</section>
+<section id="subaction-statements">
+<h3>Subaction Statements<a class="headerlink" href="#subaction-statements" title="Link to this heading"></a></h3>
+<p>Subaction statements allow for the composition of actions. Just like regular functions can call other functions, subaction statements specify that the computation of the current action function must be suspended until the user invokes an action of the specified subaction. For example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost) -&gt; VendingMachine:
+    while target_cost != 0:
+        actions:
+            act insert_5_coin()
+                target_cost = target_cost - 5
+            act insert_1_coin()
+                target_cost = target_cost - 1
+            act insert_10_coin()
+                target_cost = target_cost - 10
+
+act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
+    subaction* first_machine = vending_machine(first)
+    subaction* second_machine = vending_machine(second)
+
+fun main() -&gt; Int:
+    let machine = vending_machine_times_two(20, 2)
+    machine.insert_10_coin()
+    machine.insert_10_coin()
+    machine.insert_1_coin()
+    machine.insert_1_coin()
+    return 0
+</pre></div>
+</div>
+<p>The function <code class="docutils literal notranslate"><span class="pre">vending_machine_times_two</span></code> is lowered to the following piece of code:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
+    frm first_machine = vending_machine(first)
+    while !first_machine.is_done():
+        act insert_5_coin() {can first_machine.insert_5_coin()}
+            first_machine.insert_5_coin()
+        act insert_1_coin() {can first_machine.insert_1_coin()}
+            first_machine.insert_1_coin()
+        act insert_10_coin() {can first_machine.insert_1_coin()}
+            first_machine.insert_10_coin()
+
+    frm second_machine = vending_machine(second)
+    while !second_machine.is_done():
+        act insert_5_coin() {can second_machine.insert_5_coin()}
+            second_machine.insert_5_coin()
+        act insert_1_coin() {can second_machine.insert_1_coin()}
+            second_machine.insert_1_coin()
+        act insert_10_coin() {can second_machine.insert_1_coin()}
+            second_machine.insert_10_coin()
+</pre></div>
+</div>
+<p>That is, the computation of the outer action function will not resume until the inner action function named by the subaction statement is terminated.</p>
+<p>If you instead wish to execute a single action statement, instead of executing them all the way to the end, you can use the subaction syntax without <code class="docutils literal notranslate"><span class="pre">*</span></code>. For example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost) -&gt; VendingMachine:
+    while target_cost != 0:
+        actions:
+            act insert_5_coin()
+                target_cost = target_cost - 5
+            act insert_1_coin()
+                target_cost = target_cost - 1
+            act insert_10_coin()
+                target_cost = target_cost - 10
+
+act vending_machine_times_two(frm Int first) -&gt; VendingMachinePair:
+    subaction*(first) first_machine = vending_machine(first)
+    subaction*(first) second_machine = vending_machine(second)
+
+fun main() -&gt; Int:
+    let state = vending_machine_times_two(10)
+    state.insert_5_coin()
+    state.insert_5_coin()
+    if state.is_done():
+        return 0
+    return 1
+</pre></div>
+</div>
+<p>This example shows how to share state between two subactions. The inner vending machines have their <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> variable marked as <code class="docutils literal notranslate"><span class="pre">ctx</span></code>, and thus owned by the caller. The caller, <code class="docutils literal notranslate"><span class="pre">vending_machine_first_times_two</span></code>, uses two <code class="docutils literal notranslate"><span class="pre">subaction*</span></code> to execute both actions until the <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> reaches 0. Since <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> is zero, they will reach zero at the same time, so when the <code class="docutils literal notranslate"><span class="pre">first_machine</span></code> terminates, so immediately does <code class="docutils literal notranslate"><span class="pre">second_machine</span></code>, and thus <code class="docutils literal notranslate"><span class="pre">vending_machine_times_two</span></code>. The significant improvement is that with the syntax <code class="docutils literal notranslate"><span class="pre">subaction*(first)</span></code>, we are forwarding <code class="docutils literal notranslate"><span class="pre">first</span></code> to every invocation of methods of the subactions, removing the requirement for the function <code class="docutils literal notranslate"><span class="pre">main</span></code> to do so. <code class="docutils literal notranslate"><span class="pre">main</span></code> can simply invoke <code class="docutils literal notranslate"><span class="pre">state.insert_5_coin()</span></code>, unaware of how the state is organized within vending machines.</p>
+</section>
+<section id="context-variables-in-subaction-statements">
+<h3>Context Variables in Subaction Statements<a class="headerlink" href="#context-variables-in-subaction-statements" title="Link to this heading"></a></h3>
+<p>An important language feature built into subaction statements and context variables is the ability to share data between distinct subactions. Let’s look at an example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(ctx Int target_cost) -&gt; VendingMachine:
+    while target_cost != 0:
+        act insert_1_coin()
+        target_cost = target_cost - 1
+
+act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
+    let first_machine = vending_machine(first)
+    let second_machine = vending_machine(second)
+
+    while !first_machine.is_done() and !second_machine.is_done():
+        subaction
+</pre></div>
+</div>
+<p>This example illustrates how to use context variables with subactions. Here is a more detailed version:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(ctx Int target_cost) -&gt; VendingMachine:
+    while target_cost != 0:
+        act insert_1_coin()
+        target_cost = target_cost - 1
+
+act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
+    frm first_machine = vending_machine(first)
+    frm second_machine = vending_machine(second)
+
+    while !first_machine.is_done() and !second_machine.is_done():
+        subaction first_machine
+        subaction second_machine
+
+fun main() -&gt; Int:
+    let state = vending_machine_times_two(10, 2)
+    state.insert_5_coin()
+    state.insert_1_coin()
+    state.insert_5_coin()
+    state.insert_1_coin()
+    if state.is_done():
+        return 0
+    return 1
+</pre></div>
+</div>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">vending_machine_times_two</span></code> is set up to handle two vending machines in parallel. Each machine runs independently but shares the control flow. This allows for flexible and efficient handling of multiple actions.</p>
+</section>
+<section id="return-statements">
+<h3>Return Statements<a class="headerlink" href="#return-statements" title="Link to this heading"></a></h3>
+<p>Functions with a return type must include at least one return statement, and such a return statement must have an expression, as shown in the following snippet:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun sum(Int first, Int second) -&gt; Int:
+  return first + second
+</pre></div>
+</div>
+<p>The expression in the return statement must have the same type as the function signature. When a return statement is encountered, the execution of the function immediately terminates, and statements that follow the return statement are not executed.</p>
+</section>
+<section id="if-statements">
+<h3>If Statements<a class="headerlink" href="#if-statements" title="Link to this heading"></a></h3>
+<p>If statements can either include an else-branch or not. Here is the syntax for if statements without an else-branch:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>if bool_returning_expression():
+  some_call1()
+  some_call2()
+some_call3()
+</pre></div>
+</div>
+<p>The true-branch (e.g., <code class="docutils literal notranslate"><span class="pre">some_call1()</span></code> and <code class="docutils literal notranslate"><span class="pre">some_call2()</span></code>) is executed if and only if the condition expression evaluates to true (<code class="docutils literal notranslate"><span class="pre">bool_returning_expression()</span></code>).</p>
+<p>If statements with an else-branch follow this syntax:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>if bool_returning_expression():
+  some_call1()
+  some_call2()
+else:
+  some_call3()
+</pre></div>
+</div>
+<p>The else-branch is executed only if the true-branch is not.</p>
+</section>
+<section id="while-statements">
+<h3>While Statements<a class="headerlink" href="#while-statements" title="Link to this heading"></a></h3>
+<p>While statements follow this syntax:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>while bool_returning_expression():
+    call1()
+    call2()
+call3()
+</pre></div>
+</div>
+<p>The body of the while loop keeps being executed until the condition expression (<code class="docutils literal notranslate"><span class="pre">bool_returning_expression</span></code> in the example) evaluates to false.</p>
+<section id="break-statements">
+<h4>Break Statements<a class="headerlink" href="#break-statements" title="Link to this heading"></a></h4>
+<p>When a break statement is encountered, control flow jumps to the statement following the nearest while statement. For example, the following code prints <code class="docutils literal notranslate"><span class="pre">1</span></code> but not <code class="docutils literal notranslate"><span class="pre">0</span></code>:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x = 0
+while x != 2:
+    while x != 2:
+        if x == 0:
+            break
+        else:
+            print(x)
+    x = x + 1
+</pre></div>
+</div>
+</section>
+<section id="continue-statements">
+<h4>Continue Statements<a class="headerlink" href="#continue-statements" title="Link to this heading"></a></h4>
+<p>When a continue statement is encountered, control flow jumps to the statement following the nearest while statement. For example, the following code prints <code class="docutils literal notranslate"><span class="pre">2</span></code> but not <code class="docutils literal notranslate"><span class="pre">1</span></code>:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x = 0
+while x != 2:
+    while x != 2:
+        x = x + 1
+        if x == 1:
+            continue
+        else:
+            print(x)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="using-statements">
+<h3>Using Statements<a class="headerlink" href="#using-statements" title="Link to this heading"></a></h3>
+<p>Type aliases can be introduced with the use of alias statements. For example:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun main() -&gt; Int:
+    using T = type(6)
+    let asd : T
+    asd = 10
+    return asd - 10
+</pre></div>
+</div>
+<p>Using statements can be used both at the function scope or at the global scope. Aliases introduced this way do not generate a new type; instead, they simply redirect all uses of the alias type to the aliased type.</p>
+<p>Aliases offer the following syntax as well, which deduces the aliased type from the expression appearing inside the <code class="docutils literal notranslate"><span class="pre">type()</span></code> clause:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>using T = type(6)
+</pre></div>
+</div>
+</section>
+<section id="declaration-statements">
+<h3>Declaration Statements<a class="headerlink" href="#declaration-statements" title="Link to this heading"></a></h3>
+<p>In RL, there are two flavors of declaration statements and three types of storage qualifiers. The simplest declaration statement is an assign declaration statement, in the form:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x = exp()
+</pre></div>
+</div>
+<p>This deduces the type of <code class="docutils literal notranslate"><span class="pre">x</span></code> from the expression <code class="docutils literal notranslate"><span class="pre">exp()</span></code>, and removes a reference qualifier from the type if there is any, making a copy of <code class="docutils literal notranslate"><span class="pre">exp()</span></code> result if it was a reference.</p>
+<p>Alternatively, declaration statements can be construction declaration statements, in the form:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x : Int
+</pre></div>
+</div>
+<p>Construction declaration statements allocate a variable of the type specified after the colon and initialize them by invoking the member function <code class="docutils literal notranslate"><span class="pre">init</span></code> on them.</p>
+</section>
+<section id="reference-declaration-statements">
+<h3>Reference Declaration Statements<a class="headerlink" href="#reference-declaration-statements" title="Link to this heading"></a></h3>
+<p>Instead of declaring a variable with the keyword <code class="docutils literal notranslate"><span class="pre">let</span></code>, <code class="docutils literal notranslate"><span class="pre">ref</span></code> can be used instead:</p>
+<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>ref x = ref_returning_exp()
+</pre></div>
+</div>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">x</span></code> is not a new variable but a reference to the variable returned by <code class="docutils literal notranslate"><span class="pre">ref_returning_exp()</span></code>.</p>
+</section>
+<section id="frame-declarations-statements">
+<h3>Frame Declarations Statements<a class="headerlink" href="#frame-declarations-statements" title="Link to this heading"></a></h3>
+<p>These special declaration statements are explained in the action function section.</p>
+</section>
+<section id="declaration-statements-destruction">
+<h3>Declaration Statements Destruction<a class="headerlink" href="#declaration-statements-destruction" title="Link to this heading"></a></h3>
+<p>When declaration statements go out of scope, they are destroyed by invoking the member function <code class="docutils literal notranslate"><span class="pre">drop</span></code>.</p>
+</section>
+<section id="call-expressions">
+<h3>Call Expressions<a class="headerlink" href="#call-expressions" title="Link to this heading"></a></h3>
+<p>To be added.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gym_tutorial.html" class="btn btn-neutral float-left" title="RLC and GYM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stdlib/index.html" class="btn btn-neutral float-right" title="stdlib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RLC and GYM &mdash; rlc-doc 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RLC Language Reference" href="language-reference.html" />
+    <link rel="prev" title="Tutorial for reinforcement learning people" href="tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            rlc-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RLC and GYM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-rl-language-core">Installing <code class="docutils literal notranslate"><span class="pre">rl_language_core</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-program">Example Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-the-program">Loading the Program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#understanding-singlerlcenvironment">Understanding <code class="docutils literal notranslate"><span class="pre">SingleRLCEnvironment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dumping-the-state">Dumping the State</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#all-actions">All Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#valid-actions">Valid Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#applying-actions">Applying actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#score">Score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#end-of-the-game">End of the Game</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiplayer">Multiplayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiplayer-end-of-game">Multiplayer End of Game</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#random-actions">Random Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hidden-information">Hidden Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-tensor-representation">Custom Tensor Representation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rlc-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">RLC and GYM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gym_tutorial.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rlc-and-gym">
+<h1>RLC and GYM<a class="headerlink" href="#rlc-and-gym" title="Link to this heading"></a></h1>
+<p>This document assumes the reader is already familiar with reinforcement learning and <a class="reference external" href="https://gymnasium.farama.org">GYM-style environments</a>. It is intended as a reference for those who wish to wrap their own Rulebook environments in a GYM-style wrapper to ensure interoperability with existing reinforcement learning algorithms.</p>
+<p>It also assumes you are familiar with Rulebook. If not, we recommend starting with the <a class="reference internal" href="tutorial.html"><span class="std std-doc">base tutorial</span></a>.</p>
+<p>In this document, you will learn:</p>
+<ul class="simple">
+<li><p>How to install <code class="docutils literal notranslate"><span class="pre">rlc-core</span></code>, a minimal pip package that depends only on NumPy and offers basic functionality.</p></li>
+<li><p>How to import an example program into Python.</p></li>
+<li><p>How to use <code class="docutils literal notranslate"><span class="pre">RLCSingleEnvironment</span></code> to access essential features when building your custom wrapper.</p></li>
+</ul>
+<p>Specifically, we will cover:</p>
+<ul class="simple">
+<li><p>Handling tensor serialization, including custom serialization methods.</p></li>
+<li><p>Accessing the full list of actions and the subset of valid actions.</p></li>
+<li><p>Retrieving returns and rewards.</p></li>
+<li><p>Checking for the end of a game.</p></li>
+<li><p>Managing secret information and handling randomness.</p></li>
+</ul>
+<p>Since there are too many GYM-like wrappers, we provide general functions that you can reuse to write the wrapper with the right interface for your usecase.</p>
+<section id="installing-rl-language-core">
+<h2>Installing <code class="docutils literal notranslate"><span class="pre">rl_language_core</span></code><a class="headerlink" href="#installing-rl-language-core" title="Link to this heading"></a></h2>
+<p>This section assumes that you want to replace the default tools provided by RLC. The standard <code class="docutils literal notranslate"><span class="pre">rlc</span></code> pip package includes a dependency on PyTorch to allow users to quickly test their RLC programs. However, this setup may not be suitable if you plan to use a custom version of PyTorch or a different machine learning framework altogether.</p>
+<p>To address this, we provide the <code class="docutils literal notranslate"><span class="pre">rl_language_core</span></code> package—a minimal alternative that includes only the essential components needed to run RLC programs. It also comes with supporting Python code that depends solely on NumPy.</p>
+<p>To install it, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">rl_language_core</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">numpy</span>
+</pre></div>
+</div>
+</section>
+<section id="example-program">
+<h2>Example Program<a class="headerlink" href="#example-program" title="Link to this heading"></a></h2>
+<p>Let’s begin with a simple RLC program and build on top of it. Below is an implementation of the classic game <em>rock-paper-scissors</em>. Note that this example does not define the number of players or specify how the game state maps to the current player—these details are left implicit.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># rockpaperscizzor.rl</span>
+<span class="n">enum</span> <span class="n">Gesture</span><span class="p">:</span>
+    <span class="n">paper</span>
+    <span class="n">rock</span>
+    <span class="n">scizzor</span>
+
+<span class="nd">@classes</span>
+<span class="n">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Game</span><span class="p">:</span>
+    <span class="n">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g1</span><span class="p">)</span>
+    <span class="n">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g2</span><span class="p">)</span>
+
+<span class="n">fun</span> <span class="n">score</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">,</span> <span class="n">Int</span> <span class="n">player_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">:</span>
+    <span class="k">if</span> <span class="err">!</span><span class="n">game</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="n">let</span> <span class="n">winner</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">winner</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">winner</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mf">1.0</span>
+</pre></div>
+</div>
+</section>
+<section id="loading-the-program">
+<h2>Loading the Program<a class="headerlink" href="#loading-the-program" title="Link to this heading"></a></h2>
+<p>Now that we have a Rulebook file, let’s write a Python module to load it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># main.py</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">rlc</span><span class="w"> </span><span class="kn">import</span> <span class="nb">compile</span>
+
+<span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>This snippet compiles the <code class="docutils literal notranslate"><span class="pre">rockpaperscizzor.rl</span></code> file on the fly and returns a <code class="docutils literal notranslate"><span class="pre">Program</span></code> object—a wrapper that provides useful utilities like string conversions and formatted printing.</p>
+<p>If you prefer not to use just-in-time (JIT) compilation—for example, if you don’t want to include the RLC compiler with your distribution—you can precompile the Rulebook program ahead of time and load it directly. <em>(TODO: Show how to do this.)</em></p>
+<p>However, our goal is not just to load the program and access its functions directly. Instead, we want to interact with it through a GYM-compatible interface. For that, we wrap it in a <code class="docutils literal notranslate"><span class="pre">SingleRLCEnvironment</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rlc</span><span class="w"> </span><span class="kn">import</span> <span class="nb">compile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ml.env</span><span class="w"> </span><span class="kn">import</span> <span class="n">SingleRLCEnvironment</span><span class="p">,</span> <span class="n">exit_on_invalid_env</span>
+
+<span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="understanding-singlerlcenvironment">
+<h2>Understanding <code class="docutils literal notranslate"><span class="pre">SingleRLCEnvironment</span></code><a class="headerlink" href="#understanding-singlerlcenvironment" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">SingleRLCEnvironment</span></code> is a Python class that takes a compiled <code class="docutils literal notranslate"><span class="pre">Program</span></code> and exposes the helper functions typically expected from a reinforcement learning environment. It serves as a bridge between your Rulebook program and GYM-style interfaces.</p>
+<p>For this wrapper to work correctly, certain information must be present and properly defined in the Rulebook program. To validate this, the function <code class="docutils literal notranslate"><span class="pre">exit_on_invalid_env</span></code> is provided. It will check the structure of your <code class="docutils literal notranslate"><span class="pre">Program</span></code> and exit with descriptive error messages if the expected types or functions are missing or incorrect.</p>
+<p>Specifically, it checks that:</p>
+<ul class="simple">
+<li><p>A main action <code class="docutils literal notranslate"><span class="pre">play()</span></code> exists, and its coroutine return type is <code class="docutils literal notranslate"><span class="pre">Game</span></code>.</p></li>
+<li><p>A scoring function <code class="docutils literal notranslate"><span class="pre">score(Game</span> <span class="pre">game,</span> <span class="pre">Int</span> <span class="pre">player_id)</span></code> is defined and returns either a <code class="docutils literal notranslate"><span class="pre">float</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p>Every action’s arguments implement the <code class="docutils literal notranslate"><span class="pre">Enumerable</span></code> trait. This trait is required to enumerate all possible actions and construct action tables.</p></li>
+</ul>
+<p>Additionally, <code class="docutils literal notranslate"><span class="pre">exit_on_invalid_env</span></code> will emit warnings if the program contains objects meant to be used in training (e.g., tensors) but that lack a valid serialization strategy.</p>
+<p>For example, consider this modification to the <code class="docutils literal notranslate"><span class="pre">play</span></code> action:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@classes</span>
+<span class="n">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Game</span><span class="p">:</span>
+    <span class="n">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g1</span><span class="p">)</span>
+    <span class="n">frm</span> <span class="n">local_var</span> <span class="p">:</span> <span class="n">Int</span>
+    <span class="n">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will trigger a warning like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">WARNING</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">local_var</span> <span class="ow">is</span> <span class="n">of</span> <span class="nb">type</span> <span class="n">Int</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">tensorable</span><span class="o">.</span> <span class="n">Replace</span> <span class="n">it</span> <span class="n">instead</span> <span class="k">with</span> <span class="n">a</span> <span class="n">BInt</span> <span class="k">with</span> <span class="n">appropriate</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">specify</span> <span class="n">how</span> <span class="n">to</span> <span class="n">serialize</span> <span class="n">it</span><span class="p">,</span> <span class="ow">or</span> <span class="n">wrap</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">Hidden</span> <span class="nb">object</span><span class="o">.</span> <span class="n">It</span> <span class="n">will</span> <span class="n">be</span> <span class="n">ignored</span> <span class="n">by</span> <span class="n">machine</span> <span class="n">learning</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>These warnings help ensure that your environment is fully compatible with GPU-based training and other downstream machine learning tasks.</p>
+<p>Very well, now that we have a valid environment, let’s take a closer look at what it contains.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">SingleRLCEnvironment</span></code> includes:</p>
+<ul class="simple">
+<li><p>A game state, created by executing the user-defined <code class="docutils literal notranslate"><span class="pre">play</span></code> action.</p></li>
+<li><p>References to user-defined functions such as <code class="docutils literal notranslate"><span class="pre">score</span></code> and <code class="docutils literal notranslate"><span class="pre">get_current_player</span></code>.</p></li>
+<li><p>A table of all possible moves, allowing each move to be mapped to a unique integer.</p></li>
+<li><p>A copy of the current player’s score and the score received in the previous step.</p></li>
+</ul>
+</section>
+<section id="dumping-the-state">
+<h2>Dumping the State<a class="headerlink" href="#dumping-the-state" title="Link to this heading"></a></h2>
+<p>You can print the current game state as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">paper</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">paper</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>To obtain a tensor serialization of the state, use <code class="docutils literal notranslate"><span class="pre">get_state()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get_state</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>In this example, the serialized state is a one-hot representation:</p>
+<ul class="simple">
+<li><p>The first three floats represent the three possible values for player 1—rock, paper, and scissors.</p></li>
+<li><p>The next three floats do the same for player 2.</p></li>
+<li><p>The final float indicates the current player. Since we haven’t defined a function to determine the current player, this value defaults to zero.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[[</span><span class="mf">1.</span><span class="p">]]</span>
+ <span class="p">[[</span><span class="mf">0.</span><span class="p">]]</span>
+ <span class="p">[[</span><span class="mf">0.</span><span class="p">]]</span>
+ <span class="p">[[</span><span class="mf">1.</span><span class="p">]]</span>
+ <span class="p">[[</span><span class="mf">0.</span><span class="p">]]</span>
+ <span class="p">[[</span><span class="mf">0.</span><span class="p">]]</span>
+ <span class="p">[[</span><span class="mf">0.</span><span class="p">]]]</span>
+</pre></div>
+</div>
+</section>
+<section id="all-actions">
+<h2>All Actions<a class="headerlink" href="#all-actions" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Here are the game actions:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">([</span><span class="n">action</span> <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">actions</span><span class="p">()])</span>
+</pre></div>
+</div>
+<p>Running this program will print:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Here</span> <span class="n">are</span> <span class="n">the</span> <span class="n">game</span> <span class="n">actions</span><span class="p">:</span>
+<span class="p">[</span><span class="s1">&#39;player1_move {g1: paper} &#39;</span><span class="p">,</span> <span class="s1">&#39;player1_move {g1: rock} &#39;</span><span class="p">,</span> <span class="s1">&#39;player1_move {g1: scizzor} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: paper} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: rock} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: scizzor} &#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="valid-actions">
+<h2>Valid Actions<a class="headerlink" href="#valid-actions" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Here is a NumPy array indicating which actions are currently valid:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get_action_mask</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Here</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">NumPy</span> <span class="n">array</span> <span class="n">indicating</span> <span class="n">which</span> <span class="n">actions</span> <span class="n">are</span> <span class="n">currently</span> <span class="n">valid</span><span class="p">:</span>
+<span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>As expected, only the three actions available to player 0 are valid at the start of the game.</p>
+</section>
+<section id="applying-actions">
+<h2>Applying actions<a class="headerlink" href="#applying-actions" title="Link to this heading"></a></h2>
+<p>To advance the state, there is a very simple function, <code class="docutils literal notranslate"><span class="pre">step</span></code> which accepts the index of the action to execute and returns the reward of that action, measure as the different between the score before the action has been executed and the score after the action has been executed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># 2 is the index in the list of actions you can access with env.actions()</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">paper</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">paper</span><span class="p">}</span>
+<span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">scizzor</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">paper</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="score">
+<h2>Score<a class="headerlink" href="#score" title="Link to this heading"></a></h2>
+<p>You can view the total score using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This prints an array where the <em>i</em>-th element represents the total score of player <em>i</em>. In the example, player 0 plays rock, player 1 plays scissors, and player 0 receives a score of 1.0:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">rock</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">scizzor</span><span class="p">}</span>
+<span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can also query the score obtained in the most recent step, instead of the cumulative score:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">last_score</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="end-of-the-game">
+<h2>End of the Game<a class="headerlink" href="#end-of-the-game" title="Link to this heading"></a></h2>
+<p>There are two ways to check whether the game has ended. The first is by using <code class="docutils literal notranslate"><span class="pre">is_done_underlying()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./file.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">is_done_underlying</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>This checks whether the game has reached a terminal state. The output in this example is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span>
+</pre></div>
+</div>
+<p>The second mechanism is discussed in the multiplayer section.</p>
+</section>
+<section id="multiplayer">
+<h2>Multiplayer<a class="headerlink" href="#multiplayer" title="Link to this heading"></a></h2>
+<p>In your Rulebook code, you can enable multiplayer support by defining two additional functions: <code class="docutils literal notranslate"><span class="pre">get_num_players</span></code> and <code class="docutils literal notranslate"><span class="pre">get_current_player</span></code>. For example, add the following to your Rulebook file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">2</span>
+
+<span class="n">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">can</span> <span class="n">game</span><span class="o">.</span><span class="n">player1_move</span><span class="p">(</span><span class="n">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>You can get the ID of the player who needs to act next with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get_current_player</span><span class="p">())</span>
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get_current_player</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>This prints:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>
+<span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+<section id="multiplayer-end-of-game">
+<h2>Multiplayer End of Game<a class="headerlink" href="#multiplayer-end-of-game" title="Link to this heading"></a></h2>
+<p>If we check the score in a multiplayer setup, we might notice something unexpected:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We now see two values, one for each player. However, they don’t sum to zero, which is unusual in a zero-sum game.</p>
+<p>This behavior occurs because each player only observes the game from their own perspective. The score is updated for a player only after they take an action. To ensure that each player gets to observe the final state, the system automatically adds a fake final move for each one.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">is_done_underlying</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">is_done_for_everyone</span><span class="p">())</span>
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># fake final action; the argument can be anything</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">is_done_for_everyone</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">is_done_underlying</span></code> checks if the actual game logic has reached a terminal state.
+<code class="docutils literal notranslate"><span class="pre">is_done_for_everyone</span></code> checks if all players have had the chance to observe the final state.
+Only after <code class="docutils literal notranslate"><span class="pre">is_done_for_everyone</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code> will the scores reflect the full outcome of the game.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]</span>
+<span class="kc">True</span>
+<span class="kc">False</span>
+<span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]</span>
+<span class="kc">True</span>
+</pre></div>
+</div>
+</section>
+<section id="random-actions">
+<h2>Random Actions<a class="headerlink" href="#random-actions" title="Link to this heading"></a></h2>
+<p>You can specify that certain actions belong to a special player <code class="docutils literal notranslate"><span class="pre">-1</span></code>, which represents a random agent:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">1</span>
+
+<span class="n">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">can</span> <span class="n">game</span><span class="o">.</span><span class="n">player1_move</span><span class="p">(</span><span class="n">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>When actions belong to player <code class="docutils literal notranslate"><span class="pre">-1</span></code>, they are automatically executed by sampling uniformly from the set of valid actions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">is_done_for_everyone</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">current_score</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
+<span class="kc">True</span>
+<span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># The final result is random.</span>
+</pre></div>
+</div>
+<p>You can disable automatic execution of random actions by setting <code class="docutils literal notranslate"><span class="pre">solve_randomness=False</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, you must manually check when a random action needs to be taken and handle it yourself.</p>
+</section>
+<section id="hidden-information">
+<h2>Hidden Information<a class="headerlink" href="#hidden-information" title="Link to this heading"></a></h2>
+<p>To handle hidden information—data that should not be visible in the tensor serialization—you can use the <code class="docutils literal notranslate"><span class="pre">Hidden</span></code> type from the standard library.</p>
+<p>Here’s an updated version of the program using hidden actions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">machine_learning</span>
+
+<span class="n">enum</span> <span class="n">Gesture</span><span class="p">:</span>
+    <span class="n">paper</span>
+    <span class="n">rock</span>
+    <span class="n">scizzor</span>
+
+<span class="nd">@classes</span>
+<span class="n">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Game</span><span class="p">:</span>
+    <span class="n">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Hidden</span><span class="o">&lt;</span><span class="n">Gesture</span><span class="o">&gt;</span> <span class="n">g1</span><span class="p">)</span>
+    <span class="n">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Hidden</span><span class="o">&lt;</span><span class="n">Gesture</span><span class="o">&gt;</span> <span class="n">g2</span><span class="p">)</span>
+
+<span class="n">fun</span> <span class="n">score</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">,</span> <span class="n">Int</span> <span class="n">player_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">:</span>
+    <span class="k">if</span> <span class="err">!</span><span class="n">game</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="n">let</span> <span class="n">winner</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">winner</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">winner</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mf">1.0</span>
+
+<span class="n">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">1</span>
+
+<span class="n">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="n">let</span> <span class="n">x</span> <span class="p">:</span> <span class="n">Hidden</span><span class="o">&lt;</span><span class="n">Gesture</span><span class="o">&gt;</span>
+    <span class="k">if</span> <span class="n">can</span> <span class="n">game</span><span class="o">.</span><span class="n">player1_move</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>Running the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./file.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+    <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get_state</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>will produce a serialized state where the player’s actions are omitted, and only the current player ID is included.</p>
+<p><code class="docutils literal notranslate"><span class="pre">HiddenInformation</span></code> works similarly but allows you to specify which player is permitted to view the hidden data.</p>
+</section>
+<section id="custom-tensor-representation">
+<h2>Custom Tensor Representation<a class="headerlink" href="#custom-tensor-representation" title="Link to this heading"></a></h2>
+<p>Your machine learning algorithms might require custom tensor representations different from the default one provided. You can define these by implementing two simple functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">write_in_observation_tensor</span><span class="p">(</span><span class="n">T</span> <span class="n">obj</span><span class="p">,</span> <span class="n">Int</span> <span class="n">observer_id</span><span class="p">,</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Float</span><span class="o">&gt;</span> <span class="n">output</span><span class="p">,</span> <span class="n">Int</span> <span class="n">counter</span><span class="p">)</span>
+<span class="n">fun</span> <span class="n">size_as_observation_tensor</span><span class="p">(</span><span class="n">T</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span>
+</pre></div>
+</div>
+<p>For example, to serialize the <code class="docutils literal notranslate"><span class="pre">Gesture</span></code> enum as a single float instead of a one-hot vector:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">write_in_observation_tensor</span><span class="p">(</span><span class="n">Gesture</span> <span class="n">obj</span><span class="p">,</span> <span class="n">Int</span> <span class="n">observer_id</span><span class="p">,</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Float</span><span class="o">&gt;</span> <span class="n">output</span><span class="p">,</span> <span class="n">Int</span> <span class="n">counter</span><span class="p">):</span>
+    <span class="n">output</span><span class="p">[</span><span class="n">counter</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">obj</span><span class="p">)))</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">fun</span> <span class="n">size_as_observation_tensor</span><span class="p">(</span><span class="n">Gesture</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The line:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output</span><span class="p">[</span><span class="n">counter</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">((</span><span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">obj</span><span class="p">)))</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>works as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">float(obj.value)</span></code> converts the enum’s integer value to a float.</p></li>
+<li><p>Dividing by <code class="docutils literal notranslate"><span class="pre">float(max(obj))</span></code> scales the value to the [0, 1] range.</p></li>
+<li><p>Subtracting <code class="docutils literal notranslate"><span class="pre">0.5</span></code> recenters it to [-0.5, 0.5].</p></li>
+<li><p>Multiplying by <code class="docutils literal notranslate"><span class="pre">2.0</span></code> scales it to the [-1.0, 1.0] range.</p></li>
+</ul>
+<p>This maps the three enum values to <code class="docutils literal notranslate"><span class="pre">-1.0</span></code>, <code class="docutils literal notranslate"><span class="pre">0.0</span></code>, and <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p>When writing to the output vector, it is guaranteed that there is enough space, but you must manually update the <code class="docutils literal notranslate"><span class="pre">counter</span></code> to track how many floats you’ve written:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Finally, <code class="docutils literal notranslate"><span class="pre">size_as_observation_tensor</span></code> must return the maximum number of floats your type will ever write:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">size_as_observation_tensor</span><span class="p">(</span><span class="n">Gesture</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorial.html" class="btn btn-neutral float-left" title="Tutorial for reinforcement learning people" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="language-reference.html" class="btn btn-neutral float-right" title="RLC Language Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

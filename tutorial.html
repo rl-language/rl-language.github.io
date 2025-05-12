@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial for reinforcement learning people &mdash; rlc-doc 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="RLC and GYM" href="gym_tutorial.html" />
+    <link rel="prev" title="The RL language rationale." href="rationale.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            rlc-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial for reinforcement learning people</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#training-and-running">Training and Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-on-top-of-it">Building on Top of It</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance">Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rlc-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial for reinforcement learning people</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorial.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-for-reinforcement-learning-people">
+<h1>Tutorial for reinforcement learning people<a class="headerlink" href="#tutorial-for-reinforcement-learning-people" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language is designed, among other things, to help you use reinforcement learning techniques. It does so by helping you write simulated environments in which machine learning agents can learn. Let us see how:</p>
+<ul class="simple">
+<li><p><strong>Learning speed</strong>:</p>
+<ul>
+<li><p><strong>Simulation speed</strong>: To learn, a machine learning algorithm must interact with a real or simulated environment to try actions and see what happens. The faster the simulated environment executes, the faster the learner can learn. We will show how writing <code class="docutils literal notranslate"><span class="pre">RL</span></code> programs helps you create efficient simulated environments.</p></li>
+<li><p><strong>Development speed</strong>: A simulated environment in which an algorithm can learn is software like any other. Writing, maintaining, and deploying it is a time-consuming process, and the fidelity of the simulation to reality is critical to obtaining high-quality results. We will show how using <code class="docutils literal notranslate"><span class="pre">RL</span></code> helps you create simulated environments faster and more easily than using alternative languages.</p></li>
+</ul>
+</li>
+<li><p><strong>Costs</strong>:</p>
+<ul>
+<li><p><strong>Development costs</strong>: As mentioned in the context of learning speed, maintaining a simulation of the environment in which learning occurs is a significant development cost. Simplifying that aspect of development with the <code class="docutils literal notranslate"><span class="pre">RL</span></code> language helps reduce the costs of debugging, updating, and generally modifying the simulation.</p></li>
+<li><p><strong>Human costs</strong>: A team developing reinforcement learning solutions is costly to maintain, requiring a wide range of skills, including machine learning, development, and domain-specific knowledge. By simplifying the creation of digital environments in which agents can learn, we allow smaller teams to create their products without needing multiple human resources with different skill sets.</p></li>
+<li><p><strong>Deployment costs</strong>: Some <code class="docutils literal notranslate"><span class="pre">RL</span></code> agents are meant to operate in the real world, such as autonomous driving systems, and thus after deployment, the simulation in which they were trained is no longer relevant. Others can operate in the same environment they were trained in; for example, a chess learning algorithm can learn and be deployed in the same simulation of chess. In such cases, the simulated environment is not just a training utility but also something to be deployed to the end-user. This may include adding extra features to the simulation, such as a way to render the simulation state on screen, a way for humans to interact with the simulation, and so on. We will see how the <code class="docutils literal notranslate"><span class="pre">RL</span></code> language helps you develop, maintain, and deploy simulations beyond just learning.</p></li>
+<li><p><strong>Interoperability costs</strong>: Sometimes it is necessary for machine learning systems to interact with other pre-existing components. For example, parts of the simulation from which the machine learning system is learning may be third-party programs beyond the programmer’s ability to modify. We will see how <code class="docutils literal notranslate"><span class="pre">RL</span></code> can interoperate with tools and libraries written in other languages.</p></li>
+</ul>
+</li>
+</ul>
+<p>Notice that we have not talked about final learned performance. That is intentional. The <code class="docutils literal notranslate"><span class="pre">RL</span></code> language does not provide new reinforcement learning methods; instead, it concerns itself with the issue of writing simulations only. You can use any learning algorithm you wish when using an <code class="docutils literal notranslate"><span class="pre">RL</span></code> language simulation.</p>
+<p>Of course, included in the <code class="docutils literal notranslate"><span class="pre">RL</span></code> language package are off-the-shelf machine learning algorithms for those who do not have the skill required to write a custom solution. We will see how a user with no machine learning knowledge can still use <code class="docutils literal notranslate"><span class="pre">RL</span></code> and obtain solutions for their own optimization problems.</p>
+<p>For more non-technical information, you can check out:</p>
+<ul class="simple">
+<li><p>The project rationale <a class="reference internal" href="project_rationale.html"><span class="std std-doc">here</span></a></p></li>
+<li><p>The language rationale <a class="reference internal" href="rationale.html"><span class="std std-doc">here</span></a></p></li>
+</ul>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p>To run the following examples, you need:</p>
+<ul class="simple">
+<li><p>At least Python 3.8 installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p></li>
+</ul>
+<p>Optionally, you can install:</p>
+<ul class="simple">
+<li><p>Visual Studio Code, for which we provide syntax highlighting and autocomplete plugins. They are called <code class="docutils literal notranslate"><span class="pre">rl-lsp</span></code> and <code class="docutils literal notranslate"><span class="pre">rl-language</span></code>.</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>If you are on windows, you can refer to the following <a class="reference external" href="https://www.youtube.com/watch?v=U5pCPj6_TnY">video.</a></p>
+<p>You can install the <code class="docutils literal notranslate"><span class="pre">RL</span></code> compiler, autocomplete support, and machine learning dependencies by opening a terminal and running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>rl_example
+<span class="nb">cd</span><span class="w"> </span>rl_example
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>rl_language
+</pre></div>
+</div>
+<p>This command creates a virtual environment separate from your computer environment so that you can try <code class="docutils literal notranslate"><span class="pre">rlc</span></code> without polluting your machine.</p>
+<p>If this command completes successfully, you can validate that the installation has been successful with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>--help
+</pre></div>
+</div>
+<p>Now we can write a very simple hello world program to see how it works. Create a file called <code class="docutils literal notranslate"><span class="pre">example.rl</span></code> in the current directory, and fill it with the following content:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">serialization.print</span>
+
+<span class="n">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>As you can see, the language has a Python-like syntax, although you can already notice that in <code class="docutils literal notranslate"><span class="pre">RL</span></code> types are not optional; they must always be present. We can now compile the program and see it run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>example.rl<span class="w"> </span>-o<span class="w"> </span>executable
+./executable
+</pre></div>
+</div>
+</section>
+<section id="training-and-running">
+<h2>Training and Running<a class="headerlink" href="#training-and-running" title="Link to this heading"></a></h2>
+<p>Now that you’ve ensured your system works, download the <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">jack</span></code> example from <a class="reference external" href="https://github.com/drblallo/rlc/tool/rlc/test/examples/black_jack.rl">here</a> and save it in a file in the directory we created at the start of this example.</p>
+<p>Black jack is example that shows how to handle games with randomness and imperfect information. Indeed the actions taken by the real user are usually just one or two, while most of the game is spent by the <code class="docutils literal notranslate"><span class="pre">randomness</span> <span class="pre">player</span></code> shuffling the deck, which is a fake player that performs actions at random.</p>
+<p>After you have copied it, let us make sure we can run generate a random game.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">random</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span>
+</pre></div>
+</div>
+<p>You will see that it prints the actions to be executed in a game, this include the shuffling of the deck.
+You can visualize what is happeing with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">random</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="n">game</span><span class="o">.</span><span class="n">log</span>
+<span class="n">rlc</span><span class="o">-</span><span class="n">action</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span> <span class="n">game</span><span class="o">.</span><span class="n">log</span> <span class="o">-</span><span class="n">pp</span>
+</pre></div>
+</div>
+<p>You will be able to visualize the evolution of the deck while it is being suffled, and then see which action the player will take.</p>
+<p>Now that we have visualized a random game, we can start learning! Tou can run <code class="docutils literal notranslate"><span class="pre">rlc-learn</span></code> to do so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc-learn<span class="w"> </span>black_jack.rl<span class="w"> </span><span class="p">|&amp;</span><span class="w"> </span>tee<span class="w"> </span>log.txt
+</pre></div>
+</div>
+<p>If you have not installed torch and cuda, this invocation will fail. If it does fail, you can open the file <code class="docutils literal notranslate"><span class="pre">log.txt</span></code> and try to see what you are missing to run it.</p>
+<p>If it does work, then from your browser, you can now visit the website:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">6006</span>
+</pre></div>
+</div>
+<p>From there, you should see a website that looks like this:</p>
+<p><img alt="tensorboard example" src="_images/tensorboard.png" /></p>
+<p>In the search bar, write <code class="docutils literal notranslate"><span class="pre">episode_reward_mean</span></code>.</p>
+<p>You should see a graph that looks similar to the following:</p>
+<p><img alt="tensorboard example" src="_images/mean_reward.png" /></p>
+<p>The x-axis is the number of actions played. In the case of our game, it means the number of <code class="docutils literal notranslate"><span class="pre">hits</span></code> and <code class="docutils literal notranslate"><span class="pre">stand</span></code> executed, the y-axis is instead the average score obtained. As exepected the average score is increasing, that is: it is learning to play.</p>
+<p>Of course, the machine will never achieve a average score of one, because there is no guarantee you can always hit 21 points, not even if you knew the order of the cards in the deck. Furthermore, the size of the neural network has been defaulted to a reasonable size, but there is no guarantee that the problem is solvable given the default size.</p>
+<p>Still, with very few commands and a very simple <code class="docutils literal notranslate"><span class="pre">.rl</span></code> file, we managed to have a reasonably configured network up and learning.</p>
+<p>Let it train for as long as you wish. We stopped the training after ~500.000 moves, at around 0.75 mean return. That is, the network learned when it should keep drawing more cards and when not to.</p>
+<p><img alt="tensorboard example" src="_images/tensorboard2.png" /></p>
+<p>After you have interrupted the training, you can generate a game by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc-play<span class="w"> </span>black_jack.rl<span class="w"> </span>network<span class="w"> </span>-o<span class="w"> </span>game.log
+</pre></div>
+</div>
+<p>The command will create a file called <code class="docutils literal notranslate"><span class="pre">game.log</span></code> that contains a human-readable game that you can inspect, or you can reproduce it by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc-action<span class="w"> </span>black_jack.rl<span class="w"> </span>game.log<span class="w"> </span>-pp
+</pre></div>
+</div>
+<p>This command will run one action at a time and let you visualize the game by invoking <code class="docutils literal notranslate"><span class="pre">pretty_print</span></code> after each action is executed. You need to press any button to advance the game by one action.</p>
+</section>
+<section id="building-on-top-of-it">
+<h2>Building on Top of It<a class="headerlink" href="#building-on-top-of-it" title="Link to this heading"></a></h2>
+<p>Until now, we have seen how to write, train, run, and visualize a game. Of course, this is not the end of the road. After you have trained a network, you probably wish to use the rules you have written in a real environment. Let us see how to do so by writing a Python script that can interact with the <code class="docutils literal notranslate"><span class="pre">RL</span></code> black jack implementation.</p>
+<p>Create a file called <code class="docutils literal notranslate"><span class="pre">example.py</span></code>, and write the following content:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rlc</span><span class="w"> </span><span class="kn">import</span> <span class="nb">compile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="c1"># load the rl file</span>
+<span class="n">program</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;black_jack.rl&quot;</span><span class="p">])</span>
+<span class="c1"># starts a rlc program invoking the user defined play</span>
+<span class="c1"># function and wraps it in object for with some usefull methods</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="c1"># invokes directly the user defined function on the real state object</span>
+<span class="k">while</span> <span class="n">program</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">get_current_player</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+    <span class="c1"># enumerate legal actions using the methods defined on the</span>
+    <span class="c1"># wrapper</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">legal_actions</span><span class="p">)</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+<span class="c1"># prints the state</span>
+<span class="n">state</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span>
+
+<span class="c1"># checks for termination by using the helper functions</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;hit? (y/n)&quot;</span><span class="p">)</span>
+    <span class="n">decision</span> <span class="o">=</span> <span class="nb">input</span><span class="p">()</span>
+    <span class="c1"># invokes user defined actions directly</span>
+    <span class="k">if</span> <span class="n">decision</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">hit</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">stand</span><span class="p">()</span>
+
+    <span class="n">state</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Your final score is: </span><span class="si">{</span><span class="n">program</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can run this program with the following command, using a shell with the activated environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>example.py
+</pre></div>
+</div>
+<p>As you can see, you are able to play black jack driven by a Python script. Of course, you could already do so with the <code class="docutils literal notranslate"><span class="pre">rlc-action</span></code> command provided by the <code class="docutils literal notranslate"><span class="pre">rl_language</span></code> package, but this example shows that <code class="docutils literal notranslate"><span class="pre">RL</span></code> programs can be easily used from other languages such as Python or C++. This allows you to reuse the same <code class="docutils literal notranslate"><span class="pre">RL</span></code> code you have written to train the network in production too, building other tools on top of it!</p>
+<p>You can also load the network you have trained and use it to play games, but such a setup is a little too complex to include in this introductory document and will be shown later.</p>
+</section>
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Link to this heading"></a></h2>
+<p>If you wish, you can take a look at the classes that are generated by <code class="docutils literal notranslate"><span class="pre">rlc</span></code> by running</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span> <span class="o">--</span><span class="n">header</span> <span class="o">-</span><span class="n">o</span> <span class="n">header</span><span class="o">.</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>For example, if you search for <code class="docutils literal notranslate"><span class="pre">typedef</span> <span class="pre">union</span> <span class="pre">Shuffle</span></code> in the file you will see what gets preserved between actions when the game performs the shuffling.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">_Content</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">resume_index</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">to_shuffle</span><span class="p">;</span>
+<span class="w">    </span><span class="n">BIntT0T52T</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>It contains 2 <code class="docutils literal notranslate"><span class="pre">int64_t</span></code> and a <code class="docutils literal notranslate"><span class="pre">BIntT0T52T</span></code> which if you check, is a <code class="docutils literal notranslate"><span class="pre">int64_t</span></code> itself. That is it, it takes 3 integers to <code class="docutils literal notranslate"><span class="pre">rlc</span></code> to keep track of what must be shuffled. If you stop the game while it still shuffling and save the content to disk, 3 only integers will be saved to keep track of it (on top of what must be preserved because of other parts of the game, of course).</p>
+<p>This allow you to write very efficient games, and to have them interoperate with C and python.</p>
+</section>
+<section id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading"></a></h2>
+<p>At the start of this document, we described how machine learning works and what <code class="docutils literal notranslate"><span class="pre">RL</span></code> aims to achieve. In particular, we covered:</p>
+<ul>
+<li><p><strong>How you can write games and optimization problems in <code class="docutils literal notranslate"><span class="pre">RL</span></code>.</strong></p>
+<p>As you saw, <code class="docutils literal notranslate"><span class="pre">RL</span></code> lets you write games and simulations the way you conceptualize them by declaring at each point which actions the user must take in that moment.</p>
+</li>
+<li><p><strong>How you can run, with zero configurations required, a neural network to find good strategies for your problem.</strong></p>
+<p>As you observed, it takes a single command to have the machine learning components up and learning. While the default setup may not yield optimal results, it provides a starting point for those who can tune the machine learning configurations to their needs and is easy to use for those who cannot.</p>
+</li>
+<li><p><strong>How <code class="docutils literal notranslate"><span class="pre">RL</span></code> can interoperate with other languages, such as C, C++, and Python, and how easy it is to integrate into other codebases.</strong></p>
+<p>We demonstrated how other programs can interact with the simulation by importing an <code class="docutils literal notranslate"><span class="pre">RL</span></code> file and invoking functions and actions declared in that file, without needing to relinquish the main loop of the program to the <code class="docutils literal notranslate"><span class="pre">RL</span></code> part. In our example, we showed how to do this in Python, but it could be done with any other programming language or environment, such as graphic engines.</p>
+</li>
+<li><p><strong>What code, performance-wise, you can expect to be generated from <code class="docutils literal notranslate"><span class="pre">RL</span></code>.</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">RL</span></code> is a compiled language, not an interpreted language, yielding performance comparable to other compiled languages such as C.</p>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rationale.html" class="btn btn-neutral float-left" title="The RL language rationale." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gym_tutorial.html" class="btn btn-neutral float-right" title="RLC and GYM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
