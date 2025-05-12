@@ -364,7 +364,7 @@ In particular, <a class="reference external" href="https://en.wikipedia.org/wiki
 <ul class="simple">
 <li><p><strong>Cannot copy coroutines</strong> — Very few languages, such as scheme, can perform copies of ongoing coroutines.  This means that if you have an <strong>interactive program</strong> you wish to duplicate—say, a chess engine—the implementation must instead be a regular class. Copying is critical for techniques such as <a class="reference external" href="https://en.wikipedia.org/wiki/Monte_Carlo_tree_search">Monte Carlo Tree Search</a>.</p></li>
 <li><p><strong>Cannot inspect the content of the coroutine</strong> — Most type-checked implementations, such as those in C++, do not allow inspection of a coroutine’s internal state without exfiltrating pointers to its variables, at least not in a protable way. Inspection is critical when the coroutine’s state influences a decision-maker—for example, in reinforcement learning, where you may want to send part of the coroutine’s state to the GPU to inform decisions.</p></li>
-<li><p><strong>Cannot reuse coroutines</strong> — Most languages support coroutine reuse with stackful coroutine implementations, but some (like Lua or C++ before C++20, unless using Boost.Coroutine) do not. Composition is essential when the size of the <strong>interactive program</strong> grows and you wish divide the problem into distict coroutines.</p></li>
+<li><p><strong>Cannot reuse coroutines</strong> — Most languages support coroutine reuse with stackful coroutine implementations, but some (like Lua or C++ before C++20, unless using Boost.Coroutine) do not. Reuse is essential when the size of the <strong>interactive program</strong> grows and you wish divide the problem into distict coroutines that solve subproblems.</p></li>
 </ul>
 <p>Notice that if you require any of these properties and your language does not support them, you are <strong>forced</strong> to implement the logic as a class—just like we did earlier—thus fully suffering from the <strong>inversion of control problem</strong>.</p>
 </section>
@@ -374,7 +374,7 @@ In particular, <a class="reference external" href="https://en.wikipedia.org/wiki
 <ul class="simple">
 <li><p><strong>copy</strong> a running coroutine to explore alternate futures,</p></li>
 <li><p><strong>inspect</strong> its frame to feed state into a learner or debugger, and</p></li>
-<li><p><strong>compose</strong> many coroutines without turning every caller into one.</p></li>
+<li><p><strong>reuse</strong> coroutines allowing problem decomposition.</p></li>
 </ul>
 <p>Without these three properties we slide back to hand‑rolled, class‑shaped state machines, inheriting the superlinear maintenance costs they impose.</p>
 <p>ToDo, how to solve</p>

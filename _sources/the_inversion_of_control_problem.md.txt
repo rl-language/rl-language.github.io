@@ -302,7 +302,7 @@ Coroutines in type-checked languages are often less suited for **complex interac
 
 * **Cannot inspect the content of the coroutine** — Most type-checked implementations, such as those in C++, do not allow inspection of a coroutine’s internal state without exfiltrating pointers to its variables, at least not in a protable way. Inspection is critical when the coroutine’s state influences a decision-maker—for example, in reinforcement learning, where you may want to send part of the coroutine’s state to the GPU to inform decisions.
 
-* **Cannot reuse coroutines** — Most languages support coroutine reuse with stackful coroutine implementations, but some (like Lua or C++ before C++20, unless using Boost.Coroutine) do not. Composition is essential when the size of the **interactive program** grows and you wish divide the problem into distict coroutines.
+* **Cannot reuse coroutines** — Most languages support coroutine reuse with stackful coroutine implementations, but some (like Lua or C++ before C++20, unless using Boost.Coroutine) do not. Reuse is essential when the size of the **interactive program** grows and you wish divide the problem into distict coroutines that solve subproblems.
 
 Notice that if you require any of these properties and your language does not support them, you are **forced** to implement the logic as a class—just like we did earlier—thus fully suffering from the **inversion of control problem**.
 
@@ -312,7 +312,7 @@ The inversion‑of‑control pattern is not going away—graphics engines, web f
 
 * **copy** a running coroutine to explore alternate futures,
 * **inspect** its frame to feed state into a learner or debugger, and
-* **compose** many coroutines without turning every caller into one.
+* **reuse** coroutines allowing problem decomposition.
 
 Without these three properties we slide back to hand‑rolled, class‑shaped state machines, inheriting the superlinear maintenance costs they impose.
 
