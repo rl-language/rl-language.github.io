@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Language Tour &mdash; rlc-doc 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The interactive inversion of control problem" href="the_inversion_of_control_problem.html" />
+    <link rel="prev" title="Rulebook documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            rlc-doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Language Tour</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#action-functions">Action functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#no-main-loop-owning">No-main loop owning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#precondition-checkable">Precondition checkable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The interactive inversion of control problem</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">rlc-doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Language Tour</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/language_tour.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="language-tour">
+<h1>Language Tour<a class="headerlink" href="#language-tour" title="Link to this heading"></a></h1>
+<p>Rulebook is compiled and statically checked, the key and innovative feature of the language are SPIN coroutines.</p>
+<p>The language kind of looks like python, but has many different properties.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+
+<span class="kn">cls</span> <span class="nc">SimpleRegularCode</span><span class="p">:</span>
+    <span class="nc">Int</span> <span class="n">x</span>
+    <span class="nc">Bool</span> <span class="n">y</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">pair</span> <span class="p">:</span> <span class="nc">SimpleRegularCode</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="c1"># {x: 0, y: false}</span>
+    <span class="kr">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<section id="action-functions">
+<h2>Action functions<a class="headerlink" href="#action-functions" title="Link to this heading"></a></h2>
+<p>Rulebook objective is to simplify <a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="std std-ref">complex interactive subsystems</span></a>, and does by providing SPIN functions.</p>
+<p>SPIN stands for Serializable, Precondition checkable, Introspectable, Non-main loop owning.</p>
+<section id="no-main-loop-owning">
+<h3>No-main loop owning<a class="headerlink" href="#no-main-loop-owning" title="Link to this heading"></a></h3>
+<p>Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs.</p>
+<p>Action function are coroutines and thus do not require the main loop.</p>
+<p>Here is an example, <code class="docutils literal notranslate"><span class="pre">say_hello()</span></code> starts the action function and executes it until <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">resume()</span></code>. From the main function we can resume by invoking <code class="docutils literal notranslate"><span class="pre">sayer.resume()</span></code> which will print a hello.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+
+<span class="kn">act</span> <span class="n">say_hello</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">HelloSayer</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">resume</span><span class="p">()</span>
+    <span class="n">print</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+    <span class="kn">act</span> <span class="n">resume</span><span class="p">()</span>
+    <span class="n">print</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">sayer</span> <span class="o">=</span> <span class="n">say_hello</span><span class="p">()</span>
+    <span class="n">sayer</span><span class="p">.</span><span class="n">resume</span><span class="p">()</span> <span class="c1"># hello</span>
+    <span class="n">sayer</span><span class="p">.</span><span class="n">resume</span><span class="p">()</span> <span class="c1"># hello</span>
+    <span class="kr">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>No-main loop onwership means that you can write <strong>interactive programs</strong> as if they where prompting the <strong>user</strong> themselves instead of being aware of how the framework is implemented.</p>
+</section>
+<section id="precondition-checkable">
+<h3>Precondition checkable<a class="headerlink" href="#precondition-checkable" title="Link to this heading"></a></h3>
+<p>Precondition checkability means that the framework owning the main loop can check if the user inputs are valid.</p>
+<p>Say you have a installer that asks the user for a path on disk that must not be already used, then asks with they want their installation to include experimental content, and if they agree, it install some data.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">string</span>
+
+<span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
+    <span class="n">show_path_screen_prompt</span><span class="p">()</span>
+    <span class="kn">act</span> <span class="n">select_location</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">String</span> <span class="n">path</span><span class="p">)</span> <span class="p">{</span> <span class="o">!</span><span class="n">file_exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">show_experimental_content_prompt</span><span class="p">()</span>
+    <span class="kn">act</span> <span class="n">install_experimental_content</span><span class="p">(</span><span class="nc">Bool</span> <span class="n">do_it</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">do_it</span><span class="p">:</span>
+        <span class="n">install_with_extra</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="kr">else</span><span class="p">:</span>
+        <span class="n">install</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">installer</span> <span class="o">=</span> <span class="n">installer</span><span class="p">()</span>
+    <span class="kr">let</span> <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;wrong_path&quot;</span><span class="n">s</span>
+    <span class="kr">if</span> <span class="n">can</span> <span class="n">installer</span><span class="p">.</span><span class="n">select_location</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">installer</span><span class="p">.</span><span class="n">select_location</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">installer</span><span class="p">.</span><span class="n">install_experimental_content</span><span class="p">(</span><span class="nc">False</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>In rulebook action functions suspension points can accept arguments, if they do</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Rulebook documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="the_inversion_of_control_problem.html" class="btn btn-neutral float-right" title="The interactive inversion of control problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

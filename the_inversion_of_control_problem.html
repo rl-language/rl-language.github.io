@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The inversion of control problem &mdash; rlc-doc 0.3.0 documentation</title>
+  <title>The interactive inversion of control problem &mdash; rlc-doc 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Where we are going and what RL will do once we get there." href="project_rationale.html" />
-    <link rel="prev" title="Rulebook documentation" href="index.html" /> 
+    <link rel="prev" title="Language Tour" href="language_tour.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,20 +46,24 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">The inversion of control problem</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#complex-interactive-programs">Complex interactive programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The interactive inversion of control problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#complex-interactive-subsystems">Complex interactive subsystems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inversion-of-control">Inversion of control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-problem">The problem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-mental-burden">The mental burden</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#mitigations-coroutines">Mitigations: coroutines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-limits-of-coroutines">The limits of coroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-limits-of-coroutines">The limits of coroutines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-core-limitation">The core limitation</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
@@ -86,7 +90,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">The inversion of control problem</li>
+      <li class="breadcrumb-item active">The interactive inversion of control problem</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/the_inversion_of_control_problem.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,22 +100,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="the-inversion-of-control-problem">
-<h1>The inversion of control problem<a class="headerlink" href="#the-inversion-of-control-problem" title="Link to this heading"></a></h1>
-<p>When <strong>complex interactive programs</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor, and maintain.</p>
-<p>Here are practical examples of real-world code that became harder to reason about due to <strong>IOC</strong>:</p>
+  <section id="the-interactive-inversion-of-control-problem">
+<h1>The interactive inversion of control problem<a class="headerlink" href="#the-interactive-inversion-of-control-problem" title="Link to this heading"></a></h1>
+<p>When imperative <strong>complex interactive subsystems</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor, and maintain. Imperative languages provide <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem, but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features <a class="reference internal" href="#the-limits-of-coroutines"><span class="xref myst">decreases</span></a>.</p>
+<p>Here are practical examples of real-world code that is hard to reason about, has inverted control, and is interactive.</p>
 <ul class="simple">
-<li><p>Blender’s stateful <a class="reference external" href="https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc">GHOST event manager</a>. Because the event loop owns the timing of every mouse‑move, key‑press, and redraw, a small logic change (say, deferring key‑repeat) can subtly reorder callbacks. Reproducing a bug in similar <strong>scenarios may require replaying</strong> an entire input trace, and unit tests must mock dozens of event types to reach a single branch.</p></li>
+<li><p>Blender’s stateful <a class="reference external" href="https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc">user input event manager</a>. Because the event loop owns the timing of every mouse‑move, key‑press, and redraw, a small logic change (say, deferring key‑repeat) can subtly reorder callbacks. Reproducing a bug in similar <strong>scenarios may require replaying</strong> an entire input trace, and unit tests must mock dozens of event types to reach a single branch.</p></li>
 <li><p>Anaconda installer’s stateful <a class="reference external" href="https://github.com/rhinstaller/anaconda/blob/main/pyanaconda/ui/gui/spokes/storage.py">UI pages</a>. The installer UI pages (spokes) can appear in any order depending on earlier answers. Tests that assert “if option X then page Y collects field Z” must replicate many permutations; a new optional component multiplies the permutation space, inflating test suites and increasing the risk of missed edge cases.</p></li>
 <li><p>Google DeepMind’s <a class="reference external" href="https://github.com/google-deepmind/hanabi-learning-environment/tree/master/hanabi_learning_environment">Hanabi</a>. The game offers many possible player actions and must serialize state into tensors for neural‑network training. Performing local modifications to <strong>data structures</strong> can affect the surrounding classes, the tensor serialization code, and the order in which game actions execute—turning each change into a global problem.</p></li>
-<li><p>LightZero’s 756-line implementation of <a class="reference external" href="https://github.com/opendilab/LightZero/blob/main/zoo/board_games/tictactoe/envs/tictactoe_env.py">Tic Tac Toe</a>.</p></li>
 </ul>
-<section id="complex-interactive-programs">
-<h2>Complex interactive programs<a class="headerlink" href="#complex-interactive-programs" title="Link to this heading"></a></h2>
-<p><strong>Complex interactive programs</strong> are programs that contain procedures with graph-like behavior and:</p>
+<section id="complex-interactive-subsystems">
+<h2>Complex interactive subsystems<a class="headerlink" href="#complex-interactive-subsystems" title="Link to this heading"></a></h2>
+<p><strong>Complex interactive subsystems</strong> are subsystems that:</p>
 <ul class="simple">
-<li><p>the graph is large (<strong>complex</strong>),</p></li>
-<li><p>they must await input from some other component of the system before deciding how to proceed, <strong>and</strong> the user cares about their content (<strong>interactive</strong>). The source of input does not have to be a human; it can be anything, including randomness.</p></li>
+<li><p>must await input from some other component of the system before deciding how to proceed, <strong>and</strong> the user cares about their content (<strong>interactive</strong>). The source of input does not have to be a human; it can be anything, including randomness.</p></li>
+<li><p>inputs change future states creating a graph of possible states, and the graph is large (<strong>complex</strong>).</p></li>
 </ul>
 <p>Examples:</p>
 <div class="graphviz"><img src="_images/graphviz-77377c28510ff3a070aeb8f4b1a5070078154442.png" alt="digraph CheckoutFlow {
@@ -178,16 +181,16 @@
 <section id="inversion-of-control">
 <h2>Inversion of control<a class="headerlink" href="#inversion-of-control" title="Link to this heading"></a></h2>
 <p>The Wikipedia page on <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> describes the concept in sufficient detail, so I suggest reading it before continuing. As a recap: <strong>inversion of control</strong> arises when a program takes over the main loop of execution and relegates the programmer to implementing callbacks, which the main loop owner invokes according to its internal logic.</p>
-<p>This pattern is pervasive and intentional. Graphics engines, web engines, reinforcement learning environments, and more all use it to decouple engine internals from business logic implementation.</p>
+<p>This pattern is pervasive and intentional. Graphics engines, web engines, reinforcement learning environments, and more all use it to decouple engine internals from business logic implementation. Inversion of control is not an issue itself, it is a extremely useful tool to decouple the programming plumbings from the business logic.</p>
 </section>
 <section id="the-problem">
 <h2>The problem<a class="headerlink" href="#the-problem" title="Link to this heading"></a></h2>
 <p>Let’s restate the problem:</p>
 <ul class="simple">
-<li><p>When <strong>complex interactive programs</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a>, they become superlinearly harder to reason about, refactor, and maintain.</p></li>
+<li><p>When <strong>complex interactive subsystems</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a>, they become superlinearly harder to reason about, refactor, and maintain.</p></li>
 </ul>
-<p>This assertion is based on the observation that giving up control of the main loop in an <strong>interactive system</strong> (complex or not) effectively forces the program to be implemented as a <a class="reference external" href="https://en.wikipedia.org/wiki/Automata-based_programming">state machine</a>, unless the programming language provides a mechanism to avoid it.</p>
-<p>Let us consider an example: suppose we have a Python <strong>interactive program</strong>, such as an implementation of Tic Tac Toe that owns the main loop.</p>
+<p>This assertion is based on the observation that giving up control of the main loop in an <strong>interactive system</strong> (complex or not) push the program to be implemented as a <a class="reference external" href="https://en.wikipedia.org/wiki/Automata-based_programming">state machine</a>, unless the programming language provides a mechanism to avoid it.</p>
+<p>Let us consider an example: suppose we have a <strong>interactive subsystem</strong>, such as an implementation of Tic Tac Toe that owns the main loop. I will use python syntax, but what is relevant is not le language, but the need of writing is a state machine due to possible limitations with the language.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">():</span>
     <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="p">()</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
@@ -209,9 +212,9 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line</span><span class="p">():</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">next_resumption_point</span> <span class="o">==</span> <span class="n">Ended</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">next_resumption_point</span> <span class="o">=</span> <span class="n">Ended</span>
 
-  <span class="k">def</span><span class="w"> </span><span class="nf">is_done</span><span class="p">():</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">is_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_resumption_point</span> <span class="o">==</span> <span class="n">Ended</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Engine</span><span class="p">:</span>
@@ -261,32 +264,32 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">=</span> <span class="n">SecondGame</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">game2</span> <span class="o">=</span> <span class="n">TicTacToe</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">=</span> <span class="n">End</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">=</span> <span class="n">Ended</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">==</span> <span class="n">SecondGame</span><span class="p">:</span>
             <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="n">args</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">game2</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game2</span><span class="o">.</span><span class="n">board</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">=</span> <span class="n">End</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">=</span> <span class="n">Ended</span>
             <span class="k">return</span>
 </pre></div>
 </div>
 <p>As you can see, manually converting these functions into classes quickly results in very messy code.
 As an exercise, convert the following piece of code into a class:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plays the game up to 4 times</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">play_four_times</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">play_four_times</span><span class="p">():</span>
     <span class="n">game1</span> <span class="o">=</span> <span class="n">PlayTwice</span><span class="p">()</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">game1</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">==</span> <span class="n">End</span><span class="p">:</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">game1</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">==</span> <span class="n">Ended</span><span class="p">:</span>
         <span class="n">game1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
 
     <span class="n">play_again</span> <span class="o">=</span> <span class="n">user_input</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">play_again</span><span class="p">:</span>
         <span class="n">game2</span> <span class="o">=</span> <span class="n">PlayTwice</span><span class="p">()</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">game2</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">==</span> <span class="n">End</span><span class="p">:</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">game2</span><span class="o">.</span><span class="n">resume_index</span> <span class="o">==</span> <span class="n">Ended</span><span class="p">:</span>
             <span class="n">game2</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Hint, the graph rappresenting the state is</p>
+<p>Hint, the graph representing the state is</p>
 <div class="graphviz"><img src="_images/graphviz-47e5be03e6e8a6c96d96db2b416c60483ab205da.png" alt="digraph PlayFourTimes {
     node [shape=ellipse, style=filled, fillcolor=lightyellow];
 
@@ -328,7 +331,7 @@ As an exercise, convert the following piece of code into a class:</p>
 <p>I think it is intuitive to most programmers that this approach does not scale. Converting a function into a class is <em>syntactically</em> linear and follows a familiar “turn it into a state machine” recipe—but the real cost shows up later.</p>
 <p>The <strong>superlinearity</strong> appears in maintenance. Each time you tweak the class‑based version, you must remember how the original imperative control flow was exploded into explicit states. A single new input or edge case can force you to revisit every branch that stores or resumes state. Concretely, if your program asks for <strong>k</strong> distinct inputs and you refactor it <strong>r</strong> times, the test‑case permutations can grow toward <strong>k × r</strong>—and that’s before you multiply by invalid or corner‑case inputs.</p>
 <p>Sometimes <strong>k</strong> is small (e.g. Tic Tac Toe) or <strong>r</strong> is near 1 after initial authoring, so the pain stays minimal. But once either axis grows—say, a wizard with dozens of optional fields or a game with hundreds of enemy states—the maintenance burden balloons.</p>
-<p>We are hardly the first to flag this. The issue is related—though not identical—to <a class="reference external" href="http://callbackhell.com">callback hell</a> and the classic pitfalls of <a class="reference external" href="https://en.wikipedia.org/wiki/Non-structured_programming">non‑structured programming</a>, because steering a large explicit state machine feels like hand‑coding the program counter with jumps.</p>
+<p>We are hardly the first to flag this. The issue is related—though not identical—to <a class="reference external" href="http://callbackhell.com">callback hell</a> and the classic pitfalls of <a class="reference external" href="https://en.wikipedia.org/wiki/Non-structured_programming">non‑structured programming</a>, because steering a large explicit state machine feels like hand‑coding the program counter with jumps. Non imperative programming models can sometime help, if the domain of the business logic maps well onto them. [<a class="reference external" href="https://en.wikipedia.org/wiki/Actor_model">1</a>] [<a class="reference external" href="https://en.wikipedia.org/wiki/Functional_reactive_programming">2</a>] [<a class="reference external" href="https://en.wikipedia.org/wiki/Structured_concurrency">3</a>]. Commenting on all of them is beyond the scope of the document, we will focus on the key imperative languages solution for the issue, coroutines.</p>
 </section>
 </section>
 <section id="mitigations-coroutines">
@@ -336,12 +339,12 @@ As an exercise, convert the following piece of code into a class:</p>
 <p>The most common solution to the problem is the use of asynchronous language features.
 In particular, <a class="reference external" href="https://en.wikipedia.org/wiki/Coroutine">coroutines</a>—depending on their implementation—can sometimes fully solve the problem.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="n">board</span><span class="p">):</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
-        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="k">yield</span><span class="p">()</span>
-        <span class="n">board</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line</span><span class="p">:</span>
-            <span class="k">return</span>
-        <span class="n">board</span><span class="o">.</span><span class="n">switch_current_player</span><span class="p">()</span>
+  <span class="k">while</span> <span class="ow">not</span> <span class="n">board</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
+    <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="k">yield</span><span class="p">()</span>
+    <span class="n">board</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">board</span><span class="o">.</span><span class="n">current_player</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">board</span><span class="o">.</span><span class="n">three_in_a_line</span><span class="p">():</span>
+      <span class="k">return</span>
+    <span class="n">board</span><span class="o">.</span><span class="n">switch_current_player</span><span class="p">()</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Engine</span><span class="p">:</span>
@@ -352,7 +355,7 @@ In particular, <a class="reference external" href="https://en.wikipedia.org/wiki
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
       <span class="n">inputs</span> <span class="o">=</span> <span class="n">poll_input</span><span class="p">()</span>
       <span class="k">if</span> <span class="n">inputs</span><span class="o">.</span><span class="n">clicked_on_screen</span><span class="p">:</span>
-        <span class="n">game</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">game</span><span class="o">.</span><span class="n">send</span><span class="p">((</span><span class="n">inputs</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">inputs</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
       <span class="n">render_frame</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">board</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -360,24 +363,40 @@ In particular, <a class="reference external" href="https://en.wikipedia.org/wiki
 </section>
 <section id="the-limits-of-coroutines">
 <h2>The limits of coroutines<a class="headerlink" href="#the-limits-of-coroutines" title="Link to this heading"></a></h2>
-<p>Coroutines in type-checked languages are often less suited for <strong>complex interactive programs</strong>. dynamic languages, such as Python and JavaScript, can perform expensive introspection tricks to work around this. Still, every coroutine implementation I am aware of suffers from at least one of the following issues:</p>
+<p>Remember the second sentence in the original statement.</p>
 <ul class="simple">
-<li><p><strong>Cannot copy coroutines</strong> — Very few languages, such as scheme, can perform copies of ongoing coroutines.  This means that if you have an <strong>interactive program</strong> you wish to duplicate—say, a chess engine—the implementation must instead be a regular class. Copying is critical for techniques such as <a class="reference external" href="https://en.wikipedia.org/wiki/Monte_Carlo_tree_search">Monte Carlo Tree Search</a>.</p></li>
-<li><p><strong>Cannot inspect the content of the coroutine</strong> — Most type-checked implementations, such as those in C++, do not allow inspection of a coroutine’s internal state without exfiltrating pointers to its variables, at least not in a protable way. Inspection is critical when the coroutine’s state influences a decision-maker—for example, in reinforcement learning, where you may want to send part of the coroutine’s state to the GPU to inform decisions.</p></li>
-<li><p><strong>Cannot reuse coroutines</strong> — Most languages support coroutine reuse with stackful coroutine implementations, but some (like Lua or C++ before C++20, unless using Boost.Coroutine) do not. Reuse is essential when the size of the <strong>interactive program</strong> grows and you wish divide the problem into distict coroutines that solve subproblems.</p></li>
+<li><p>Languages provide <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem (coroutines), but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features decreases.</p></li>
 </ul>
-<p>Notice that if you require any of these properties and your language does not support them, you are <strong>forced</strong> to implement the logic as a class—just like we did earlier—thus fully suffering from the <strong>inversion of control problem</strong>.</p>
+<p>Complexity here is intrinsic to the business rules: no amount of engineering can remove the six screens in Amazon’s checkout if management requires them. That complexity therefore lies outside the programmer’s control.</p>
+<p>Each new rule, branch, or state transition is another chance that some part of the flow will demand a capability absent from the coroutine model. Once a single branch cannot be expressed, you sometimes can keep half the program in coroutines and the rest elsewhere—sometimes you must rewrite the entire interaction as an explicit class‑based state machine.</p>
+<p><strong>Example</strong>:
+You’ve implemented a user interface in Python using coroutines. It asks users for personal data—name, address, ID number, etc.—with the flow depending on their nationality.</p>
+<p>Later, management introduces a new requirement:</p>
+<blockquote>
+<div><p>“At each screen transition, store the full application state so we can reload it later for debugging—<em>but without persisting any user data</em>, for privacy reasons.”</p>
+</div></blockquote>
+<p>This seemingly small request breaks the coroutine-based design.</p>
+<p>CPython coroutines are normally not serializable. You can’t snapshot the coroutine’s execution state and restore it to be debugged elsewhere, and you can’t simply replay the coroutine from the beginning because you can’t store the sensitive user inputs. Without full serialization or replay, you lose the ability to recreate the interaction history—meaning the coroutine approach must be abandoned in favor of an explicit, inspectable, and serializable state machine.</p>
+<section id="the-core-limitation">
+<h3>The core limitation<a class="headerlink" href="#the-core-limitation" title="Link to this heading"></a></h3>
+<p>The core limitation of coroutines in imperative languages is:</p>
+<blockquote>
+<div><p><strong>If a coroutine implementation is not fully equivalent to a class (or the equivalent construct of the language) in all essential respects, then any business requirement that demands a feature supported by classes—but not coroutines—forces you to abandon the coroutine design, at least locally around the affected logic.</strong></p>
+</div></blockquote>
+<p>Unfortunately, mainstream coroutine systems fall short. Most lack one or more capabilities that are standard in class-based designs. Here are some of the most common shortcomings (this list is not exhaustive):</p>
+<ul class="simple">
+<li><p><strong>No coroutine cloning</strong> — Not many imperative languages support copying a live coroutine. If your interactive program stores critical state inside a coroutine and you need to fork it—say, to run parallel simulations as in <a class="reference external" href="https://en.wikipedia.org/wiki/Monte_Carlo_tree_search">Monte Carlo Tree Search</a>—you’re out of luck. You must reimplement the logic using an explicit class that supports deep copying.</p></li>
+<li><p><strong>No safe introspection</strong> — Many statically checked programming languages provide no portable way to inspect a coroutine’s internal state at runtime. Without access to that state, you cannot export it—for example, to a GPU in a reinforcement learning system—without resorting to fragile, non-portable hacks like leaking pointers or manually extracting values.</p></li>
+<li><p><strong>Limited composition and reuse</strong> — Coroutines can often be composed and reused, but without delegating yields or similar constructs composing coroutines can become challenging.</p></li>
+</ul>
+<p>These issues aren’t theoretical. In traditional AI, for example, <strong>even a game as trivial as Tic-Tac-Toe cannot be implemented with coroutines</strong>—because the logic must support copying mid-execution to explore alternate futures of the game. If the coroutine holds the game’s variables instead just wrapping the game state, and you cannot clone it, you’re stuck. You could externalize all state to a separate object—but then you have a coroutine AND a state machine.</p>
+<p>In practice, coroutines are excellent tools for managing the <em>plumbing</em> of large systems. But when applied to <strong>complex interactive subsystems</strong>, the model starts to crumble. As program complexity grows, so too does the probability that you’ll need to <strong>copy, inspect, serialize</strong>, or some other class related feature, and the probability trends higher.</p>
+</section>
 </section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
-<p>The inversion‑of‑control pattern is not going away—graphics engines, web frameworks, RL platforms, and countless other systems deeply suffer from it.  What <em>can</em> change is the toolset we bring to the fight.  Ordinary coroutines already hint at a better world, yet their mainstream incarnations fall short when we need to</p>
-<ul class="simple">
-<li><p><strong>copy</strong> a running coroutine to explore alternate futures,</p></li>
-<li><p><strong>inspect</strong> its frame to feed state into a learner or debugger, and</p></li>
-<li><p><strong>reuse</strong> coroutines allowing problem decomposition.</p></li>
-</ul>
-<p>Without these three properties we slide back to hand‑rolled, class‑shaped state machines, inheriting the superlinear maintenance costs they impose.</p>
-<p>ToDo, how to solve</p>
+<p>The <strong>interactive inversion of control problem</strong> is not going away. Graphics engines, web frameworks, reinforcement learning platforms, and countless other systems suffer deeply from it. While modern languages offer coroutine-based workarounds, they are <strong>fighting a losing battle</strong>. To make real progress, we need language-level constructs designed to express interactive, stateful logic in a first-class, inspectable, and composable way.</p>
+<p><a class="reference internal" href="language_tour.html#action-functions"><span class="std std-ref">Rulebook</span></a> solves this issue through first-class continuations, under the name of Action functions.</p>
 </section>
 </section>
 
@@ -385,7 +404,7 @@ In particular, <a class="reference external" href="https://en.wikipedia.org/wiki
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Rulebook documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="language_tour.html" class="btn btn-neutral float-left" title="Language Tour" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="project_rationale.html" class="btn btn-neutral float-right" title="Where we are going and what RL will do once we get there." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

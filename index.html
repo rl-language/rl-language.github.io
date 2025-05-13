@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="The inversion of control problem" href="the_inversion_of_control_problem.html" /> 
+    <link rel="next" title="Language Tour" href="language_tour.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,9 +45,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The interactive inversion of control problem</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
@@ -86,26 +87,31 @@
              
   <section id="rulebook-documentation">
 <h1>Rulebook documentation<a class="headerlink" href="#rulebook-documentation" title="Link to this heading"></a></h1>
-<p><strong>Rulebook</strong> is a language to bolt onto other languages to solve the <a class="reference external" href="./the_inversion_of_control_problem.html">inversion of control problem</a> in <strong>complex interactive programs</strong> (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, …).</p>
-<p><strong>Rulebook</strong>:</p>
+<p><strong>Rulebook</strong> is a language for <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, …).</p>
+<p>Rulebook is compiled and statically checked, the key and innovative feature of the language are <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a> , which help to:</p>
 <ul class="simple">
-<li><p>solves the <strong>inversion of control problem</strong> at the language level — no other language does.</p></li>
-<li><p>requires <strong>asymptotically</strong> less code to write <strong>complex interactive programs</strong>.</p></li>
-<li><p>is designed to <strong>aid</strong>, not replace, and can <strong>interoperate</strong> with C, C++, C#, Python, and Godot Script.</p></li>
+<li><p><strong>properly separate and reuse</strong> interactive code</p></li>
+<li><p><strong>automatically test</strong> your interactive code using fuzzers and reinforcement learning.</p></li>
+<li><p><strong>automatically trace and reply</strong> interactive code.</p></li>
+<li><p><strong>automatically remote execute</strong> interactive code over the network.</p></li>
+<li><p><strong>write self-configuring UIs</strong>, where UIs can inspect the underlying program they present and configure themselves accordingly.</p></li>
+<li><p>solves the <a class="reference external" href="./the_inversion_of_control_problem.html">interactive inversion of control problem</a> at the language level.</p></li>
 </ul>
-<p>Furthermore, by solving the <strong>inversion of control problem</strong>, <strong>Rulebook</strong> enables:</p>
+<p>Rulebook:</p>
 <ul class="simple">
-<li><p><strong>storable</strong> and <strong>resumable</strong> coroutines.</p></li>
-<li><p><strong>automatic testing</strong> using fuzzers and reinforcement learning.</p></li>
-<li><p><strong>automatic tracing</strong> of executions.</p></li>
-<li><p><strong>automatic remote execution</strong> over the network.</p></li>
-<li><p><strong>self-configuring UIs</strong>, where UIs can inspect the underlying program they present and configure themselves accordingly.</p></li>
+<li><p><strong>aids</strong>, not replaces C, C++, C#, Python, and Godot Script. (just like SQL aids but not replaces those languages)</p></li>
+<li><p>produces a single shared library (or webassembly if targeting the web) with the same ABI as C that you can embed in your software, wrapped into generated file native to your language.</p></li>
 </ul>
+<p>Our key proof of concept example is <a class="reference external" href="https://github.com/rl-language/4Hammer">4Hammer</a> . A never before implemented reinforcement learning environment with huge amounts of user actions in only ~5k lines of code (including graphical code). It runs in the browser and on desktop and all the features described in this section are are present.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-programs">Complex interactive programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#action-functions">Action functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The interactive inversion of control problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems">Complex interactive subsystems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#inversion-of-control">Inversion of control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-problem">The problem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#mitigations-coroutines">Mitigations: coroutines</a></li>
@@ -115,13 +121,15 @@
 </li>
 </ul>
 </div>
-<p><strong>Reinforcement learning environments</strong> are often subject to the <strong>Inversion of Control Problem</strong>, since they must be stopped and resumed every time the artificial agent wishes to take an action. The following documents in detail what <strong>Rulebook</strong> does in that domain. In particular, we show:</p>
+<section id="reinforcement-learning-usecase">
+<h2>Reinforcement learning usecase<a class="headerlink" href="#reinforcement-learning-usecase" title="Link to this heading"></a></h2>
+<p><strong>Reinforcement learning environments</strong> are often subject to the <strong>interactive inversion of control problem</strong>, since they must be stopped and resumed every time the artificial agent wishes to take an action. The following documents in detail what <strong>Rulebook</strong> does in that domain. In particular, we show:</p>
 <ul class="simple">
 <li><p>how to interoperate <strong>Rulebook</strong> with <strong>Python</strong>.</p></li>
 <li><p>how you can write almost arbitrary functions, turn them into a <strong>GYM</strong> environment, and have your custom agents learn from such environments.</p></li>
 </ul>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="project_rationale.html#machine-learning">Machine Learning</a></li>
@@ -166,6 +174,10 @@
 </li>
 </ul>
 </div>
+</section>
+<section id="graphical-engines">
+<h2>Graphical engines<a class="headerlink" href="#graphical-engines" title="Link to this heading"></a></h2>
+<p>Graphical engines</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -286,12 +298,13 @@
 </ul>
 </div>
 </section>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="the_inversion_of_control_problem.html" class="btn btn-neutral float-right" title="The inversion of control problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="language_tour.html" class="btn btn-neutral float-right" title="Language Tour" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

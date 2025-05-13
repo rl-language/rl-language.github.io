@@ -6,31 +6,37 @@
 Rulebook documentation
 ======================
 
-**Rulebook** is a language to bolt onto other languages to solve the `inversion of control problem <./the_inversion_of_control_problem.html>`_ in **complex interactive programs** (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, ...).
+**Rulebook** is a language for `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, ...).
 
-**Rulebook**:
+Rulebook is compiled and statically checked, the key and innovative feature of the language are `Action functions with SPIN properties <./language_tour.html#action-functions>`_ , which help to:
 
-* solves the **inversion of control problem** at the language level — no other language does.
-* requires **asymptotically** less code to write **complex interactive programs**.
-* is designed to **aid**, not replace, and can **interoperate** with C, C++, C#, Python, and Godot Script.
+* **properly separate and reuse** interactive code
+* **automatically test** your interactive code using fuzzers and reinforcement learning.
+* **automatically trace and reply** interactive code.
+* **automatically remote execute** interactive code over the network.
+* **write self-configuring UIs**, where UIs can inspect the underlying program they present and configure themselves accordingly.
+* solves the `interactive inversion of control problem <./the_inversion_of_control_problem.html>`_ at the language level.
 
-Furthermore, by solving the **inversion of control problem**, **Rulebook** enables:
+Rulebook:
 
-* **storable** and **resumable** coroutines.
-* **automatic testing** using fuzzers and reinforcement learning.
-* **automatic tracing** of executions.
-* **automatic remote execution** over the network.
-* **self-configuring UIs**, where UIs can inspect the underlying program they present and configure themselves accordingly.
+* **aids**, not replaces C, C++, C#, Python, and Godot Script. (just like SQL aids but not replaces those languages)
+* produces a single shared library (or webassembly if targeting the web) with the same ABI as C that you can embed in your software, wrapped into generated file native to your language.
+
+Our key proof of concept example is `4Hammer <https://github.com/rl-language/4Hammer>`_ . A never before implemented reinforcement learning environment with huge amounts of user actions in only ~5k lines of code (including graphical code). It runs in the browser and on desktop and all the features described in this section are are present.
 
 
 .. toctree::
    :maxdepth: 2
    :caption: Concepts:
 
+   language_tour.md
    the_inversion_of_control_problem.md
 
 
-**Reinforcement learning environments** are often subject to the **Inversion of Control Problem**, since they must be stopped and resumed every time the artificial agent wishes to take an action. The following documents in detail what **Rulebook** does in that domain. In particular, we show:
+Reinforcement learning usecase
+##############################
+
+**Reinforcement learning environments** are often subject to the **interactive inversion of control problem**, since they must be stopped and resumed every time the artificial agent wishes to take an action. The following documents in detail what **Rulebook** does in that domain. In particular, we show:
 
 * how to interoperate **Rulebook** with **Python**.
 * how you can write almost arbitrary functions, turn them into a **GYM** environment, and have your custom agents learn from such environments.
@@ -38,12 +44,18 @@ Furthermore, by solving the **inversion of control problem**, **Rulebook** enabl
 
 .. toctree::
    :maxdepth: 2
-   :caption: Reinforcement learning:
+   :caption: Reinforcement Learning Docs:
 
    project_rationale.md
    rationale.md
    tutorial.md
    gym_tutorial.md
+   
+
+Graphical engines
+#################
+
+Graphical engines 
 
 
 .. toctree::

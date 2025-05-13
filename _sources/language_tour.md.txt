@@ -1,0 +1,79 @@
+# Language Tour
+
+Rulebook is compiled and statically checked, the key and innovative feature of the language are SPIN coroutines.
+
+The language kind of looks like python, but has many different properties.
+
+```rlc
+import serialization.print
+
+cls SimpleRegularCode:
+    Int x
+    Bool y
+
+fun main() -> Int:
+    let pair : SimpleRegularCode
+    print(pair) # {x: 0, y: false}
+    return 0
+```
+
+## Action functions
+
+Rulebook objective is to simplify [complex interactive subsystems](./the_inversion_of_control_problem.md#complex-interactive-subsystems), and does by providing SPIN functions.
+
+SPIN stands for Serializable, Precondition checkable, Introspectable, Non-main loop owning.
+
+### No-main loop owning
+Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs.
+
+Action function are coroutines and thus do not require the main loop.
+
+Here is an example, `say_hello()` starts the action function and executes it until `act resume()`. From the main function we can resume by invoking `sayer.resume()` which will print a hello.
+
+```rlc
+import serialization.print
+
+act say_hello() -> HelloSayer:
+    act resume()
+    print("hello")
+    act resume()
+    print("hello")
+
+fun main() -> Int:
+    let sayer = say_hello()
+    sayer.resume() # hello
+    sayer.resume() # hello
+    return 0
+```
+
+
+No-main loop onwership means that you can write **interactive programs** as if they where prompting the **user** themselves instead of being aware of how the framework is implemented.
+
+### Precondition checkable
+
+Precondition checkability means that the framework owning the main loop can check if the user inputs are valid.
+
+Say you have a installer that asks the user for a path on disk that must not be already used, then asks with they want their installation to include experimental content, and if they agree, it install some data.
+```rlc
+import string
+
+act installer() -> Installer:
+    show_path_screen_prompt()
+    act select_location(frm String path) { !file_exists(path) }
+    show_experimental_content_prompt()
+    act install_experimental_content(Bool do_it)
+    if do_it:
+        install_with_extra(path)
+    else:
+        install(path)
+
+fun main() -> Int:
+    let installer = installer()
+    let path = "wrong_path"s
+    if can installer.select_location(path):
+        installer.select_location(path)
+        installer.install_experimental_content(False)
+    return 0
+```
+
+In rulebook action functions suspension points can accept arguments, if they do
