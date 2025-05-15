@@ -50,6 +50,21 @@
 <li class="toctree-l2"><a class="reference internal" href="#action-functions">Action functions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#no-main-loop-owning">No-main loop owning</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#precondition-checkable">Precondition checkable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#serializable">Serializable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inspectable">Inspectable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spin-functions-implications">SPIN functions implications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action-statements-classes">Action statements classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#composing-actions">Composing actions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#use-cases">Use cases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-testing">Automatic testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finite-interactive-programs">Finite interactive programs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reinforcement-learning">Reinforcement Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#self-configuring-uis">Self configuring UIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compatibility">Compatibility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remote-execution">Remote execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autocomplete">Autocomplete</a></li>
 </ul>
 </li>
 </ul>
@@ -95,8 +110,7 @@
              
   <section id="language-tour">
 <h1>Language Tour<a class="headerlink" href="#language-tour" title="Link to this heading"></a></h1>
-<p>Rulebook is compiled and statically checked, the key and innovative feature of the language are SPIN coroutines.</p>
-<p>The language kind of looks like python, but has many different properties.</p>
+<p>Rulebook is compiled and statically checked, the key and innovative feature of the language are action functions with SPIN properties.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
 
 <span class="kn">cls</span> <span class="nc">SimpleRegularCode</span><span class="p">:</span>
@@ -112,10 +126,11 @@
 <section id="action-functions">
 <h2>Action functions<a class="headerlink" href="#action-functions" title="Link to this heading"></a></h2>
 <p>Rulebook objective is to simplify <a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="std std-ref">complex interactive subsystems</span></a>, and does by providing SPIN functions.</p>
-<p>SPIN stands for Serializable, Precondition checkable, Introspectable, Non-main loop owning.</p>
+<p>SPIN stands for <a class="reference internal" href="#serializable"><span class="xref myst">Serializable</span></a>, <a class="reference internal" href="#precondition-checkable"><span class="xref myst">Precondition checkable</span></a>, <a class="reference internal" href="#inspectable"><span class="xref myst">Inspectable</span></a>, <a class="reference internal" href="#no-main-loop-owning"><span class="xref myst">No-main loop owning</span></a>.</p>
+<p>With SPIN functions we have the ability to <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">store, load, print, replay, modify</span></a> both the program state and execution traces.</p>
 <section id="no-main-loop-owning">
 <h3>No-main loop owning<a class="headerlink" href="#no-main-loop-owning" title="Link to this heading"></a></h3>
-<p>Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs.</p>
+<p>Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs. For the reminder of the section we are going to call the component that holds the main loop the <strong>framework</strong>.</p>
 <p>Action function are coroutines and thus do not require the main loop.</p>
 <p>Here is an example, <code class="docutils literal notranslate"><span class="pre">say_hello()</span></code> starts the action function and executes it until <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">resume()</span></code>. From the main function we can resume by invoking <code class="docutils literal notranslate"><span class="pre">sayer.resume()</span></code> which will print a hello.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
@@ -133,12 +148,12 @@
     <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>No-main loop onwership means that you can write <strong>interactive programs</strong> as if they where prompting the <strong>user</strong> themselves instead of being aware of how the framework is implemented.</p>
+<p>No-main loop onwership means that you can write <strong>interactive programs</strong> as if they were prompting the <strong>user</strong> themselves instead of being aware of how the <strong>framework</strong> is implemented.</p>
 </section>
 <section id="precondition-checkable">
 <h3>Precondition checkable<a class="headerlink" href="#precondition-checkable" title="Link to this heading"></a></h3>
 <p>Precondition checkability means that the framework owning the main loop can check if the user inputs are valid.</p>
-<p>Say you have a installer that asks the user for a path on disk that must not be already used, then asks with they want their installation to include experimental content, and if they agree, it install some data.</p>
+<p>Say you have a installer that asks the user for a valid disk on path, then asks with they want their installation to include experimental content, and if they agree, it installs some data.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">string</span>
 
 <span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
@@ -160,7 +175,457 @@
     <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>In rulebook action functions suspension points can accept arguments, if they do</p>
+<p>In rulebook action functions suspension points, called <strong>action statements</strong>, can accept arguments, furthermore actions statements can be annotated with a boolean condition that specifies if such action, which such arguments are valid. This allows, using the operator <code class="docutils literal notranslate"><span class="pre">can</span></code>, the <strong>framework</strong> owning the main loop to check if the user input is valid without requiring burdensome validation mechanisms inside the action function.</p>
+</section>
+<section id="serializable">
+<h3>Serializable<a class="headerlink" href="#serializable" title="Link to this heading"></a></h3>
+<p>Sometimes the <strong>framework</strong> may desire store somewhere the state of the <strong>interactive system</strong> so that it can be resumed later.</p>
+<p>Immagine that you have written a game of rock paper scizor as follow and after player1 selectes a move, and you want to try all possible moves until you find one that wins.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
+    <span class="n">rock</span>
+    <span class="n">paper</span>
+    <span class="n">scizzor</span>
+
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player1</span><span class="p">)</span>
+    <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player2</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">player2_wins</span><span class="p">(</span><span class="n">player1</span><span class="p">,</span> <span class="n">player2</span><span class="p">):</span>
+        <span class="n">print</span><span class="p">(</span><span class="s2">&quot;you win&quot;</span><span class="p">)</span>
+    <span class="kr">else</span><span class="p">:</span>
+        <span class="n">print</span><span class="p">(</span><span class="s2">&quot;you lose&quot;</span><span class="p">)</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">play</span><span class="p">()</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">)</span>
+    <span class="kr">let</span> <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
+    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">)</span> <span class="c1"># you lose</span>
+    <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
+    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">scizzor</span><span class="p">)</span> <span class="c1"># you lose</span>
+    <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
+    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">paper</span><span class="p">)</span> <span class="c1"># you win</span>
+</pre></div>
+</div>
+<p>Rulebook allows to serialize and copy coroutines. This property allows many usefull techniques, for example you can test a <strong>interactive program</strong> by copying it and trying all possible actions that are valid in that state.</p>
+</section>
+<section id="inspectable">
+<h3>Inspectable<a class="headerlink" href="#inspectable" title="Link to this heading"></a></h3>
+<p>Sometimes you may desire to use some variable held in the coroutine frame to achieve some objective related to the <strong>framework</strong>.</p>
+<p>Suppose you have the previously mentioned implementation rock paper scizzor. Instead of trying all possible moves to see which one is the right one, you can just look inside the coroutine.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
+    <span class="n">rock</span>
+    <span class="n">paper</span>
+    <span class="n">scizzor</span>
+
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player1</span><span class="p">)</span>
+    <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player2</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">player2_wins</span><span class="p">(</span><span class="n">player1</span><span class="p">,</span> <span class="n">player2</span><span class="p">):</span>
+        <span class="n">print</span><span class="p">(</span><span class="s2">&quot;you win&quot;</span><span class="p">)</span>
+    <span class="kr">else</span><span class="p">:</span>
+        <span class="n">print</span><span class="p">(</span><span class="s2">&quot;you lose&quot;</span><span class="p">)</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">play</span><span class="p">()</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">player1</span><span class="p">)</span> <span class="c1"># rock</span>
+</pre></div>
+</div>
+<p>Rulebook allows to access any variable inside the coroutine that has been marked with the keyword <code class="docutils literal notranslate"><span class="pre">frm</span></code>. This feature allows to think of a action function simply has a different way of declaring a class. Whenever a class makes more sense as a class you can write it that way. When a class is inherently more procedure like, you can write it as a coroutine.</p>
+</section>
+<section id="spin-functions-implications">
+<h3>SPIN functions implications<a class="headerlink" href="#spin-functions-implications" title="Link to this heading"></a></h3>
+<p>SPIN functions used in a interpreted language or combined with Rulebook <a class="reference internal" href="#action-statements-classes"><span class="xref myst">Action statements classes</span></a> allow for powerfull techinques in <strong>complex interactive systems</strong></p>
+<p>Beside fully separating the concerns of the UI engine from the <strong>interactive application logic</strong>, we have the ability to store, load, print, replay, modify both execution traces and the program state. Here is a example of a <strong>Interactive program</strong> that selects random actions applies them, stores them in a vector, and then reapplies them on a new state.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
+    <span class="n">show_path_screen_prompt</span><span class="p">()</span>
+    <span class="kn">act</span> <span class="n">select_location</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">String</span> <span class="n">path</span><span class="p">)</span> <span class="p">{</span> <span class="o">!</span><span class="n">file_exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">show_experimental_content_prompt</span><span class="p">()</span>
+    <span class="kn">act</span> <span class="n">install_experimental_content</span><span class="p">(</span><span class="nc">Bool</span> <span class="n">do_it</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">do_it</span><span class="p">:</span>
+        <span class="n">install_with_extra</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="kr">else</span><span class="p">:</span>
+        <span class="n">install</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">trace</span> <span class="p">:</span> <span class="nc">Vector</span><span class="o">&lt;</span><span class="nc">AnyInstallerAction</span><span class="o">&gt;</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">installer</span><span class="p">()</span>
+    <span class="kr">while</span> <span class="o">!</span><span class="n">state</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kr">let</span> <span class="n">action</span> <span class="o">=</span> <span class="n">select_random_valid_action</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">apply</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+        <span class="n">trace</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="n">state</span> <span class="o">=</span> <span class="n">installer</span><span class="p">()</span>
+    <span class="kr">for</span> <span class="n">action</span> <span class="kr">in</span> <span class="n">trace</span><span class="p">:</span>
+        <span class="n">apply</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+
+    <span class="kr">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>Depending on the logic if the user provided <code class="docutils literal notranslate"><span class="pre">select_random_valid_action</span></code>, <code class="docutils literal notranslate"><span class="pre">trace</span></code> will contain 2 valid actions, a possible output of printing <code class="docutils literal notranslate"><span class="pre">trace</span></code> is <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">InstallerSelectLocation{</span> <span class="pre">path:</span> <span class="pre">&quot;some_valid_path&quot;</span> <span class="pre">},</span> <span class="pre">InstallerInstallExperimentalContent{</span> <span class="pre">dot_it:</span> <span class="pre">true</span> <span class="pre">}</span> <span class="pre">}</span></code>.</p>
+<p>This techinque is key to usefull pratical activities such as <strong>fuzzing</strong>, <strong>reinforcement learning environments</strong>, and testing application logic indipendently from the application.</p>
+</section>
+<section id="action-statements-classes">
+<h3>Action statements classes<a class="headerlink" href="#action-statements-classes" title="Link to this heading"></a></h3>
+<p>In a <strong>interactive system</strong> sometime you wish to delay the execution of a action until some future moment.</p>
+<p>Say you have a installer and for some reason you want to introduce a 10 frames delay before a user input is actually applied to the application. In rulebook you can use the <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code> attribute applied to action function to achieve this. Here is a example of a rendering loop that polls the GUI events, turns them into installer actions, puts them into a queue, and after 10 frames applies them.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
+    <span class="n">show_path_screen_prompt</span><span class="p">()</span>
+    <span class="kn">act</span> <span class="n">select_location</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">String</span> <span class="n">path</span><span class="p">)</span> <span class="p">{</span> <span class="o">!</span><span class="n">file_exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">show_experimental_content_prompt</span><span class="p">()</span>
+    <span class="kn">act</span> <span class="n">install_experimental_content</span><span class="p">(</span><span class="nc">Bool</span> <span class="n">do_it</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">do_it</span><span class="p">:</span>
+        <span class="n">install_with_extra</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="kr">else</span><span class="p">:</span>
+        <span class="n">install</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="p">:</span> <span class="n">installer</span><span class="p">()</span>
+    <span class="kr">let</span> <span class="n">delayed_events</span> <span class="p">:</span> <span class="nc">DelayedEventQueue</span>
+    <span class="kr">let</span> <span class="n">ui</span> <span class="p">:</span> <span class="nc">GUI</span>
+    <span class="kr">while</span> <span class="l">true</span><span class="p">:</span>
+        <span class="n">render_frame</span><span class="p">()</span>
+        <span class="kr">let</span> <span class="n">events</span> <span class="o">=</span> <span class="n">poll_user_events</span><span class="p">()</span>
+        <span class="c1"># queue a event to be resolved later</span>
+        <span class="kr">if</span> <span class="n">event</span><span class="p">.</span><span class="n">clicked_some_button</span><span class="p">:</span>
+            <span class="kr">let</span> <span class="n">action</span> <span class="p">:</span> <span class="nc">InstallerSelectLocation</span>
+            <span class="n">action</span><span class="p">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">ui</span><span class="p">.</span><span class="n">path_field</span><span class="p">.</span><span class="n">text</span>
+            <span class="n">delayed_events</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="kr">if</span> <span class="n">event</span><span class="p">.</span><span class="n">clicked_clicked_on_checkbox</span><span class="p">:</span>
+            <span class="kr">let</span> <span class="n">action</span> <span class="p">:</span>  <span class="nc">InstallerInstallExperimentalContent</span>
+            <span class="n">action</span><span class="p">.</span><span class="n">do_it</span> <span class="o">=</span> <span class="n">ui</span><span class="p">.</span><span class="n">checkbox</span><span class="p">.</span><span class="n">is_set</span>
+            <span class="n">delayed_events</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="c1"># apply the events after 10 frames have happed</span>
+        <span class="kr">for</span> <span class="n">event</span> <span class="kr">in</span> <span class="n">deylayed_events</span><span class="p">.</span><span class="n">get_events_to_apply</span><span class="p">():</span>
+            <span class="kr">if</span> <span class="n">can</span> <span class="n">apply</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+                <span class="n">apply</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code> is attached to a action function (<code class="docutils literal notranslate"><span class="pre">installer</span></code>) the compiler emits a class for each possible action statement (<code class="docutils literal notranslate"><span class="pre">select_location</span></code>, <code class="docutils literal notranslate"><span class="pre">install_experimental_content</span></code>). That class is populated only with the arguments of the action function, furthermore a typesafe union named <code class="docutils literal notranslate"><span class="pre">AnyInstallerAction</span></code> between the alterantive possible operations is introduced too. In this case the generated classes are equivalent to:</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">cls</span> <span class="nc">InstallerSelectLocation</span><span class="p">:</span>
+    <span class="nc">String</span> <span class="n">location</span>
+
+<span class="kn">cls</span> <span class="nc">InstallerInstallExperimentalContent</span><span class="p">:</span>
+    <span class="nc">Bool</span> <span class="n">do_it</span>
+
+<span class="kr">using</span> <span class="nc">AnyInstallerAction</span> <span class="o">=</span> <span class="nc">InstallerSelectLocation</span> <span class="p">|</span> <span class="nc">InstallerInstallExperimentalContent</span>
+</pre></div>
+</div>
+<p>You can store, print, copy such classes and do whatever you would normally do with classes. Furthermore the language offers the <code class="docutils literal notranslate"><span class="pre">apply</span></code> function to execute the action encapsulated into the class.
+Rulebook by allowing you to schedule actions at will, prevents coupling between GUI framework code and application logic.</p>
+</section>
+<section id="composing-actions">
+<h3>Composing actions<a class="headerlink" href="#composing-actions" title="Link to this heading"></a></h3>
+<p><strong>Complex interactive subsystems</strong>, the target of Rulebook, are by definition complex. In those situations you wish to split your logic into smaller reusable chucks.</p>
+<p>Rulebook provides facilities to achieve this. Here is a example of how you can reuse and compose a <strong>interactive sequence</strong>, such as rolling multiple dice, into a action that depending on the result allows the user to reroll them.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">roll_2_dice</span><span class="p">(</span><span class="nc">Int</span> <span class="n">num_faces</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">RollDice</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">roll</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">first</span><span class="p">)</span> <span class="p">{</span><span class="n">first</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">first</span> <span class="o">&lt;=</span> <span class="n">num_faces</span><span class="p">}</span>
+    <span class="kn">act</span> <span class="n">roll</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="p">{</span><span class="n">second</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">second</span> <span class="o">&lt;=</span> <span class="n">num_faces</span><span class="p">}</span>
+
+<span class="kn">act</span> <span class="n">rerollable_roll</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">RerollableDices</span><span class="p">:</span>
+    <span class="kn">subaction</span><span class="o">*</span> <span class="n">roll</span> <span class="o">=</span> <span class="n">roll_2_dice</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">roll</span><span class="p">.</span><span class="n">first</span> <span class="o">+</span> <span class="n">roll</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">roll</span> <span class="o">=</span> <span class="n">roll_2_dice</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="kn">subaction</span><span class="o">*</span> <span class="n">roll</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">sequence</span> <span class="o">=</span> <span class="n">rerollable_roll</span><span class="p">()</span>
+    <span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="c1"># 3</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="c1"># 4</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">subation*</span></code> allows to expose the inner action sequence to the outside until the inner action function has beenterminated. This techinque allows to split a <strong>interactive sequence</strong> into <strong>subsequences</strong> that can be tested in isolation.</p>
+<p>You can read more about it <a class="reference internal" href="language-reference.html#subaction-statements"><span class="std std-ref">here</span></a>.</p>
+</section>
+</section>
+<section id="use-cases">
+<h2>Use cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h2>
+<p>We have seen <a class="reference internal" href="#action-functions"><span class="xref myst">action functions</span></a> and how they enable powerfull techinques, so now we can see them in practice.</p>
+<section id="automatic-testing">
+<h3>Automatic testing<a class="headerlink" href="#automatic-testing" title="Link to this heading"></a></h3>
+<p>RLC comes with a off the shelf fuzzer that can be used as is, or modified for custom uses.</p>
+<p>You can read what fuzzing is <a class="reference external" href="https://en.wikipedia.org/wiki/Fuzzing">here</a>.</p>
+<p>Here is a example of a <strong>interactive sequence</strong> where the user provides its data, conditionally on its age. But we have forgot to specify that the age cannot be zero.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">action</span>
+
+<span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">ask_user_data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">AskUserData</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">insert_nationality</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">nationality_id</span><span class="p">)</span>
+    <span class="kn">act</span> <span class="n">insert_age</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">age</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">18</span><span class="p">:</span>
+       <span class="kr">return</span> <span class="c1"># nothing else to do</span>
+
+    <span class="kn">act</span> <span class="n">insert_parent_nationality</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">parent_nation_id</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">assert</span><span class="p">(</span><span class="l">false</span><span class="p">,</span> <span class="s2">&quot;age cannot be negative&quot;</span><span class="p">)</span>
+
+<span class="kn">fun</span> <span class="n">fuzz</span><span class="p">(</span><span class="nc">Vector</span><span class="o">&lt;</span><span class="nc">Byte</span><span class="o">&gt;</span> <span class="n">input</span><span class="p">):</span>
+    <span class="kr">if</span> <span class="n">input</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kr">return</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">ask_user_data</span><span class="p">()</span>
+    <span class="kr">let</span> <span class="n">action</span> <span class="p">:</span> <span class="nc">AnyAskUserDataAction</span>
+    <span class="kr">let</span> <span class="n">trace</span> <span class="o">=</span> <span class="n">parse_actions</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">input</span><span class="p">)</span>
+    <span class="kr">for</span> <span class="n">action</span> <span class="kr">in</span> <span class="n">trace</span><span class="p">:</span>
+        <span class="kr">if</span> <span class="n">can</span> <span class="n">apply</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+            <span class="n">apply</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="n">print</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can compile and execute this program with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># on linux</span>
+rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>executable<span class="w"> </span>--fuzzer
+./executable<span class="w"> </span><span class="c1"># will crash and tell you which file contains the crashing trace</span>
+./exetable<span class="w"> </span>crashing_trace.txt
+<span class="c1"># ./file.rl:12:9 error: age cannot be negative</span>
+</pre></div>
+</div>
+<p>With really little effort you have written a function that generates random actions and uses them to drive the <strong>interactive subsystem</strong>. In this case the proper fix is to specify that the <code class="docutils literal notranslate"><span class="pre">insert_age</span></code> action statement cannot accept a negative number. <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">insert_age(frm</span> <span class="pre">Int</span> <span class="pre">age)</span> <span class="pre">{age</span> <span class="pre">&gt;=</span> <span class="pre">0}</span></code>.</p>
+<p>Techinques such fuzzing can be used both to make sure that feature are robust, but they can be used as a replacement in rapid prototyping designs too. If you think that you are going to throw away a interactive sequence tomorrow, don’t bother testing it manually, just run the fuzzer and make sure it does not crashes for any input.</p>
+<p>While this is usefull, most of the computation is wasted rejecting invalid actions. Since in production environments we will just use <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">apply</span></code> to reject invalid actions there is no need to test those. If the problem you are trying to solve allows you to fully <a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">finite</span></a> all valid inputs, then your fuzzer can achieve significantly superior performances.
+Depending of the feature of your program, similar other optimizations may be possibile.</p>
+</section>
+<section id="finite-interactive-programs">
+<h3>Finite interactive programs<a class="headerlink" href="#finite-interactive-programs" title="Link to this heading"></a></h3>
+<p>Finite interactive programs are <strong>interactive systems</strong> where there is a finite, even if large, amounts of distinct actions that the user can take.</p>
+<p>Example are:</p>
+<ul class="simple">
+<li><p><strong>Chess</strong> even if the game rules may allow for infinite games, in each game each player can only select one of its finite pieces and move it in one of the finite board cells.</p></li>
+<li><p><strong>A mechanical vending machine</strong> the machine accepts a finite number of type of coins and allows to select among a finite amounts of products.</p></li>
+</ul>
+<p>Finite interactive programs allow to use many famous algorithms, for example all the variants of <a class="reference external" href="https://en.wikipedia.org/wiki/State_space_search">state space search</a>.</p>
+<p>Here is a example that uses rulebook <code class="docutils literal notranslate"><span class="pre">enumerate</span></code> to create a table of all possible distinct moves of tic tac toe, and then makes sure the program never crashes by visitng all valid states of tic tac toe.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">board</span> <span class="p">:</span> <span class="nc">Board</span>
+    <span class="kr">while</span> <span class="o">!</span><span class="n">board</span><span class="p">.</span><span class="n">full</span><span class="p">():</span>
+        <span class="kn">act</span> <span class="n">mark</span><span class="p">(</span><span class="nc">BInt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">,</span> <span class="nc">BInt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">board</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">}</span>
+
+        <span class="n">board</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">board</span><span class="p">.</span><span class="n">current_player</span><span class="p">())</span>
+
+        <span class="kr">if</span> <span class="n">board</span><span class="p">.</span><span class="n">three_in_a_line_player</span><span class="p">(</span><span class="n">board</span><span class="p">.</span><span class="n">current_player</span><span class="p">()):</span>
+            <span class="kr">return</span>
+        <span class="n">board</span><span class="p">.</span><span class="n">next_turn</span><span class="p">()</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">frontier</span> <span class="p">:</span> <span class="nc">Vector</span><span class="o">&lt;</span><span class="nc">Game</span><span class="o">&gt;</span>
+    <span class="kr">let</span> <span class="n">any_action</span> <span class="p">:</span> <span class="nc">AnyGameAction</span>
+    <span class="kr">let</span> <span class="kn">actions</span> <span class="o">=</span> <span class="n">enumerate</span><span class="p">(</span><span class="n">any_action</span><span class="p">)</span> <span class="c1"># contains 9 elements</span>
+    <span class="n">frontier</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">play</span><span class="p">())</span>
+    <span class="kr">while</span> <span class="o">!</span><span class="n">frontier</span><span class="p">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">frontier</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="kr">for</span> <span class="n">action</span> <span class="kr">in</span> <span class="kn">actions</span><span class="p">:</span>
+            <span class="kr">if</span> <span class="n">can</span> <span class="n">apply</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+                <span class="n">frontier</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+                <span class="n">apply</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">frontier</span><span class="p">.</span><span class="n">back</span><span class="p">())</span>
+
+    <span class="kr">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>The key feature here is <code class="docutils literal notranslate"><span class="pre">BInt</span></code>, which specifies that only numbers between 0 and 3 (excluded) are valid. University professors don’t want you to know it, but a simple program like this is a <strong>formal proof</strong> that <code class="docutils literal notranslate"><span class="pre">play</span></code> will never crash.</p>
+<p>Since rulebook programs are composable, you can test <strong>interactive sequences in isolation</strong>, even if not all your components be tested this way, Rulebook lets you test the pieces that can be tested with strong techinques like this.</p>
+</section>
+<section id="reinforcement-learning">
+<h3>Reinforcement Learning<a class="headerlink" href="#reinforcement-learning" title="Link to this heading"></a></h3>
+<p>If you install RLC using the pip <code class="docutils literal notranslate"><span class="pre">rl_language</span></code>, you obtain the ability to run <a class="reference external" href="https://en.wikipedia.org/wiki/Reinforcement_learning">reinforcement learning</a>. We saw how to trivially <a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">prove</span></a> that small components will never crash. We saw how to use a <a class="reference internal" href="#automatic-testing"><span class="xref myst">fuzzer</span></a> to find crashes in larger programs. Such techniques only allow you to say if the program crashes or not. Sometimes you may be interested in knowing how does some metric of a system evolves.</p>
+<p>Here is catch, a simple game used in reinforcement learning to validate reinforcement learning algorithms. The game allows the player to move left and right and try to catch a ball falling from above. The program is longer than the previous ones, because it must specify details such as the number of players, who is the current player and how to measure the score. The score is 1 when the player catches the ball. If the program is right, the average score of the network should trend to 100%.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+<span class="kn">import</span> <span class="n">range</span>
+<span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
+<span class="kn">import</span> <span class="n">machine_learning</span>
+<span class="kn">import</span> <span class="n">action</span>
+
+<span class="c1"># Constants for the game</span>
+<span class="kr">const</span> <span class="n">NUM_ROWS</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="kr">const</span> <span class="n">NUM_COLUMS</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="kn">enum</span> <span class="nc">Direction</span><span class="p">:</span>
+    <span class="nc">Left</span>
+    <span class="nc">None</span>
+    <span class="nc">Right</span>
+
+    <span class="kn">fun</span> <span class="n">equal</span><span class="p">(</span><span class="nc">Direction</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Bool</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">value</span>
+
+    <span class="kn">fun</span> <span class="n">not_equal</span><span class="p">(</span><span class="nc">Direction</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Bool</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="o">!</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+
+
+<span class="kr">using</span> <span class="nc">Column</span> <span class="o">=</span> <span class="nc">BInt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">NUM_COLUMS</span><span class="o">&gt;</span>
+<span class="kr">using</span> <span class="nc">Row</span> <span class="o">=</span> <span class="nc">BInt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">NUM_ROWS</span><span class="o">&gt;</span>
+
+<span class="c1"># The main Catch game</span>
+<span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">ball_row</span> <span class="p">:</span> <span class="nc">Row</span>
+    <span class="kn">frm</span> <span class="n">ball_col</span> <span class="p">:</span> <span class="nc">Column</span>
+    <span class="kn">frm</span> <span class="n">paddle_col</span> <span class="p">:</span> <span class="nc">Column</span>
+
+    <span class="c1"># Initialization - chance player selects starting ball column</span>
+    <span class="kn">act</span> <span class="n">set_start_location</span><span class="p">(</span><span class="nc">Column</span> <span class="n">col</span><span class="p">)</span>
+    <span class="n">ball_col</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">col</span><span class="p">.</span><span class="n">value</span>
+    <span class="n">paddle_col</span> <span class="o">=</span> <span class="n">NUM_COLUMS</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># Game loop - player makes moves until ball reaches bottom</span>
+    <span class="kr">while</span> <span class="n">ball_row</span> <span class="o">!=</span> <span class="n">NUM_ROWS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">move</span><span class="p">(</span><span class="nc">Direction</span> <span class="n">direction</span><span class="p">)</span>
+
+        <span class="n">ball_row</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">ball_row</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="kr">let</span> <span class="n">actual_direction</span> <span class="o">=</span> <span class="n">direction</span><span class="p">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># Convert to -1, 0, 1</span>
+        <span class="n">paddle_col</span> <span class="o">=</span> <span class="n">paddle_col</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">actual_direction</span>
+
+<span class="c1"># Cell states</span>
+<span class="kn">enum</span> <span class="nc">CellState</span><span class="p">:</span>
+    <span class="nc">Empty</span>
+    <span class="nc">Paddle</span>
+    <span class="nc">Ball</span>
+
+    <span class="kn">fun</span> <span class="n">equal</span><span class="p">(</span><span class="nc">CellState</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Bool</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">value</span>
+
+    <span class="kn">fun</span> <span class="n">not_equal</span><span class="p">(</span><span class="nc">CellState</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Bool</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="o">!</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+
+<span class="c1"># Get cell state at specific row and column</span>
+<span class="kn">fun</span> <span class="n">cell_at</span><span class="p">(</span><span class="nc">Game</span> <span class="n">game</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">row</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">col</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">CellState</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">NUM_ROWS</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">and</span> <span class="n">col</span> <span class="o">==</span> <span class="n">game</span><span class="p">.</span><span class="n">paddle_col</span><span class="p">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="nc">CellState</span><span class="p">::</span><span class="nc">Paddle</span>
+    <span class="kr">else</span> <span class="kr">if</span> <span class="n">row</span> <span class="o">==</span> <span class="n">game</span><span class="p">.</span><span class="n">ball_row</span><span class="p">.</span><span class="n">value</span> <span class="o">and</span> <span class="n">col</span> <span class="o">==</span> <span class="n">game</span><span class="p">.</span><span class="n">ball_col</span><span class="p">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="nc">CellState</span><span class="p">::</span><span class="nc">Ball</span>
+    <span class="kr">return</span> <span class="nc">CellState</span><span class="p">::</span><span class="nc">Empty</span>
+
+
+
+<span class="c1"># Function for machine learning components to display the game state</span>
+<span class="kn">fun</span> <span class="n">pretty_print</span><span class="p">(</span><span class="nc">Game</span> <span class="n">game</span><span class="p">):</span>
+    <span class="c1"># Generate string representation of the board</span>
+    <span class="kr">let</span> <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="n">s</span>
+    <span class="kr">for</span> <span class="n">row</span> <span class="kr">in</span> <span class="n">range</span><span class="p">(</span><span class="n">NUM_ROWS</span><span class="p">):</span>
+        <span class="kr">for</span> <span class="n">col</span> <span class="kr">in</span> <span class="n">range</span><span class="p">(</span><span class="n">NUM_COLUMS</span><span class="p">):</span>
+            <span class="kr">if</span> <span class="n">cell_at</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="o">==</span> <span class="nc">CellState</span><span class="p">::</span><span class="nc">Empty</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="n">s</span>
+            <span class="kr">else</span> <span class="kr">if</span> <span class="n">cell_at</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="o">==</span> <span class="nc">CellState</span><span class="p">::</span><span class="nc">Paddle</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;x&quot;</span><span class="n">s</span>
+            <span class="kr">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;o&quot;</span><span class="n">s</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span> <span class="o">+</span> <span class="s2">&quot;\n&quot;</span><span class="n">s</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="c1"># Return current player or special value if game is done</span>
+<span class="kn">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="nc">Game</span> <span class="n">g</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="n">g</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kr">return</span> <span class="o">-</span><span class="mi">4</span>  <span class="c1"># Terminal state</span>
+    <span class="kr">let</span> <span class="n">column</span> <span class="p">:</span> <span class="nc">Column</span>
+    <span class="kr">if</span> <span class="n">can</span> <span class="n">g</span><span class="p">.</span><span class="n">set_start_location</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+        <span class="kr">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="kr">return</span> <span class="mi">0</span>  <span class="c1"># Player 0 (the only player)</span>
+
+<span class="c1"># Return score for ML training</span>
+<span class="kn">fun</span> <span class="n">score</span><span class="p">(</span><span class="nc">Game</span> <span class="n">g</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">player_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Float</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="o">!</span><span class="n">g</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kr">return</span> <span class="mf">0.0</span>
+    <span class="kr">if</span> <span class="n">g</span><span class="p">.</span><span class="n">paddle_col</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">g</span><span class="p">.</span><span class="n">ball_col</span><span class="p">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="mf">1.0</span>
+    <span class="kr">else</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="mf">0.0</span>
+
+<span class="c1"># Return number of players (always 1 for this game)</span>
+<span class="kn">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The program is simply run with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">learn</span> <span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="n">network</span> <span class="c1">#ctrl+c to stop it after a while</span>
+<span class="n">rlc</span><span class="o">-</span><span class="n">play</span> <span class="n">file</span><span class="o">.</span><span class="n">rk</span> <span class="n">network</span> <span class="c1"># to see a game</span>
+</pre></div>
+</div>
+<p>The user did not specified anything related to reinforcement learning about this program, it specified properties about how to play the environment, it was all automatic. The computer will learn to maximize the score, and the score can be later visualized. This is helpfull both in the case the user does wishes see what is the best score possible for a given program, or when it wants to make sure that the program is correct and variables inside the program do not assume surprising values.</p>
+</section>
+<section id="self-configuring-uis">
+<h3>Self configuring UIs<a class="headerlink" href="#self-configuring-uis" title="Link to this heading"></a></h3>
+<p>Since in Rulebook allows you to know all types of actions that can be applied to a given action function, your UI code can inspect the state of action functions to decide what to show on screen, as well as inspecting what actions are valid.</p>
+<p>Say you want write a UI for tic tac toe. You have created 9 UI cell elements that change color depending on who marked that cell of the screen. The cell should flash when they can be clicked. The rules of tic tac toe are subject to change, so the the UI designer cannot rely on their implementation details. In Rulebook you can use actions classes to achieve this.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">board</span> <span class="p">:</span> <span class="nc">Board</span>
+    <span class="kr">while</span> <span class="o">!</span><span class="n">board</span><span class="p">.</span><span class="n">full</span><span class="p">():</span>
+        <span class="kn">act</span> <span class="n">mark</span><span class="p">(</span><span class="nc">BInt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">x</span><span class="p">,</span> <span class="nc">BInt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">board</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">}</span>
+
+        <span class="n">board</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">board</span><span class="p">.</span><span class="n">current_player</span><span class="p">())</span>
+
+        <span class="kr">if</span> <span class="n">board</span><span class="p">.</span><span class="n">three_in_a_line_player</span><span class="p">(</span><span class="n">board</span><span class="p">.</span><span class="n">current_player</span><span class="p">()):</span>
+            <span class="kr">return</span>
+        <span class="n">board</span><span class="p">.</span><span class="n">next_turn</span><span class="p">()</span>
+
+<span class="kn">cls</span> <span class="nc">UISquare</span><span class="p">:</span>
+    <span class="nc">Int</span> <span class="n">x</span>
+    <span class="nc">Int</span> <span class="n">y</span>
+
+    <span class="n">def</span> <span class="n">update</span><span class="p">(</span><span class="nc">Game</span> <span class="n">state</span><span class="p">):</span>
+        <span class="kr">let</span> <span class="n">action</span> <span class="o">=</span> <span class="nc">GameMark</span>
+        <span class="n">action</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">action</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="kr">if</span> <span class="n">can</span> <span class="n">apply</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+            <span class="n">render_quad</span><span class="p">(</span><span class="n">glow</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="kr">else</span> <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">board</span><span class="p">.</span><span class="n">slots</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="n">render_quad</span><span class="p">(</span><span class="n">grey</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="kr">else</span> <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">board</span><span class="p">.</span><span class="n">slots</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="n">render_quad</span><span class="p">(</span><span class="n">blue</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="kr">else</span><span class="p">:</span>
+            <span class="n">render_quad</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">play</span><span class="p">()</span>
+    <span class="kr">let</span> <span class="n">ui_quads</span> <span class="o">=</span> <span class="n">make_quads</span><span class="p">()</span>
+    <span class="kr">while</span> <span class="nc">True</span><span class="p">:</span>
+        <span class="kr">for</span> <span class="n">quad</span> <span class="kr">in</span> <span class="n">ui_quads</span><span class="p">:</span>
+            <span class="n">quad</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">poll_and_apply_events</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="kr">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>The snippet implements a <code class="docutils literal notranslate"><span class="pre">UISquare</span></code> in a way that only relies on actions, and that <code class="docutils literal notranslate"><span class="pre">board</span></code> is of type <code class="docutils literal notranslate"><span class="pre">Board</span></code>. Based on them, it decides which color to be rendered as. This means that as long as <code class="docutils literal notranslate"><span class="pre">play</span></code> keeps those features, it is allowed to arbitrarily change the game rules, and everything will work. Since rulebook exposes all actions as classes, and you can check if a action is valid, UI elements can expose complex auto configuration schemes that work correctly when you change the underlying application code.</p>
+</section>
+<section id="compatibility">
+<h3>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading"></a></h3>
+<p>Rulebook has bidirectional compatibility with C, CPP, Python, C# and Godot.Here is a example of c# invoking Rulebook.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">local_var</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kn">act</span> <span class="n">pick</span><span class="p">(</span><span class="nc">Int</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">local_var</span> <span class="o">=</span> <span class="n">x</span>
+</pre></div>
+</div>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Tester</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">test</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Game</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RLC</span><span class="p">.</span><span class="n">play</span><span class="p">();</span>
+<span class="w">        </span><span class="n">pair</span><span class="p">.</span><span class="n">pick</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">pair</span><span class="p">.</span><span class="n">local_var</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To benefit the most from Rulebook features it is suggested that inside rulebook object you only use copiable and default constructable objects. If you cannot guarantee this property, look in the references how you can use the <strong>ctx</strong> language feature to provide a context object to action functions so that those non copiable or non default constructable objects are never constructed or copied.</p>
+</section>
+<section id="remote-execution">
+<h3>Remote execution<a class="headerlink" href="#remote-execution" title="Link to this heading"></a></h3>
+<p>Since Rulebook is compatible with multiple languages, if the remote execution you are interested in implementing can be expressed at the level of the action trace, you can automatically perform remote execution by keeping two copies of the program into two processes, and whenever one executes a action, it is sent to the other one, even if they run on different languages.</p>
+<p>Showing this feature in a small snippet of code is difficult, but it is implemented in the <a class="reference external" href="https://github.com/rl-language/4Hammer">4hammer</a> example, and it is a obvious consequence of <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">SPIN functions</span></a> since SPIN functions can be serialized, sent over network and restored.</p>
+</section>
+<section id="autocomplete">
+<h3>Autocomplete<a class="headerlink" href="#autocomplete" title="Link to this heading"></a></h3>
+<p>We have autocomplete support for vscode, and for any editor that supports a lsp. We have automatic autocomplete support in any language for any language we are compatible with, since we emit the wrapper for that language that knows all the Rulebook types.</p>
 </section>
 </section>
 </section>

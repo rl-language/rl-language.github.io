@@ -189,7 +189,7 @@
 <ul class="simple">
 <li><p>When <strong>complex interactive subsystems</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a>, they become superlinearly harder to reason about, refactor, and maintain.</p></li>
 </ul>
-<p>This assertion is based on the observation that giving up control of the main loop in an <strong>interactive system</strong> (complex or not) push the program to be implemented as a <a class="reference external" href="https://en.wikipedia.org/wiki/Automata-based_programming">state machine</a>, unless the programming language provides a mechanism to avoid it.</p>
+<p>This assertion is based on the observation that giving up control of the main loop in an <strong>interactive system</strong> (complex or not) push the program to be implemented as a <a class="reference external" href="https://en.wikipedia.org/wiki/Automata-based_programming">state machine</a> or some equivalent construct, unless the programming language provides a mechanism to avoid it.</p>
 <p>Let us consider an example: suppose we have a <strong>interactive subsystem</strong>, such as an implementation of Tic Tac Toe that owns the main loop. I will use python syntax, but what is relevant is not le language, but the need of writing is a state machine due to possible limitations with the language.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">():</span>
     <span class="n">board</span> <span class="o">=</span> <span class="n">Board</span><span class="p">()</span>
@@ -389,7 +389,6 @@ You’ve implemented a user interface in Python using coroutines. It asks users 
 <li><p><strong>No safe introspection</strong> — Many statically checked programming languages provide no portable way to inspect a coroutine’s internal state at runtime. Without access to that state, you cannot export it—for example, to a GPU in a reinforcement learning system—without resorting to fragile, non-portable hacks like leaking pointers or manually extracting values.</p></li>
 <li><p><strong>Limited composition and reuse</strong> — Coroutines can often be composed and reused, but without delegating yields or similar constructs composing coroutines can become challenging.</p></li>
 </ul>
-<p>These issues aren’t theoretical. In traditional AI, for example, <strong>even a game as trivial as Tic-Tac-Toe cannot be implemented with coroutines</strong>—because the logic must support copying mid-execution to explore alternate futures of the game. If the coroutine holds the game’s variables instead just wrapping the game state, and you cannot clone it, you’re stuck. You could externalize all state to a separate object—but then you have a coroutine AND a state machine.</p>
 <p>In practice, coroutines are excellent tools for managing the <em>plumbing</em> of large systems. But when applied to <strong>complex interactive subsystems</strong>, the model starts to crumble. As program complexity grows, so too does the probability that you’ll need to <strong>copy, inspect, serialize</strong>, or some other class related feature, and the probability trends higher.</p>
 </section>
 </section>

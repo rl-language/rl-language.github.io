@@ -10,19 +10,18 @@ Rulebook documentation
 
 Rulebook is compiled and statically checked, the key and innovative feature of the language are `Action functions with SPIN properties <./language_tour.html#action-functions>`_ , which help to:
 
-* **properly separate and reuse** interactive code
-* **automatically test** your interactive code using fuzzers and reinforcement learning.
-* **automatically trace and reply** interactive code.
-* **automatically remote execute** interactive code over the network.
-* **write self-configuring UIs**, where UIs can inspect the underlying program they present and configure themselves accordingly.
+* `store, load, print, replay, modify <./language_tour.html#spin-functions-implications>`_ both execution traces and the program state
+* **automatically test** your interactive code using off-the-shelf `fuzzers <./language_tour.html#automatic-testing>`_ , `proofs <./language_tour.html#>`_ and `reinforcement learning <./language_tour.html#reinforcement-learning>`_.
+* write `self-configuring UIs <./language_tour.html#self-configuring-uis>`_, where UIs can inspect the underlying program they present and configure themselves accordingly.
+* `automatically remote execute <./language_tour.html#remote-execution>`_ interactive code over the network.
 * solves the `interactive inversion of control problem <./the_inversion_of_control_problem.html>`_ at the language level.
 
 Rulebook:
 
-* **aids**, not replaces C, C++, C#, Python, and Godot Script. (just like SQL aids but not replaces those languages)
+* **aids**, not replaces `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_  (just like SQL aids but not replaces those languages)
 * produces a single shared library (or webassembly if targeting the web) with the same ABI as C that you can embed in your software, wrapped into generated file native to your language.
 
-Our key proof of concept example is `4Hammer <https://github.com/rl-language/4Hammer>`_ . A never before implemented reinforcement learning environment with huge amounts of user actions in only ~5k lines of code (including graphical code). It runs in the browser and on desktop and all the features described in this section are are present.
+Our key proof of concept example is `4Hammer <https://github.com/rl-language/4Hammer>`_ . A never before implemented reinforcement learning environment with huge amounts of user actions in only ~5k lines of code (including graphical code). It runs in the browser and on desktop and all the features described in this section are present.
 
 
 .. toctree::

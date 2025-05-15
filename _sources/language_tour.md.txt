@@ -1,8 +1,6 @@
 # Language Tour
 
-Rulebook is compiled and statically checked, the key and innovative feature of the language are SPIN coroutines.
-
-The language kind of looks like python, but has many different properties.
+Rulebook is compiled and statically checked, the key and innovative feature of the language are action functions with SPIN properties.
 
 ```rlc
 import serialization.print
@@ -21,10 +19,14 @@ fun main() -> Int:
 
 Rulebook objective is to simplify [complex interactive subsystems](./the_inversion_of_control_problem.md#complex-interactive-subsystems), and does by providing SPIN functions.
 
-SPIN stands for Serializable, Precondition checkable, Introspectable, Non-main loop owning.
+SPIN stands for [Serializable](#serializable), [Precondition checkable](#precondition-checkable), [Inspectable](#inspectable), [No-main loop owning](#no-main-loop-owning).
+
+With SPIN functions we have the ability to [store, load, print, replay, modify](#spin-functions-implications) both the program state and execution traces.
+
+
 
 ### No-main loop owning
-Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs.
+Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs. For the reminder of the section we are going to call the component that holds the main loop the **framework**.
 
 Action function are coroutines and thus do not require the main loop.
 
@@ -47,13 +49,13 @@ fun main() -> Int:
 ```
 
 
-No-main loop onwership means that you can write **interactive programs** as if they where prompting the **user** themselves instead of being aware of how the framework is implemented.
+No-main loop onwership means that you can write **interactive programs** as if they were prompting the **user** themselves instead of being aware of how the **framework** is implemented.
 
 ### Precondition checkable
 
 Precondition checkability means that the framework owning the main loop can check if the user inputs are valid.
 
-Say you have a installer that asks the user for a path on disk that must not be already used, then asks with they want their installation to include experimental content, and if they agree, it install some data.
+Say you have a installer that asks the user for a valid disk on path, then asks with they want their installation to include experimental content, and if they agree, it installs some data.
 ```rlc
 import string
 
@@ -76,4 +78,497 @@ fun main() -> Int:
     return 0
 ```
 
-In rulebook action functions suspension points can accept arguments, if they do
+In rulebook action functions suspension points, called **action statements**, can accept arguments, furthermore actions statements can be annotated with a boolean condition that specifies if such action, which such arguments are valid. This allows, using the operator `can`, the **framework** owning the main loop to check if the user input is valid without requiring burdensome validation mechanisms inside the action function.
+
+### Serializable
+
+Sometimes the **framework** may desire store somewhere the state of the **interactive system** so that it can be resumed later.
+
+Immagine that you have written a game of rock paper scizor as follow and after player1 selectes a move, and you want to try all possible moves until you find one that wins.
+
+```rlc
+enum Gesture:
+    rock
+    paper
+    scizzor
+
+act play() -> Game:
+    act select(frm Gesture player1)
+    act select(frm Gesture player2)
+    if player2_wins(player1, player2):
+        print("you win")
+    else:
+        print("you lose")
+
+fun main() -> Int:
+    let state = play()
+    state.select(Gesture::rock)
+    let copy = state
+    copy.select(Gesture::rock) # you lose
+    copy = state
+    copy.select(Gesture::scizzor) # you lose
+    copy = state
+    copy.select(Gesture::paper) # you win
+```
+
+Rulebook allows to serialize and copy coroutines. This property allows many usefull techniques, for example you can test a **interactive program** by copying it and trying all possible actions that are valid in that state.
+
+### Inspectable
+
+Sometimes you may desire to use some variable held in the coroutine frame to achieve some objective related to the **framework**.
+
+Suppose you have the previously mentioned implementation rock paper scizzor. Instead of trying all possible moves to see which one is the right one, you can just look inside the coroutine.
+
+```rlc
+enum Gesture:
+    rock
+    paper
+    scizzor
+
+act play() -> Game:
+    act select(frm Gesture player1)
+    act select(frm Gesture player2)
+    if player2_wins(player1, player2):
+        print("you win")
+    else:
+        print("you lose")
+
+fun main() -> Int:
+    let state = play()
+    state.select(Gesture::rock)
+    print(state.player1) # rock
+```
+
+Rulebook allows to access any variable inside the coroutine that has been marked with the keyword `frm`. This feature allows to think of a action function simply has a different way of declaring a class. Whenever a class makes more sense as a class you can write it that way. When a class is inherently more procedure like, you can write it as a coroutine.
+
+### SPIN functions implications
+
+SPIN functions used in a interpreted language or combined with Rulebook [Action statements classes](#action-statements-classes) allow for powerfull techinques in **complex interactive systems**
+
+Beside fully separating the concerns of the UI engine from the **interactive application logic**, we have the ability to store, load, print, replay, modify both execution traces and the program state. Here is a example of a **Interactive program** that selects random actions applies them, stores them in a vector, and then reapplies them on a new state.
+
+```rlc
+@classes
+act installer() -> Installer:
+    show_path_screen_prompt()
+    act select_location(frm String path) { !file_exists(path) }
+    show_experimental_content_prompt()
+    act install_experimental_content(Bool do_it)
+    if do_it:
+        install_with_extra(path)
+    else:
+        install(path)
+
+fun main() -> Int:
+    let trace : Vector<AnyInstallerAction>
+    let state = installer()
+    while !state.is_done():
+        let action = select_random_valid_action(state)
+        apply(state, action)
+        trace.append(state)
+
+    state = installer()
+    for action in trace:
+        apply(state, action)
+
+    return 0
+```
+
+Depending on the logic if the user provided `select_random_valid_action`, `trace` will contain 2 valid actions, a possible output of printing `trace` is `{ InstallerSelectLocation{ path: "some_valid_path" }, InstallerInstallExperimentalContent{ dot_it: true } }`.
+
+This techinque is key to usefull pratical activities such as **fuzzing**, **reinforcement learning environments**, and testing application logic indipendently from the application.
+
+### Action statements classes
+
+In a **interactive system** sometime you wish to delay the execution of a action until some future moment.
+
+Say you have a installer and for some reason you want to introduce a 10 frames delay before a user input is actually applied to the application. In rulebook you can use the `@classes` attribute applied to action function to achieve this. Here is a example of a rendering loop that polls the GUI events, turns them into installer actions, puts them into a queue, and after 10 frames applies them.
+
+```rlc
+@classes
+act installer() -> Installer:
+    show_path_screen_prompt()
+    act select_location(frm String path) { !file_exists(path) }
+    show_experimental_content_prompt()
+    act install_experimental_content(Bool do_it)
+    if do_it:
+        install_with_extra(path)
+    else:
+        install(path)
+
+fun main() -> Int:
+    let state : installer()
+    let delayed_events : DelayedEventQueue
+    let ui : GUI
+    while true:
+        render_frame()
+        let events = poll_user_events()
+        # queue a event to be resolved later
+        if event.clicked_some_button:
+            let action : InstallerSelectLocation
+            action.path = ui.path_field.text
+            delayed_events.append(action)
+        if event.clicked_clicked_on_checkbox:
+            let action :  InstallerInstallExperimentalContent
+            action.do_it = ui.checkbox.is_set
+            delayed_events.append(action)
+        # apply the events after 10 frames have happed
+        for event in deylayed_events.get_events_to_apply():
+            if can apply(event, state):
+                apply(event, state)
+```
+
+When `@classes` is attached to a action function (`installer`) the compiler emits a class for each possible action statement (`select_location`, `install_experimental_content`). That class is populated only with the arguments of the action function, furthermore a typesafe union named `AnyInstallerAction` between the alterantive possible operations is introduced too. In this case the generated classes are equivalent to:
+
+```rlc
+cls InstallerSelectLocation:
+    String location
+
+cls InstallerInstallExperimentalContent:
+    Bool do_it
+
+using AnyInstallerAction = InstallerSelectLocation | InstallerInstallExperimentalContent
+```
+
+You can store, print, copy such classes and do whatever you would normally do with classes. Furthermore the language offers the `apply` function to execute the action encapsulated into the class.
+Rulebook by allowing you to schedule actions at will, prevents coupling between GUI framework code and application logic.
+
+### Composing actions
+
+**Complex interactive subsystems**, the target of Rulebook, are by definition complex. In those situations you wish to split your logic into smaller reusable chucks.
+
+Rulebook provides facilities to achieve this. Here is a example of how you can reuse and compose a **interactive sequence**, such as rolling multiple dice, into a action that depending on the result allows the user to reroll them.
+
+```rlc
+act roll_2_dice(Int num_faces) -> RollDice:
+    act roll(frm Int first) {first > 0, first <= num_faces}
+    act roll(frm Int second) {second > 0, second <= num_faces}
+
+act rerollable_roll() -> RerollableDices:
+    subaction* roll = roll_2_dice(6)
+    if roll.first + roll.second == 2:
+        roll = roll_2_dice(6)
+        subaction* roll
+
+fun main() -> Int:
+    let sequence = rerollable_roll()
+    sequence.roll(1)
+    sequence.roll(1)
+    sequence.roll(3)
+    sequence.roll(4)
+    print(sequence.roll.first) # 3
+    print(sequence.roll.second) # 4
+
+```
+
+`subation*` allows to expose the inner action sequence to the outside until the inner action function has beenterminated. This techinque allows to split a **interactive sequence** into **subsequences** that can be tested in isolation.
+
+You can read more about it [here](./language-reference.md#subaction-statements).
+
+
+
+## Use cases
+
+We have seen [action functions](#action-functions) and how they enable powerfull techinques, so now we can see them in practice.
+
+### Automatic testing
+
+RLC comes with a off the shelf fuzzer that can be used as is, or modified for custom uses.
+
+You can read what fuzzing is [here](https://en.wikipedia.org/wiki/Fuzzing).
+
+Here is a example of a **interactive sequence** where the user provides its data, conditionally on its age. But we have forgot to specify that the age cannot be zero.
+```rlc
+import action
+
+@classes
+act ask_user_data() -> AskUserData:
+    act insert_nationality(frm Int nationality_id)
+    act insert_age(frm Int age)
+    if age > 18:
+       return # nothing else to do
+
+    act insert_parent_nationality(frm Int parent_nation_id)
+    if age < 0:
+        assert(false, "age cannot be negative")
+
+fun fuzz(Vector<Byte> input):
+    if input.size() == 0:
+        return
+    let state = ask_user_data()
+    let action : AnyAskUserDataAction
+    let trace = parse_actions(action, input)
+    for action in trace:
+        if can apply(action, state):
+            apply(action, state)
+            print(action)
+```
+
+We can compile and execute this program with
+```bash
+# on linux
+rlc file.rl -o executable --fuzzer
+./executable # will crash and tell you which file contains the crashing trace
+./exetable crashing_trace.txt
+# ./file.rl:12:9 error: age cannot be negative
+```
+
+With really little effort you have written a function that generates random actions and uses them to drive the **interactive subsystem**. In this case the proper fix is to specify that the `insert_age` action statement cannot accept a negative number. `act insert_age(frm Int age) {age >= 0}`.
+
+Techinques such fuzzing can be used both to make sure that feature are robust, but they can be used as a replacement in rapid prototyping designs too. If you think that you are going to throw away a interactive sequence tomorrow, don't bother testing it manually, just run the fuzzer and make sure it does not crashes for any input.
+
+While this is usefull, most of the computation is wasted rejecting invalid actions. Since in production environments we will just use `can apply` to reject invalid actions there is no need to test those. If the problem you are trying to solve allows you to fully [finite](#finite-interactive-programs) all valid inputs, then your fuzzer can achieve significantly superior performances.
+Depending of the feature of your program, similar other optimizations may be possibile.
+
+### Finite interactive programs
+
+Finite interactive programs are **interactive systems** where there is a finite, even if large, amounts of distinct actions that the user can take.
+
+Example are:
+* **Chess** even if the game rules may allow for infinite games, in each game each player can only select one of its finite pieces and move it in one of the finite board cells.
+* **A mechanical vending machine** the machine accepts a finite number of type of coins and allows to select among a finite amounts of products.
+
+Finite interactive programs allow to use many famous algorithms, for example all the variants of [state space search](https://en.wikipedia.org/wiki/State_space_search).
+
+Here is a example that uses rulebook `enumerate` to create a table of all possible distinct moves of tic tac toe, and then makes sure the program never crashes by visitng all valid states of tic tac toe.
+
+```rlc
+@classes
+act play() -> Game:
+    frm board : Board
+    while !board.full():
+        act mark(BInt<0, 3> x, BInt<0, 3> y) {
+            board.get(x.value, y.value) == 0
+        }
+
+        board.set(x.value, y.value, board.current_player())
+
+        if board.three_in_a_line_player(board.current_player()):
+            return
+        board.next_turn()
+
+fun main() -> Int:
+    let frontier : Vector<Game>
+    let any_action : AnyGameAction
+    let actions = enumerate(any_action) # contains 9 elements
+    frontier.append(play())
+    while !frontier.empty():
+        let state = frontier.pop()
+        for action in actions:
+            if can apply(action, state):
+                frontier.append(state)
+                apply(action, frontier.back())
+
+    return 0
+```
+
+The key feature here is `BInt`, which specifies that only numbers between 0 and 3 (excluded) are valid. University professors don't want you to know it, but a simple program like this is a **formal proof** that `play` will never crash.
+
+Since rulebook programs are composable, you can test **interactive sequences in isolation**, even if not all your components be tested this way, Rulebook lets you test the pieces that can be tested with strong techinques like this.
+
+### Reinforcement Learning
+
+If you install RLC using the pip `rl_language`, you obtain the ability to run [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning). We saw how to trivially [prove](#finite-interactive-programs) that small components will never crash. We saw how to use a [fuzzer](#automatic-testing) to find crashes in larger programs. Such techniques only allow you to say if the program crashes or not. Sometimes you may be interested in knowing how does some metric of a system evolves.
+
+Here is catch, a simple game used in reinforcement learning to validate reinforcement learning algorithms. The game allows the player to move left and right and try to catch a ball falling from above. The program is longer than the previous ones, because it must specify details such as the number of players, who is the current player and how to measure the score. The score is 1 when the player catches the ball. If the program is right, the average score of the network should trend to 100%.
+
+```rlc
+import serialization.print
+import range
+import collections.vector
+import machine_learning
+import action
+
+# Constants for the game
+const NUM_ROWS = 11
+const NUM_COLUMS = 5
+
+enum Direction:
+    Left
+    None
+    Right
+
+    fun equal(Direction other) -> Bool:
+        return self.value == other.value
+
+    fun not_equal(Direction other) -> Bool:
+        return !(self.value == other.value)
+
+
+using Column = BInt<0, NUM_COLUMS>
+using Row = BInt<0, NUM_ROWS>
+
+# The main Catch game
+@classes
+act play() -> Game:
+    frm ball_row : Row
+    frm ball_col : Column
+    frm paddle_col : Column
+
+    # Initialization - chance player selects starting ball column
+    act set_start_location(Column col)
+    ball_col.value = col.value
+    paddle_col = NUM_COLUMS / 2
+
+    # Game loop - player makes moves until ball reaches bottom
+    while ball_row != NUM_ROWS - 1:
+        act move(Direction direction)
+
+        ball_row.value = ball_row.value + 1
+
+        let actual_direction = direction.value - 1  # Convert to -1, 0, 1
+        paddle_col = paddle_col.value + actual_direction
+
+# Cell states
+enum CellState:
+    Empty
+    Paddle
+    Ball
+
+    fun equal(CellState other) -> Bool:
+        return self.value == other.value
+
+    fun not_equal(CellState other) -> Bool:
+        return !(self.value == other.value)
+
+# Get cell state at specific row and column
+fun cell_at(Game game, Int row, Int col) -> CellState:
+    if row == NUM_ROWS - 1 and col == game.paddle_col.value:
+        return CellState::Paddle
+    else if row == game.ball_row.value and col == game.ball_col.value:
+        return CellState::Ball
+    return CellState::Empty
+
+
+
+# Function for machine learning components to display the game state
+fun pretty_print(Game game):
+    # Generate string representation of the board
+    let result = ""s
+    for row in range(NUM_ROWS):
+        for col in range(NUM_COLUMS):
+            if cell_at(game, row, col) == CellState::Empty:
+                result = result + "."s
+            else if cell_at(game, row, col) == CellState::Paddle:
+                result = result + "x"s
+            else:
+                result = result + "o"s
+        result = result + "\n"s
+    print(result)
+
+
+# Return current player or special value if game is done
+fun get_current_player(Game g) -> Int:
+    if g.is_done():
+        return -4  # Terminal state
+    let column : Column
+    if can g.set_start_location(column):
+        return -1
+    return 0  # Player 0 (the only player)
+
+# Return score for ML training
+fun score(Game g, Int player_id) -> Float:
+    if !g.is_done():
+        return 0.0
+    if g.paddle_col.value == g.ball_col.value:
+        return 1.0
+    else:
+        return 0.0
+
+# Return number of players (always 1 for this game)
+fun get_num_players() -> Int:
+    return 1
+```
+
+The program is simply run with
+```
+rlc-learn file.rl -o network #ctrl+c to stop it after a while
+rlc-play file.rk network # to see a game
+```
+
+The user did not specified anything related to reinforcement learning about this program, it specified properties about how to play the environment, it was all automatic. The computer will learn to maximize the score, and the score can be later visualized. This is helpfull both in the case the user does wishes see what is the best score possible for a given program, or when it wants to make sure that the program is correct and variables inside the program do not assume surprising values.
+
+### Self configuring UIs
+
+Since in Rulebook allows you to know all types of actions that can be applied to a given action function, your UI code can inspect the state of action functions to decide what to show on screen, as well as inspecting what actions are valid.
+
+Say you want write a UI for tic tac toe. You have created 9 UI cell elements that change color depending on who marked that cell of the screen. The cell should flash when they can be clicked. The rules of tic tac toe are subject to change, so the the UI designer cannot rely on their implementation details. In Rulebook you can use actions classes to achieve this.
+
+```rlc
+@classes
+act play() -> Game:
+    frm board : Board
+    while !board.full():
+        act mark(BInt<0, 3> x, BInt<0, 3> y) {
+            board.get(x.value, y.value) == 0
+        }
+
+        board.set(x.value, y.value, board.current_player())
+
+        if board.three_in_a_line_player(board.current_player()):
+            return
+        board.next_turn()
+
+cls UISquare:
+    Int x
+    Int y
+
+    def update(Game state):
+        let action = GameMark
+        action.x = x
+        action.y = y
+        if can apply(action, state):
+            render_quad(glow, x, y)
+        else if state.board.slots[x][y] == 0
+            render_quad(grey, x, y)
+        else if state.board.slots[x][y] == 1
+            render_quad(blue, x, y)
+        else:
+            render_quad(red, x, y)
+
+
+fun main() -> Int:
+    let state = play()
+    let ui_quads = make_quads()
+    while True:
+        for quad in ui_quads:
+            quad.update(state)
+        poll_and_apply_events(state)
+
+    return 0
+```
+
+The snippet implements a `UISquare` in a way that only relies on actions, and that `board` is of type `Board`. Based on them, it decides which color to be rendered as. This means that as long as `play` keeps those features, it is allowed to arbitrarily change the game rules, and everything will work. Since rulebook exposes all actions as classes, and you can check if a action is valid, UI elements can expose complex auto configuration schemes that work correctly when you change the underlying application code.
+
+### Compatibility
+
+Rulebook has bidirectional compatibility with C, CPP, Python, C# and Godot.Here is a example of c# invoking Rulebook.
+
+```rlc
+act play() -> Game:
+    frm local_var = 0
+    act pick(Int x)
+    local_var = x
+```
+
+```c#
+class Tester {
+    public void test() {
+        Game pair = RLC.play();
+        pair.pick(3);
+        return (int)(pair.local_var - 3);
+    }
+}
+```
+
+To benefit the most from Rulebook features it is suggested that inside rulebook object you only use copiable and default constructable objects. If you cannot guarantee this property, look in the references how you can use the **ctx** language feature to provide a context object to action functions so that those non copiable or non default constructable objects are never constructed or copied.
+
+### Remote execution
+
+Since Rulebook is compatible with multiple languages, if the remote execution you are interested in implementing can be expressed at the level of the action trace, you can automatically perform remote execution by keeping two copies of the program into two processes, and whenever one executes a action, it is sent to the other one, even if they run on different languages.
+
+Showing this feature in a small snippet of code is difficult, but it is implemented in the [4hammer](https://github.com/rl-language/4Hammer) example, and it is a obvious consequence of [SPIN functions](#spin-functions-implications) since SPIN functions can be serialized, sent over network and restored.
+
+### Autocomplete
+
+We have autocomplete support for vscode, and for any editor that supports a lsp. We have automatic autocomplete support in any language for any language we are compatible with, since we emit the wrapper for that language that knows all the Rulebook types.

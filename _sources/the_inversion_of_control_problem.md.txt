@@ -99,7 +99,7 @@ Let’s restate the problem:
 
 * When **complex interactive subsystems** are subjected to [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control), they become superlinearly harder to reason about, refactor, and maintain.
 
-This assertion is based on the observation that giving up control of the main loop in an **interactive system** (complex or not) push the program to be implemented as a [state machine](https://en.wikipedia.org/wiki/Automata-based_programming), unless the programming language provides a mechanism to avoid it.
+This assertion is based on the observation that giving up control of the main loop in an **interactive system** (complex or not) push the program to be implemented as a [state machine](https://en.wikipedia.org/wiki/Automata-based_programming) or some equivalent construct, unless the programming language provides a mechanism to avoid it.
 
 Let us consider an example: suppose we have a **interactive subsystem**, such as an implementation of Tic Tac Toe that owns the main loop. I will use python syntax, but what is relevant is not le language, but the need of writing is a state machine due to possible limitations with the language.
 
@@ -331,8 +331,6 @@ Unfortunately, mainstream coroutine systems fall short. Most lack one or more ca
 
 * **Limited composition and reuse** — Coroutines can often be composed and reused, but without delegating yields or similar constructs composing coroutines can become challenging.
 
-
-These issues aren’t theoretical. In traditional AI, for example, **even a game as trivial as Tic-Tac-Toe cannot be implemented with coroutines**—because the logic must support copying mid-execution to explore alternate futures of the game. If the coroutine holds the game's variables instead just wrapping the game state, and you cannot clone it, you're stuck. You could externalize all state to a separate object—but then you have a coroutine AND a state machine.
 
 In practice, coroutines are excellent tools for managing the *plumbing* of large systems. But when applied to **complex interactive subsystems**, the model starts to crumble. As program complexity grows, so too does the probability that you’ll need to **copy, inspect, serialize**, or some other class related feature, and the probability trends higher.
 

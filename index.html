@@ -90,24 +90,24 @@
 <p><strong>Rulebook</strong> is a language for <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, …).</p>
 <p>Rulebook is compiled and statically checked, the key and innovative feature of the language are <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a> , which help to:</p>
 <ul class="simple">
-<li><p><strong>properly separate and reuse</strong> interactive code</p></li>
-<li><p><strong>automatically test</strong> your interactive code using fuzzers and reinforcement learning.</p></li>
-<li><p><strong>automatically trace and reply</strong> interactive code.</p></li>
-<li><p><strong>automatically remote execute</strong> interactive code over the network.</p></li>
-<li><p><strong>write self-configuring UIs</strong>, where UIs can inspect the underlying program they present and configure themselves accordingly.</p></li>
+<li><p><a class="reference external" href="./language_tour.html#spin-functions-implications">store, load, print, replay, modify</a> both execution traces and the program state</p></li>
+<li><p><strong>automatically test</strong> your interactive code using off-the-shelf <a class="reference external" href="./language_tour.html#automatic-testing">fuzzers</a> , <a class="reference external" href="./language_tour.html#">proofs</a> and <a class="reference external" href="./language_tour.html#reinforcement-learning">reinforcement learning</a>.</p></li>
+<li><p>write <a class="reference external" href="./language_tour.html#self-configuring-uis">self-configuring UIs</a>, where UIs can inspect the underlying program they present and configure themselves accordingly.</p></li>
+<li><p><a class="reference external" href="./language_tour.html#remote-execution">automatically remote execute</a> interactive code over the network.</p></li>
 <li><p>solves the <a class="reference external" href="./the_inversion_of_control_problem.html">interactive inversion of control problem</a> at the language level.</p></li>
 </ul>
 <p>Rulebook:</p>
 <ul class="simple">
-<li><p><strong>aids</strong>, not replaces C, C++, C#, Python, and Godot Script. (just like SQL aids but not replaces those languages)</p></li>
+<li><p><strong>aids</strong>, not replaces <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>  (just like SQL aids but not replaces those languages)</p></li>
 <li><p>produces a single shared library (or webassembly if targeting the web) with the same ABI as C that you can embed in your software, wrapped into generated file native to your language.</p></li>
 </ul>
-<p>Our key proof of concept example is <a class="reference external" href="https://github.com/rl-language/4Hammer">4Hammer</a> . A never before implemented reinforcement learning environment with huge amounts of user actions in only ~5k lines of code (including graphical code). It runs in the browser and on desktop and all the features described in this section are are present.</p>
+<p>Our key proof of concept example is <a class="reference external" href="https://github.com/rl-language/4Hammer">4Hammer</a> . A never before implemented reinforcement learning environment with huge amounts of user actions in only ~5k lines of code (including graphical code). It runs in the browser and on desktop and all the features described in this section are present.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language_tour.html#action-functions">Action functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#use-cases">Use cases</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The interactive inversion of control problem</a><ul>
