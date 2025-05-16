@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RLC Language Reference &mdash; rlc-doc 0.3.0 documentation</title>
+  <title>Rulebook Language &mdash; Rulebook documentation 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="stdlib" href="stdlib/index.html" />
-    <link rel="prev" title="RLC and GYM" href="gym_tutorial.html" /> 
+    <link rel="prev" title="UI, Controller and Gameplay" href="ui_gameplay.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,7 +34,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            rlc-doc
+            Rulebook documentation
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -46,25 +46,33 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">RLC Language Reference</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Rulebook Language</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rlc">RLC</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#static-and-shared-libraries">Static and Shared Libraries</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#c-cpp-and-python-wrappers">C/CPP and Python Wrappers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#optimization-level-and-debug-symbols">Optimization Level and Debug Symbols</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#rulebook-language">Rulebook Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Rulebook Language</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#rulebook-types">Rulebook Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#enum-types">Enum Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#array-types">Array Types</a></li>
@@ -108,7 +116,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">rlc-doc</a>
+          <a href="index.html">Rulebook documentation</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -116,7 +124,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">RLC Language Reference</li>
+      <li class="breadcrumb-item active">Rulebook Language</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/language-reference.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -126,8 +134,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="rlc-language-reference">
-<h1>RLC Language Reference<a class="headerlink" href="#rlc-language-reference" title="Link to this heading"></a></h1>
+  <section id="rulebook-language">
+<h1>Rulebook Language<a class="headerlink" href="#rulebook-language" title="Link to this heading"></a></h1>
 <p>This document explains the language features of <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> and the features of the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> compiler. The generated documentation of the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> standard library can be found in this repository as well.</p>
 <p>This is a technical document intended for advanced programmers. If you are a new user of Rulebook, refer instead to the <a class="reference external" href="https://github.com/rl-language/rlc">rlc repository page</a> and to the <a class="reference external" href="https://github.com/rl-language/rlc?tab=readme-ov-file">blackjack tutorial</a>.</p>
 <section id="rlc">
@@ -198,8 +206,8 @@ rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </s
 <p>Debug symbols can be emitted with <code class="docutils literal notranslate"><span class="pre">-g</span></code>.</p>
 </section>
 </section>
-<section id="rulebook-language">
-<h2>Rulebook Language<a class="headerlink" href="#rulebook-language" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>Rulebook Language<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>This section describes the language features of the <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language.</p>
 <section id="rulebook-types">
 <h3>Rulebook Types<a class="headerlink" href="#rulebook-types" title="Link to this heading"></a></h3>
@@ -758,7 +766,7 @@ while x != 2:
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="gym_tutorial.html" class="btn btn-neutral float-left" title="RLC and GYM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ui_gameplay.html" class="btn btn-neutral float-left" title="UI, Controller and Gameplay" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="stdlib/index.html" class="btn btn-neutral float-right" title="stdlib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

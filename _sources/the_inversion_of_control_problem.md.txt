@@ -1,6 +1,6 @@
-# The interactive inversion of control problem
+# Interactive Inversion of control
 
-When imperative **complex interactive subsystems** are subjected to [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) (**IOC**), they [become superlinearly harder](#the-mental-burden) to reason about, refactor, and maintain. Imperative languages provide [solutions](#mitigations-coroutines) to this problem, but when the complexity of the **interactive subsystems** increases, the probability of being able to use those features [decreases](#the-limits-of-coroutines).
+When imperative [complex interactive subsystems](#complex-interactive-subsystems) are subjected to [inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) (**IOC**), they [become superlinearly harder](#the-mental-burden) to reason about, refactor, and maintain. Imperative languages provide [solutions](#mitigations-coroutines) to this problem, but when the complexity of the **interactive subsystems** increases, the probability of being able to use those features [decreases](#the-limits-of-coroutines).
 
 Here are practical examples of real-world code that is hard to reason about, has inverted control, and is interactive.
 

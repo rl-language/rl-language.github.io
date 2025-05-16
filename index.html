@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rulebook documentation &mdash; rlc-doc 0.3.0 documentation</title>
+  <title>Rulebook documentation &mdash; Rulebook documentation 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -33,7 +33,7 @@
           
           
           <a href="#" class="icon icon-home">
-            rlc-doc
+            Rulebook documentation
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -46,18 +46,25 @@
               <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
-<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The interactive inversion of control problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
 </ul>
 
@@ -67,7 +74,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">rlc-doc</a>
+          <a href="#">Rulebook documentation</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -87,11 +94,11 @@
              
   <section id="rulebook-documentation">
 <h1>Rulebook documentation<a class="headerlink" href="#rulebook-documentation" title="Link to this heading"></a></h1>
-<p><strong>Rulebook</strong> is a language for <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, …).</p>
+<p><strong>Rulebook</strong> is a imperative language for <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, …).</p>
 <p>Rulebook is compiled and statically checked, the key and innovative feature of the language are <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a> , which help to:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="./language_tour.html#spin-functions-implications">store, load, print, replay, modify</a> both execution traces and the program state</p></li>
-<li><p><strong>automatically test</strong> your interactive code using off-the-shelf <a class="reference external" href="./language_tour.html#automatic-testing">fuzzers</a> , <a class="reference external" href="./language_tour.html#">proofs</a> and <a class="reference external" href="./language_tour.html#reinforcement-learning">reinforcement learning</a>.</p></li>
+<li><p><strong>automatically test</strong> your interactive code using off-the-shelf <a class="reference external" href="./language_tour.html#automatic-testing">fuzzers</a> , <a class="reference external" href="./language_tour.html#finite-interactive-programs">proofs</a> and <a class="reference external" href="./language_tour.html#reinforcement-learning">reinforcement learning</a>.</p></li>
 <li><p>write <a class="reference external" href="./language_tour.html#self-configuring-uis">self-configuring UIs</a>, where UIs can inspect the underlying program they present and configure themselves accordingly.</p></li>
 <li><p><a class="reference external" href="./language_tour.html#remote-execution">automatically remote execute</a> interactive code over the network.</p></li>
 <li><p>solves the <a class="reference external" href="./the_inversion_of_control_problem.html">interactive inversion of control problem</a> at the language level.</p></li>
@@ -107,16 +114,36 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language_tour.html#action-functions">Action functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#no-main-loop-owning">No-main loop owning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#precondition-checkable">Precondition checkable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#serializable">Serializable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#inspectable">Inspectable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#spin-functions-implications">SPIN functions implications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#action-statements-classes">Action statements classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#composing-actions">Composing actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language_tour.html#use-cases">Use cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#automatic-testing">Automatic testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#finite-interactive-programs">Finite interactive programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#reinforcement-learning">Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#self-configuring-uis">Self configuring UIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#compatibility">Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#remote-execution">Remote execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language_tour.html#tooling">Tooling</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The interactive inversion of control problem</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems">Complex interactive subsystems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#inversion-of-control">Inversion of control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-problem">The problem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#mitigations-coroutines">Mitigations: coroutines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#the-limits-of-coroutines">The limits of coroutines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="the_inversion_of_control_problem.html#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#machine-learning">Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#games">Games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#unifing-games-and-machine-learning">Unifing games and machine learning.</a></li>
 </ul>
 </li>
 </ul>
@@ -129,23 +156,30 @@
 <li><p>how you can write almost arbitrary functions, turn them into a <strong>GYM</strong> environment, and have your custom agents learn from such environments.</p></li>
 </ul>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#rlc">rlc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#hammer-graphical-engine">4Hammer graphical engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#python-drivers">Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#fuzzer">Fuzzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#rlc-lsp-and-autocomplete">rlc-lsp and autocomplete</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#vscode">VSCODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="architecture.html#vim-with-youcompleteme">VIM with YouCompleteMe</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#rlc-test">rlc-test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#rlc-random">rlc-random</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#machine-learning">Machine Learning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#games">Games</a></li>
-<li class="toctree-l2"><a class="reference internal" href="project_rationale.html#unifing-games-and-machine-learning">Unifing games and machine learning.</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#the-complexity-of-writing-games-and-rule-heavy-simulations">The Complexity of writing games and rule heavy simulations.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#how-rl-does-it">How RL does it</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#building-on-top-of-it">Building on top of it</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#conclusion">Conclusion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#faq">FAQ:</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#training-and-running">Training and Running</a></li>
@@ -175,20 +209,26 @@
 </ul>
 </div>
 </section>
-<section id="graphical-engines">
-<h2>Graphical engines<a class="headerlink" href="#graphical-engines" title="Link to this heading"></a></h2>
-<p>Graphical engines</p>
+<section id="ui-controller-and-gameplay-programming">
+<h2>UI, Controller and Gameplay Programming<a class="headerlink" href="#ui-controller-and-gameplay-programming" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">UI, controller</a> and gameplay programming are among the sections that benefit the most from using Rulebook. Beside automatically <a class="reference external" href="./language_tour.html#automatic-testing">fuzz</a> , <a class="reference external" href="./language_tour.html#finite-interactive-programs">prove correct</a> and <a class="reference external" href="./language_tour.html#reinforcement-learning">run reinforcement learning on</a> your program, write  <a class="reference external" href="./language_tour.html#self-configuring-uis">self-configuring UIs</a> , Rulebook automatically provides a sharp division between UI concerns and Controllers or Gameplay.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+</ul>
+</div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language-reference.html#rlc">RLC</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="language-reference.html#static-and-shared-libraries">Static and Shared Libraries</a></li>
 <li class="toctree-l3"><a class="reference internal" href="language-reference.html#c-cpp-and-python-wrappers">C/CPP and Python Wrappers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="language-reference.html#optimization-level-and-debug-symbols">Optimization Level and Debug Symbols</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="language-reference.html#rulebook-language">Rulebook Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language-reference.html#id1">Rulebook Language</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="language-reference.html#rulebook-types">Rulebook Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="language-reference.html#enum-types">Enum Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="language-reference.html#array-types">Array Types</a></li>

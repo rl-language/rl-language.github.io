@@ -1,4 +1,4 @@
-# Where we are going and what RL will do once we get there.
+# Graphic engines and machine learning
 
 
 Machine learning is being unleashed onto the world with tremendous force. Year by year, machines solve more and more problems considered untractable and achieve super-human results.

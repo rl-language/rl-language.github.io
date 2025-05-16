@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The interactive inversion of control problem &mdash; rlc-doc 0.3.0 documentation</title>
+  <title>Interactive Inversion of control &mdash; Rulebook documentation 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Where we are going and what RL will do once we get there." href="project_rationale.html" />
+    <link rel="next" title="Graphic engines and machine learning" href="project_rationale.html" />
     <link rel="prev" title="Language Tour" href="language_tour.html" /> 
 </head>
 
@@ -34,7 +34,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            rlc-doc
+            Rulebook documentation
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,7 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">The interactive inversion of control problem</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interactive Inversion of control</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#complex-interactive-subsystems">Complex interactive subsystems</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inversion-of-control">Inversion of control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-problem">The problem</a><ul>
@@ -62,17 +62,24 @@
 <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Where we are going and what RL will do once we get there.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
 </ul>
 
@@ -82,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">rlc-doc</a>
+          <a href="index.html">Rulebook documentation</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -90,7 +97,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">The interactive inversion of control problem</li>
+      <li class="breadcrumb-item active">Interactive Inversion of control</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/the_inversion_of_control_problem.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -100,9 +107,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="the-interactive-inversion-of-control-problem">
-<h1>The interactive inversion of control problem<a class="headerlink" href="#the-interactive-inversion-of-control-problem" title="Link to this heading"></a></h1>
-<p>When imperative <strong>complex interactive subsystems</strong> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor, and maintain. Imperative languages provide <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem, but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features <a class="reference internal" href="#the-limits-of-coroutines"><span class="xref myst">decreases</span></a>.</p>
+  <section id="interactive-inversion-of-control">
+<h1>Interactive Inversion of control<a class="headerlink" href="#interactive-inversion-of-control" title="Link to this heading"></a></h1>
+<p>When imperative <a class="reference internal" href="#complex-interactive-subsystems"><span class="xref myst">complex interactive subsystems</span></a> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor, and maintain. Imperative languages provide <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem, but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features <a class="reference internal" href="#the-limits-of-coroutines"><span class="xref myst">decreases</span></a>.</p>
 <p>Here are practical examples of real-world code that is hard to reason about, has inverted control, and is interactive.</p>
 <ul class="simple">
 <li><p>Blender’s stateful <a class="reference external" href="https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc">user input event manager</a>. Because the event loop owns the timing of every mouse‑move, key‑press, and redraw, a small logic change (say, deferring key‑repeat) can subtly reorder callbacks. Reproducing a bug in similar <strong>scenarios may require replaying</strong> an entire input trace, and unit tests must mock dozens of event types to reach a single branch.</p></li>
@@ -404,7 +411,7 @@ You’ve implemented a user interface in Python using coroutines. It asks users 
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="language_tour.html" class="btn btn-neutral float-left" title="Language Tour" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="project_rationale.html" class="btn btn-neutral float-right" title="Where we are going and what RL will do once we get there." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="project_rationale.html" class="btn btn-neutral float-right" title="Graphic engines and machine learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

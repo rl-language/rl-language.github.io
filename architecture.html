@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture &mdash; Rulebook documentation 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial for RL people" href="tutorial.html" />
+    <link rel="prev" title="Graphic engines and machine learning" href="project_rationale.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Rulebook documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rlc">rlc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hammer-graphical-engine">4Hammer graphical engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-drivers">Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fuzzer">Fuzzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-lsp-and-autocomplete">rlc-lsp and autocomplete</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vscode">VSCODE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vim-with-youcompleteme">VIM with YouCompleteMe</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-test">rlc-test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-random">rlc-random</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rulebook documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Architecture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/architecture.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h1>
+<p>This document describes the architecture of <code class="docutils literal notranslate"><span class="pre">RLC</span></code>, the rulebook compiler, and of the other tools of the RLC suite. The intent is to provide a high level description of how the various parts of Rulebook fit into a product built on top of it, as well as a description of RLC command line facilities. More exhaustive descriptions of all tools can be found in the <a class="reference internal" href="language-reference.html"><span class="std std-doc">reference</span></a>.</p>
+<section id="rlc">
+<h2>rlc<a class="headerlink" href="#rlc" title="Link to this heading"></a></h2>
+<p>RLC is a <a class="reference external" href="https://llvm.org">LLVM</a> based compiler, it ingest one or more rulebook files and various possible outputs depending on the user request.</p>
+<div class="graphviz"><img src="_images/graphviz-321f793b2840b5c2cbf4f3573bb454888b0e97e7.png" alt="digraph RLC_Compiler {
+    /*––Layout––*/
+    rankdir = LR;
+    nodesep = 0.6;
+    ranksep = 1;
+
+    /*––Global node / edge styling––*/
+    node [shape=box, style=filled, color=&quot;#dddddd&quot;,
+          fontname=&quot;Helvetica&quot;, fontsize=10];
+    edge [arrowsize=0.7];
+
+    /*––Input &amp; compiler––*/
+    rl_file [label=&quot;file.rl&quot;,
+             shape=note, style=&quot;filled,rounded&quot;,
+             color=&quot;#8ecae6&quot;, fontcolor=&quot;#0a3045&quot;];
+    rlc     [label=&quot;rlc&quot;,
+             shape=box3d, color=&quot;#219ebc&quot;, fontcolor=&quot;white&quot;];
+
+    /*––Outputs, all kept on the same vertical line––*/
+    subgraph cluster_outputs { rank=same;
+        executable [label=&quot;Executable&quot;];
+        shared     [label=&quot;Shared Library&quot;];
+        static     [label=&quot;Static Library&quot;];
+        header     [label=&quot;header.h&quot;];
+        godot      [label=&quot;Godot-CPP Module&quot;];
+        csharp     [label=&quot;C# Wrapper&quot;];
+        python     [label=&quot;Python Wrapper&quot;];
+    }
+
+    /*––Edges––*/
+    rl_file -&gt; rlc;
+
+    rlc -&gt; executable;
+    rlc -&gt; shared  ;
+    rlc -&gt; static ;
+    rlc -&gt; header;
+    rlc -&gt; godot;
+    rlc -&gt; csharp  ;
+    rlc -&gt; python;
+}" class="graphviz" /></div>
+<p>RLC produces:</p>
+<ul class="simple">
+<li><p><strong>native executable</strong>, pretty much the same as the output of a c/cpp file compiled with clang.</p></li>
+<li><p>native libraries to reuse in other languages.</p></li>
+<li><p>a wrapper to use the library in that language.</p></li>
+</ul>
+<p>Here is the architecture of our example project <a class="reference external" href="https://github.com/rl-language/4Hammer">4hammer</a>. 4Hammer is a <a class="reference external" href="https://godotengine.org">godot</a> based reinforcement learning environments. What is relevant to this section is that:</p>
+<ul class="simple">
+<li><p>4Hammer has a architecture and usecase similar to other graphical engine programs, such as videogames.</p></li>
+<li><p>Rulebook code is invoked by godot scripts, so that godot can decide what to render on screen.</p></li>
+<li><p>Rulebook code is used by python reinforcement learning scripts to maximize arbitrary objectives.</p></li>
+</ul>
+<div class="figure" style="text-align: center"><p><img  src="_images/tikz-506dfc568dc3bf1b967c0ca5467239360de6b5bc.png" alt="Figure made with TikZ" /></p>
+</div><p>Rulebook code(red) describing the rules of the environment is compiled into a shared library(lib.so) using RLC. RLC emits as well a wrapper for Python(wrapper.py) and for Godot(godot_header.h).</p>
+<section id="hammer-graphical-engine">
+<h3>4Hammer graphical engine<a class="headerlink" href="#hammer-graphical-engine" title="Link to this heading"></a></h3>
+<p>The Godot wrapper and simulation rules are used to compile a Godot plugin, which exposes Rulebook typesafe rules, types and functions to godot scripts.</p>
+<p>The godot plugin and the godot graphical elements are exported by the godot editor to produce 4hammer_graphical_engine  which is the final product that can be used by users as a standalone application. Since godot can run on the web, and rlc exports webassembly files too, you can use 4hammer_graphical_engine on the web too.</p>
+</section>
+<section id="python-drivers">
+<h3>Python drivers<a class="headerlink" href="#python-drivers" title="Link to this heading"></a></h3>
+<p>The rulebook code is as well executed by python scripts that load the wrapper and the library.
+Since the rules are the same between the engine and python, python can connect over network to the engine and issue commands related to rulebook components.</p>
+</section>
+<section id="fuzzer">
+<h3>Fuzzer<a class="headerlink" href="#fuzzer" title="Link to this heading"></a></h3>
+<p>The rulebook libraries have been designed to expose a <a class="reference internal" href="#./language_tour.html#finite-interactive-programs"><span class="xref myst">finite interactive program</span></a>. This allows to automatically compile a <a class="reference internal" href="#./language_tour.html#automatic-testing"><span class="xref myst">fuzzer</span></a>, which stresses the controller of the environment for free.</p>
+</section>
+</section>
+<section id="rlc-lsp-and-autocomplete">
+<h2>rlc-lsp and autocomplete<a class="headerlink" href="#rlc-lsp-and-autocomplete" title="Link to this heading"></a></h2>
+<p>rlc-lsp is a <a class="reference external" href="https://en.wikipedia.org/wiki/Language_Server_Protocol">language server</a> for the Rulebook language. It allows users to get autocomplete in their ide.</p>
+<p>Notice that rlc-lsp must be in PATH, so if you are using the PIP package of rulebook, you must start your editor from the shell that has already enabled the virtual environment that installed rl_language or rl_language_core.</p>
+<section id="vscode">
+<h3>VSCODE<a class="headerlink" href="#vscode" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">vscode</span></code> has a plugin available in the plugin store called <code class="docutils literal notranslate"><span class="pre">rl-lsp</span></code> and <code class="docutils literal notranslate"><span class="pre">rl-language</span></code> that enables autocomplete and syntax highlighting.</p>
+</section>
+<section id="vim-with-youcompleteme">
+<h3>VIM with YouCompleteMe<a class="headerlink" href="#vim-with-youcompleteme" title="Link to this heading"></a></h3>
+<p>On <code class="docutils literal notranslate"><span class="pre">vim</span></code>, if you use <code class="docutils literal notranslate"><span class="pre">YouCompleteMe</span></code> you can get access to automplete by adding the followings to your .vimrc file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">au</span> <span class="n">BufRead</span><span class="p">,</span><span class="n">BufNewFile</span> <span class="o">*.</span><span class="n">rl</span> <span class="nb">set</span> <span class="n">filetype</span><span class="o">=</span><span class="n">rl</span>
+
+<span class="n">let</span> <span class="n">g</span><span class="p">:</span><span class="n">ycm_language_server</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
+            \    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;rulebook&#39;</span><span class="p">,</span>
+            \     <span class="s1">&#39;cmdline&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="s1">&#39;rlc-lsp&#39;</span><span class="p">,</span> <span class="s1">&#39;--stdio&#39;</span> <span class="p">],</span>
+            \     <span class="s1">&#39;filetypes&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="s1">&#39;rl&#39;</span> <span class="p">]</span>
+            \   <span class="p">}]</span>
+
+</pre></div>
+</div>
+</section>
+</section>
+<section id="rlc-test">
+<h2>rlc-test<a class="headerlink" href="#rlc-test" title="Link to this heading"></a></h2>
+<p>rlc-test runs all functions with no arguments found in the input file that return a bool called test_* .</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">test_return_success</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Bool</span><span class="p">:</span>
+    <span class="kr">return</span> <span class="l">true</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc-test<span class="w"> </span>file.rl
+</pre></div>
+</div>
+<p>This program is only available in a pip installation.</p>
+</section>
+<section id="rlc-random">
+<h2>rlc-random<a class="headerlink" href="#rlc-random" title="Link to this heading"></a></h2>
+<p>rlc-random runs random actions on a program with a finite amount of actions, and does until it reaches the end of the program. It prints the selected actions.</p>
+<p>This tool is usefull as a command line utility to quickly test a interactive program, or to produce a trace usefull to some other program.</p>
+<p>This program is only available in a pip installation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="project_rationale.html" class="btn btn-neutral float-left" title="Graphic engines and machine learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial for RL people" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

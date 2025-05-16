@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Where we are going and what RL will do once we get there. &mdash; rlc-doc 0.3.0 documentation</title>
+  <title>Graphic engines and machine learning &mdash; Rulebook documentation 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -21,8 +21,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="The RL language rationale." href="rationale.html" />
-    <link rel="prev" title="The inversion of control problem" href="the_inversion_of_control_problem.html" /> 
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Interactive Inversion of control" href="the_inversion_of_control_problem.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,7 +34,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            rlc-doc
+            Rulebook documentation
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -45,24 +45,32 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">The inversion of control problem</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Reinforcement learning:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Where we are going and what RL will do once we get there.</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Graphic engines and machine learning</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#machine-learning">Machine Learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#games">Games</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#unifing-games-and-machine-learning">Unifing games and machine learning.</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">The RL language rationale.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for reinforcement learning people</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="language-reference.html">RLC Language Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a></li>
 <li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
 </ul>
 
@@ -72,7 +80,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">rlc-doc</a>
+          <a href="index.html">Rulebook documentation</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -80,7 +88,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Where we are going and what RL will do once we get there.</li>
+      <li class="breadcrumb-item active">Graphic engines and machine learning</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/project_rationale.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -90,8 +98,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="where-we-are-going-and-what-rl-will-do-once-we-get-there">
-<h1>Where we are going and what RL will do once we get there.<a class="headerlink" href="#where-we-are-going-and-what-rl-will-do-once-we-get-there" title="Link to this heading"></a></h1>
+  <section id="graphic-engines-and-machine-learning">
+<h1>Graphic engines and machine learning<a class="headerlink" href="#graphic-engines-and-machine-learning" title="Link to this heading"></a></h1>
 <p>Machine learning is being unleashed onto the world with tremendous force. Year by year, machines solve more and more problems considered untractable and achieve super-human results.</p>
 <p><img alt="ML performances" src="_images/ml_progress.jpeg" /></p>
 <p>Reasoning and general game-playing still stand unsolved. We have no doubt algorithm improvements will soon yield super-human performance in those categories too.
@@ -159,7 +167,7 @@ This leads to a development loop where the engine and graphic programmers work o
 <li><p><strong>Imperative language</strong>: Game rules are conceptualized by designers as procedures players must follow. Since we are trying to produce a simple language, we should strive to keep the difference between how one thinks of games and how one implements them. Thus, RL must be an imperative language.</p></li>
 </ul>
 <p>Finally, the most important feature is
-<strong>Engine independence</strong>: which we explain how to achieve <a class="reference internal" href="rationale.html"><span class="std std-doc">here</span></a>.</p>
+<strong>Engine independence</strong>: which we explain how to achieve <a class="reference internal" href="#./rationale.md"><span class="xref myst">here</span></a>.</p>
 </section>
 </section>
 
@@ -167,8 +175,8 @@ This leads to a development loop where the engine and graphic programmers work o
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="the_inversion_of_control_problem.html" class="btn btn-neutral float-left" title="The inversion of control problem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rationale.html" class="btn btn-neutral float-right" title="The RL language rationale." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="the_inversion_of_control_problem.html" class="btn btn-neutral float-left" title="Interactive Inversion of control" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

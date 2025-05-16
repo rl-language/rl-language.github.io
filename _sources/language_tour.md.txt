@@ -25,7 +25,7 @@ With SPIN functions we have the ability to [store, load, print, replay, modify](
 
 
 
-### No-main loop owning
+## No-main loop owning
 Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs. For the reminder of the section we are going to call the component that holds the main loop the **framework**.
 
 Action function are coroutines and thus do not require the main loop.
@@ -51,7 +51,7 @@ fun main() -> Int:
 
 No-main loop onwership means that you can write **interactive programs** as if they were prompting the **user** themselves instead of being aware of how the **framework** is implemented.
 
-### Precondition checkable
+## Precondition checkable
 
 Precondition checkability means that the framework owning the main loop can check if the user inputs are valid.
 
@@ -80,7 +80,7 @@ fun main() -> Int:
 
 In rulebook action functions suspension points, called **action statements**, can accept arguments, furthermore actions statements can be annotated with a boolean condition that specifies if such action, which such arguments are valid. This allows, using the operator `can`, the **framework** owning the main loop to check if the user input is valid without requiring burdensome validation mechanisms inside the action function.
 
-### Serializable
+## Serializable
 
 Sometimes the **framework** may desire store somewhere the state of the **interactive system** so that it can be resumed later.
 
@@ -113,7 +113,7 @@ fun main() -> Int:
 
 Rulebook allows to serialize and copy coroutines. This property allows many usefull techniques, for example you can test a **interactive program** by copying it and trying all possible actions that are valid in that state.
 
-### Inspectable
+## Inspectable
 
 Sometimes you may desire to use some variable held in the coroutine frame to achieve some objective related to the **framework**.
 
@@ -141,7 +141,7 @@ fun main() -> Int:
 
 Rulebook allows to access any variable inside the coroutine that has been marked with the keyword `frm`. This feature allows to think of a action function simply has a different way of declaring a class. Whenever a class makes more sense as a class you can write it that way. When a class is inherently more procedure like, you can write it as a coroutine.
 
-### SPIN functions implications
+## SPIN functions implications
 
 SPIN functions used in a interpreted language or combined with Rulebook [Action statements classes](#action-statements-classes) allow for powerfull techinques in **complex interactive systems**
 
@@ -178,7 +178,7 @@ Depending on the logic if the user provided `select_random_valid_action`, `trace
 
 This techinque is key to usefull pratical activities such as **fuzzing**, **reinforcement learning environments**, and testing application logic indipendently from the application.
 
-### Action statements classes
+## Action statements classes
 
 In a **interactive system** sometime you wish to delay the execution of a action until some future moment.
 
@@ -233,7 +233,7 @@ using AnyInstallerAction = InstallerSelectLocation | InstallerInstallExperimenta
 You can store, print, copy such classes and do whatever you would normally do with classes. Furthermore the language offers the `apply` function to execute the action encapsulated into the class.
 Rulebook by allowing you to schedule actions at will, prevents coupling between GUI framework code and application logic.
 
-### Composing actions
+## Composing actions
 
 **Complex interactive subsystems**, the target of Rulebook, are by definition complex. In those situations you wish to split your logic into smaller reusable chucks.
 
@@ -271,7 +271,7 @@ You can read more about it [here](./language-reference.md#subaction-statements).
 
 We have seen [action functions](#action-functions) and how they enable powerfull techinques, so now we can see them in practice.
 
-### Automatic testing
+## Automatic testing
 
 RLC comes with a off the shelf fuzzer that can be used as is, or modified for custom uses.
 
@@ -320,7 +320,7 @@ Techinques such fuzzing can be used both to make sure that feature are robust, b
 While this is usefull, most of the computation is wasted rejecting invalid actions. Since in production environments we will just use `can apply` to reject invalid actions there is no need to test those. If the problem you are trying to solve allows you to fully [finite](#finite-interactive-programs) all valid inputs, then your fuzzer can achieve significantly superior performances.
 Depending of the feature of your program, similar other optimizations may be possibile.
 
-### Finite interactive programs
+## Finite interactive programs
 
 Finite interactive programs are **interactive systems** where there is a finite, even if large, amounts of distinct actions that the user can take.
 
@@ -330,7 +330,7 @@ Example are:
 
 Finite interactive programs allow to use many famous algorithms, for example all the variants of [state space search](https://en.wikipedia.org/wiki/State_space_search).
 
-Here is a example that uses rulebook `enumerate` to create a table of all possible distinct moves of tic tac toe, and then makes sure the program never crashes by visitng all valid states of tic tac toe.
+Here is a example that uses rulebook `enumerate` to create a table of all possible distinct moves of tic tac toe, and then makes sure the program never crashes by visiting all valid states of tic tac toe.
 
 ```rlc
 @classes
@@ -364,9 +364,9 @@ fun main() -> Int:
 
 The key feature here is `BInt`, which specifies that only numbers between 0 and 3 (excluded) are valid. University professors don't want you to know it, but a simple program like this is a **formal proof** that `play` will never crash.
 
-Since rulebook programs are composable, you can test **interactive sequences in isolation**, even if not all your components be tested this way, Rulebook lets you test the pieces that can be tested with strong techinques like this.
+Of course this trick works only for small programs. Since rulebook programs are composable, you can test **interactive sequences in isolation**, even if not all your components be tested this way, Rulebook lets you validate pieces that can this way, and use more common techniques for harder cases.
 
-### Reinforcement Learning
+## Reinforcement Learning
 
 If you install RLC using the pip `rl_language`, you obtain the ability to run [reinforcement learning](https://en.wikipedia.org/wiki/Reinforcement_learning). We saw how to trivially [prove](#finite-interactive-programs) that small components will never crash. We saw how to use a [fuzzer](#automatic-testing) to find crashes in larger programs. Such techniques only allow you to say if the program crashes or not. Sometimes you may be interested in knowing how does some metric of a system evolves.
 
@@ -488,7 +488,7 @@ rlc-play file.rk network # to see a game
 
 The user did not specified anything related to reinforcement learning about this program, it specified properties about how to play the environment, it was all automatic. The computer will learn to maximize the score, and the score can be later visualized. This is helpfull both in the case the user does wishes see what is the best score possible for a given program, or when it wants to make sure that the program is correct and variables inside the program do not assume surprising values.
 
-### Self configuring UIs
+## Self configuring UIs
 
 Since in Rulebook allows you to know all types of actions that can be applied to a given action function, your UI code can inspect the state of action functions to decide what to show on screen, as well as inspecting what actions are valid.
 
@@ -540,7 +540,7 @@ fun main() -> Int:
 
 The snippet implements a `UISquare` in a way that only relies on actions, and that `board` is of type `Board`. Based on them, it decides which color to be rendered as. This means that as long as `play` keeps those features, it is allowed to arbitrarily change the game rules, and everything will work. Since rulebook exposes all actions as classes, and you can check if a action is valid, UI elements can expose complex auto configuration schemes that work correctly when you change the underlying application code.
 
-### Compatibility
+## Compatibility
 
 Rulebook has bidirectional compatibility with C, CPP, Python, C# and Godot.Here is a example of c# invoking Rulebook.
 
@@ -563,12 +563,15 @@ class Tester {
 
 To benefit the most from Rulebook features it is suggested that inside rulebook object you only use copiable and default constructable objects. If you cannot guarantee this property, look in the references how you can use the **ctx** language feature to provide a context object to action functions so that those non copiable or non default constructable objects are never constructed or copied.
 
-### Remote execution
+All features you saw in this document are **opt-in**, and if you don't use them, you pay no cost for them. For example, if you have a UI that has some components that are [finite interactive programs](#finite-interactive-programs) but whole system is not, you can use functions such as `enumerate` to validate the UI components only, while suffering no cost on the larger architecture.
+Similarly, you can pick and choose between which features are relevant for your problem. Maybe your program contains time dependant logic, such as videogames, that make replaying trace useless since timing will change on user machines, but maybe on the same program you wish to run a reinforcement learning algorithms to maximize some metric of interest.
 
-Since Rulebook is compatible with multiple languages, if the remote execution you are interested in implementing can be expressed at the level of the action trace, you can automatically perform remote execution by keeping two copies of the program into two processes, and whenever one executes a action, it is sent to the other one, even if they run on different languages.
+## Remote execution
+
+Since Rulebook is compatible with multiple languages, if the remote execution you want to can be expressed at the level of the action trace, you can automatically perform remote execution by keeping two copies of the program into two processes, and whenever one executes a action, it is sent to the other one, even if they run on different languages.
 
 Showing this feature in a small snippet of code is difficult, but it is implemented in the [4hammer](https://github.com/rl-language/4Hammer) example, and it is a obvious consequence of [SPIN functions](#spin-functions-implications) since SPIN functions can be serialized, sent over network and restored.
 
-### Autocomplete
+## Tooling
 
-We have autocomplete support for vscode, and for any editor that supports a lsp. We have automatic autocomplete support in any language for any language we are compatible with, since we emit the wrapper for that language that knows all the Rulebook types.
+We have autocomplete support for vscode, and for any editor that supports a lsp. We have automatic autocomplete support for any language we are compatible with, since we emit the wrapper for that language that knows all the Rulebook types.

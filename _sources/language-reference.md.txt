@@ -1,4 +1,4 @@
-# RLC Language Reference
+# Rulebook Language
 
 This document explains the language features of `Rulebook` and the features of the `rlc` compiler. The generated documentation of the `rlc` standard library can be found in this repository as well.
 

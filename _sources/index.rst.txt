@@ -6,12 +6,12 @@
 Rulebook documentation
 ======================
 
-**Rulebook** is a language for `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, ...).
+**Rulebook** is a imperative language for `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, ...).
 
 Rulebook is compiled and statically checked, the key and innovative feature of the language are `Action functions with SPIN properties <./language_tour.html#action-functions>`_ , which help to:
 
 * `store, load, print, replay, modify <./language_tour.html#spin-functions-implications>`_ both execution traces and the program state
-* **automatically test** your interactive code using off-the-shelf `fuzzers <./language_tour.html#automatic-testing>`_ , `proofs <./language_tour.html#>`_ and `reinforcement learning <./language_tour.html#reinforcement-learning>`_.
+* **automatically test** your interactive code using off-the-shelf `fuzzers <./language_tour.html#automatic-testing>`_ , `proofs <./language_tour.html#finite-interactive-programs>`_ and `reinforcement learning <./language_tour.html#reinforcement-learning>`_.
 * write `self-configuring UIs <./language_tour.html#self-configuring-uis>`_, where UIs can inspect the underlying program they present and configure themselves accordingly.
 * `automatically remote execute <./language_tour.html#remote-execution>`_ interactive code over the network.
 * solves the `interactive inversion of control problem <./the_inversion_of_control_problem.html>`_ at the language level.
@@ -30,6 +30,7 @@ Our key proof of concept example is `4Hammer <https://github.com/rl-language/4Ha
 
    language_tour.md
    the_inversion_of_control_problem.md
+   project_rationale.md
 
 
 Reinforcement learning usecase
@@ -40,21 +41,31 @@ Reinforcement learning usecase
 * how to interoperate **Rulebook** with **Python**.
 * how you can write almost arbitrary functions, turn them into a **GYM** environment, and have your custom agents learn from such environments.
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Architecture 
+
+   architecture.md 
 
 .. toctree::
    :maxdepth: 2
    :caption: Reinforcement Learning Docs:
 
-   project_rationale.md
-   rationale.md
    tutorial.md
    gym_tutorial.md
    
 
-Graphical engines
-#################
+UI, Controller and Gameplay Programming
+########################################
 
-Graphical engines 
+`UI, controller <https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller>`_ and gameplay programming are among the sections that benefit the most from using Rulebook. Beside automatically `fuzz <./language_tour.html#automatic-testing>`_ , `prove correct <./language_tour.html#finite-interactive-programs>`_ and `run reinforcement learning on <./language_tour.html#reinforcement-learning>`_ your program, write  `self-configuring UIs <./language_tour.html#self-configuring-uis>`_ , Rulebook automatically provides a sharp division between UI concerns and Controllers or Gameplay.
+
+
+.. toctree::
+   :maxdepth: 3
+   :caption: UIs, Controllers, Gameplay:
+
+   ui_gameplay.md 
 
 
 .. toctree::

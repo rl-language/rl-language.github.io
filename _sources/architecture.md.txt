@@ -1,0 +1,186 @@
+# Architecture
+
+This document describes the architecture of `RLC`, the rulebook compiler, and of the other tools of the RLC suite. The intent is to provide a high level description of how the various parts of Rulebook fit into a product built on top of it, as well as a description of RLC command line facilities. More exhaustive descriptions of all tools can be found in the [reference](./language-reference.md).
+
+## rlc
+
+RLC is a [LLVM](https://llvm.org) based compiler, it ingest one or more rulebook files and various possible outputs depending on the user request.
+
+```{graphviz}
+
+digraph RLC_Compiler {
+    /*––Layout––*/
+    rankdir = LR;
+    nodesep = 0.6;
+    ranksep = 1;
+
+    /*––Global node / edge styling––*/
+    node [shape=box, style=filled, color="#dddddd",
+          fontname="Helvetica", fontsize=10];
+    edge [arrowsize=0.7];
+
+    /*––Input & compiler––*/
+    rl_file [label="file.rl",
+             shape=note, style="filled,rounded",
+             color="#8ecae6", fontcolor="#0a3045"];
+    rlc     [label="rlc",
+             shape=box3d, color="#219ebc", fontcolor="white"];
+
+    /*––Outputs, all kept on the same vertical line––*/
+    subgraph cluster_outputs { rank=same;
+        executable [label="Executable"];
+        shared     [label="Shared Library"];
+        static     [label="Static Library"];
+        header     [label="header.h"];
+        godot      [label="Godot-CPP Module"];
+        csharp     [label="C# Wrapper"];
+        python     [label="Python Wrapper"];
+    }
+
+    /*––Edges––*/
+    rl_file -> rlc;
+
+    rlc -> executable;
+    rlc -> shared  ;
+    rlc -> static ;
+    rlc -> header;
+    rlc -> godot;
+    rlc -> csharp  ;
+    rlc -> python;
+}
+```
+
+RLC produces:
+* **native executable**, pretty much the same as the output of a c/cpp file compiled with clang.
+* native libraries to reuse in other languages.
+* a wrapper to use the library in that language.
+
+Here is the architecture of our example project [4hammer](https://github.com/rl-language/4Hammer). 4Hammer is a [godot](https://godotengine.org) based reinforcement learning environments. What is relevant to this section is that:
+* 4Hammer has a architecture and usecase similar to other graphical engine programs, such as videogames.
+* Rulebook code is invoked by godot scripts, so that godot can decide what to render on screen.
+* Rulebook code is used by python reinforcement learning scripts to maximize arbitrary objectives.
+
+```{tikz}
+:libs: arrows.meta,calc,positioning
+\begin{tikzpicture}[
+  every node/.style   = {rectangle, draw, rounded corners,
+                         minimum width=2cm, minimum height=1cm,
+                         align=center, font=\sffamily\small},
+  purplebox/.style    = {fill=purple!40,  draw=purple!60},
+  bluebox/.style      = {fill=blue!20,    draw=blue!60},
+  redbox/.style       = {fill=cyan!20,     draw=cyan!60},
+  orangebox/.style    = {fill=yellow!20,  draw=orange!60},
+  greenbox/.style     = {fill=green!20,   draw=green!60},
+  violetbox/.style    = {fill=violet!20,  draw=violet!60},
+  dashededge/.style   = {dashed, -latex},
+  solidedge/.style    = {-latex},
+  socketedge/.style   = {densely dotted}   % <-- no arrow here; we add it when drawing
+]
+
+% ───────────────── Row 1: purple *.rl inputs ─────────────────
+\node[purplebox]                          (stats)  {stats.rl};
+\node[purplebox, right=1cm of stats]      (boar)   {board.rl};
+\node[purplebox, right=1cm of boar]       (rules)  {rules.rl};
+\node[purplebox, right=1cm of rules]       (otherrl)  {\dots};
+
+
+% ───────────────── Compiler ─────────────────
+\node[bluebox, below=1cm of boar]         (rlc)    {RLC\\\footnotesize compiler};
+
+\foreach \src in {stats,boar,rules,otherrl}{\draw[dashededge] (\src) -- (rlc);}
+
+% ───────────────── Compiler outputs (wrapper ↔ lib.so swapped) ─────────────────
+\node[orangebox, below left =1cm and 1cm of rlc] (wrapper) {wrapper.py};
+\node[redbox,    below      =1cm         of rlc]   (libso)   {lib.so};
+\node[greenbox,  below right=1cm and 1cm of rlc] (header)  {godot\_header.h};
+\node[redbox,    right=1cm  of header]               (fuzzer)  {fuzzer};
+
+\foreach \dst in {libso,wrapper,header,fuzzer}{\draw[dashededge] (rlc) -- (\dst);}
+
+% ───────────────── libgodotrules.so ─────────────────
+\node[redbox, below right=1cm and 1cm of header] (godotrules) {libgodotrules.so};
+\draw[solidedge] (header) -- (godotrules);
+\draw[solidedge] (libso)  -- (godotrules);
+
+% ───────────────── 4hammer_godot_project (lifted up) ─────────────────
+\node[violetbox, left=2cm of godotrules] (project) {4hammer\_godot\_project};
+
+% ───────────────── Godot editor & engine ─────────────────
+\node[bluebox, below=1cm of godotrules]                   (editor)  {godot-editor};
+\node[redbox, below=1cm of editor]                       (engine)  {4hammer\_graphical\_engine};
+
+\draw[dashededge] (project)    -- (editor);
+\draw[dashededge] (godotrules) -- (editor);
+\draw[dashededge]  (editor)     -- (engine);
+
+% ───────────────── python drivers (lowered to engine level) ─────────────────
+\node[orangebox, left=8cm of engine] (drivers) {python drivers};
+
+\draw[solidedge] (libso)   -- (drivers);   % vertical+horizontal to new position
+\draw[solidedge] (wrapper) -- (drivers);
+
+% ───────────────── Bidirectional socket connection ─────────────────
+\draw[socketedge, latex-latex] (engine) -- node[midway, above] {over socket communication} (drivers);
+
+\end{tikzpicture}
+```
+
+Rulebook code(red) describing the rules of the environment is compiled into a shared library(lib.so) using RLC. RLC emits as well a wrapper for Python(wrapper.py) and for Godot(godot\_header.h).
+
+### 4Hammer graphical engine
+The Godot wrapper and simulation rules are used to compile a Godot plugin, which exposes Rulebook typesafe rules, types and functions to godot scripts.
+
+The godot plugin and the godot graphical elements are exported by the godot editor to produce 4hammer\_graphical\_engine  which is the final product that can be used by users as a standalone application. Since godot can run on the web, and rlc exports webassembly files too, you can use 4hammer\_graphical\_engine on the web too.
+
+### Python drivers
+The rulebook code is as well executed by python scripts that load the wrapper and the library.
+Since the rules are the same between the engine and python, python can connect over network to the engine and issue commands related to rulebook components.
+
+### Fuzzer
+The rulebook libraries have been designed to expose a [finite interactive program](./language_tour.html#finite-interactive-programs). This allows to automatically compile a [fuzzer](./language_tour.html#automatic-testing), which stresses the controller of the environment for free.
+
+## rlc-lsp and autocomplete
+
+rlc-lsp is a [language server](https://en.wikipedia.org/wiki/Language_Server_Protocol) for the Rulebook language. It allows users to get autocomplete in their ide.
+
+Notice that rlc-lsp must be in PATH, so if you are using the PIP package of rulebook, you must start your editor from the shell that has already enabled the virtual environment that installed rl\_language or rl\_language\_core.
+
+### VSCODE
+`vscode` has a plugin available in the plugin store called `rl-lsp` and `rl-language` that enables autocomplete and syntax highlighting.
+
+### VIM with YouCompleteMe
+On `vim`, if you use `YouCompleteMe` you can get access to automplete by adding the followings to your .vimrc file.
+
+```
+au BufRead,BufNewFile *.rl set filetype=rl
+
+let g:ycm_language_server = [ {
+            \    'name': 'rulebook',
+            \     'cmdline': [ 'rlc-lsp', '--stdio' ],
+            \     'filetypes': [ 'rl' ]
+            \   }]
+
+```
+
+## rlc-test
+
+rlc-test runs all functions with no arguments found in the input file that return a bool called test_\* .
+
+```rlc
+fun test_return_success() -> Bool:
+    return true
+```
+
+```bash
+rlc-test file.rl
+```
+
+This program is only available in a pip installation.
+
+## rlc-random
+
+rlc-random runs random actions on a program with a finite amount of actions, and does until it reaches the end of the program. It prints the selected actions.
+
+This tool is usefull as a command line utility to quickly test a interactive program, or to produce a trace usefull to some other program.
+
+This program is only available in a pip installation.
