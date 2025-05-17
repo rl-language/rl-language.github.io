@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
@@ -62,6 +63,7 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul class="current">
@@ -141,11 +143,11 @@
 <section id="rlc">
 <h2>RLC<a class="headerlink" href="#rlc" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">rlc</span></code> is the Rulebook compiler. It has a command-line interface similar to that of gcc and clang. Given a minimal <code class="docutils literal notranslate"><span class="pre">rl</span></code> file:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span># example.rl
-import serialization.print
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># example.rl</span>
+<span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
 
-fun main() -&gt; Int:
-    print(&quot;hello world&quot;)
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="n">print</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can compile it from the command line with:</p>
@@ -234,41 +236,41 @@ rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </s
 <h3>Enum Types<a class="headerlink" href="#enum-types" title="Link to this heading"></a></h3>
 <p>Enum types are declared with enum declarations, and they are converted to a class type that contains a single <code class="docutils literal notranslate"><span class="pre">Int</span></code> called <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p>
 <p>The syntax of enums is:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>enum Color:
-  red
-  blue
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Color</span><span class="p">:</span>
+  <span class="n">red</span>
+  <span class="n">blue</span>
 
-fun return_enum() -&gt; Color:
-  return Color::red
+<span class="kn">fun</span> <span class="n">return_enum</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Color</span><span class="p">:</span>
+  <span class="kr">return</span> <span class="nc">Color</span><span class="p">::</span><span class="n">red</span>
 
-fun red_value() -&gt; Int:
-  return Color::red.value
+<span class="kn">fun</span> <span class="n">red_value</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+  <span class="kr">return</span> <span class="nc">Color</span><span class="p">::</span><span class="n">red</span><span class="p">.</span><span class="n">value</span>
 </pre></div>
 </div>
 <p>Enums can declare functions in their body as well:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>enum Color:
-  red
-  blue
-  fun name() -&gt; String:
-    if self == Color::red:
-       return &quot;red&quot;s
-    if self == Color::blue:
-       return &quot;blue&quot;s
-    return &quot;unreachable&quot;
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Color</span><span class="p">:</span>
+  <span class="n">red</span>
+  <span class="n">blue</span>
+  <span class="kn">fun</span> <span class="n">name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">String</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="n">self</span> <span class="o">==</span> <span class="nc">Color</span><span class="p">::</span><span class="n">red</span><span class="p">:</span>
+       <span class="kr">return</span> <span class="s2">&quot;red&quot;</span><span class="n">s</span>
+    <span class="kr">if</span> <span class="n">self</span> <span class="o">==</span> <span class="nc">Color</span><span class="p">::</span><span class="n">blue</span><span class="p">:</span>
+       <span class="kr">return</span> <span class="s2">&quot;blue&quot;</span><span class="n">s</span>
+    <span class="kr">return</span> <span class="s2">&quot;unreachable&quot;</span>
 
-fun red_name() -&gt; String:
-  return Color::red.name()
+<span class="kn">fun</span> <span class="n">red_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">String</span><span class="p">:</span>
+  <span class="kr">return</span> <span class="nc">Color</span><span class="p">::</span><span class="n">red</span><span class="p">.</span><span class="n">name</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Finally, enums have a special syntax to write code such as the one in the last snippet faster. You can specify an enum member clause in each field of an enum.</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>enum Color:
-  red:
-    String name = &quot;red&quot;s
-  blue:
-    String name = &quot;blue&quot;s
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Color</span><span class="p">:</span>
+  <span class="n">red</span><span class="p">:</span>
+    <span class="nc">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="n">s</span>
+  <span class="n">blue</span><span class="p">:</span>
+    <span class="nc">String</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="n">s</span>
 
-fun red_name() -&gt; String:
-  return Color::red.name()
+<span class="kn">fun</span> <span class="n">red_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">String</span><span class="p">:</span>
+  <span class="kr">return</span> <span class="nc">Color</span><span class="p">::</span><span class="n">red</span><span class="p">.</span><span class="n">name</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The last two snippets generate the same code.</p>
@@ -276,9 +278,9 @@ fun red_name() -&gt; String:
 <section id="array-types">
 <h3>Array Types<a class="headerlink" href="#array-types" title="Link to this heading"></a></h3>
 <p>Array types are composed of a compile-time known size and an underlying type:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Int[10]
-x[2] = 1
-x[1] = x[2] + 2
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span><span class="p">:</span> <span class="nc">Int</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span>
 </pre></div>
 </div>
 <p>Array accesses are checked by default on optimization level 0, and not checked on optimization level 2. The check can be enabled and disabled with <code class="docutils literal notranslate"><span class="pre">--emit-bound-checks=true/false</span></code>.</p>
@@ -286,49 +288,49 @@ x[1] = x[2] + 2
 <section id="alternative-types">
 <h3>Alternative Types<a class="headerlink" href="#alternative-types" title="Link to this heading"></a></h3>
 <p>Alternative types are used to describe objects that can be of two different types. For example, an object that can be a <code class="docutils literal notranslate"><span class="pre">Float</span></code> or an <code class="docutils literal notranslate"><span class="pre">Int</span></code> can be declared as:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Float | Int
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span><span class="p">:</span> <span class="nc">Float</span> <span class="p">|</span> <span class="nc">Int</span>
 </pre></div>
 </div>
 <p>Declaration statements such as this one will initialize <code class="docutils literal notranslate"><span class="pre">x</span></code> to be an alternative that contains the first possible type of the list. In this case, the content will be <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 <p>Objects of type alternative can be assigned from any right-hand operand that is either an alternative type with the same alternatives or any of the possible types of the alternative. For example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Float | Int
-x = 0     # valid
-x = 1.0   # valid
-x = true  # invalid
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span><span class="p">:</span> <span class="nc">Float</span> <span class="p">|</span> <span class="nc">Int</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>     <span class="c1"># valid</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mf">1.0</span>   <span class="c1"># valid</span>
+<span class="n">x</span> <span class="o">=</span> <span class="l">true</span>  <span class="c1"># invalid</span>
 
-let y: Float | Int
-y = 3     # valid
-x = y     # valid
+<span class="kr">let</span> <span class="n">y</span><span class="p">:</span> <span class="nc">Float</span> <span class="p">|</span> <span class="nc">Int</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">3</span>     <span class="c1"># valid</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">y</span>     <span class="c1"># valid</span>
 </pre></div>
 </div>
 <p>Alternative types can be upcasted with the use of type guards. For example, the following snippet of code is valid and will ensure that <code class="docutils literal notranslate"><span class="pre">y</span></code> will always be of type <code class="docutils literal notranslate"><span class="pre">Float</span></code>:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x: Float | Int
-if x is Float:
-  using T = type(x)
-  let y: T
-  y = 0.0
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span><span class="p">:</span> <span class="nc">Float</span> <span class="p">|</span> <span class="nc">Int</span>
+<span class="kr">if</span> <span class="n">x</span> <span class="kr">is</span> <span class="nc">Float</span><span class="p">:</span>
+  <span class="kr">using</span> <span class="nc">T</span> <span class="o">=</span> <span class="n">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="kr">let</span> <span class="n">y</span><span class="p">:</span> <span class="nc">T</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
 </section>
 <section id="class-types">
 <h3>Class Types<a class="headerlink" href="#class-types" title="Link to this heading"></a></h3>
 <p>Class types are the most common type of user-defined type. A class includes both members and methods. For example, a tic-tac-toe board can be defined as follows:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>cls Board:
-    BInt&lt;0, 3&gt;[3][3] slots
-    Bool player_turn
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">cls</span> <span class="nc">Board</span><span class="p">:</span>
+    <span class="nc">BInt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span> <span class="n">slots</span>
+    <span class="nc">Bool</span> <span class="n">player_turn</span>
 </pre></div>
 </div>
 <p>Member variables whose names start with <code class="docutils literal notranslate"><span class="pre">_</span></code>, such as <code class="docutils literal notranslate"><span class="pre">_player_turn</span></code>, are not accessible from outside the file in which they have been declared.</p>
 <p>The default value of a member when an object is constructed can be overridden by defining the <code class="docutils literal notranslate"><span class="pre">init</span></code> method:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>class IntegerThatStartsAt3:
-  Int x
-  fun init():
-    self.x = 3
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="n">class</span> <span class="nc">IntegerThatStartsAt3</span><span class="p">:</span>
+  <span class="nc">Int</span> <span class="n">x</span>
+  <span class="kn">fun</span> <span class="n">init</span><span class="p">():</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
 
-fun main() -&gt; Int:
-  let x: IntegerThatStartsAt3
-  print(x)  # prints: {x: 3}
-  return 0
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+  <span class="kr">let</span> <span class="n">x</span><span class="p">:</span> <span class="nc">IntegerThatStartsAt3</span>
+  <span class="n">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># prints: {x: 3}</span>
+  <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <p>If you override the <code class="docutils literal notranslate"><span class="pre">init</span></code> method, you will need to invoke the <code class="docutils literal notranslate"><span class="pre">init</span></code> method of all the member fields yourself.</p>
@@ -341,20 +343,20 @@ fun main() -&gt; Int:
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
 <p>RLC functions can be declared only in the global scope of a program. The simplest function that can be declared is a function with no arguments and no return values:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun NAME():
-  return
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="nc">NAME</span><span class="p">():</span>
+  <span class="kr">return</span>
 </pre></div>
 </div>
 <p>The previous snippet declares a function called <code class="docutils literal notranslate"><span class="pre">NAME</span></code>, with no parameters and no return value, that does nothing.</p>
 <p>Functions that return a value must declare their intention by specifying the return type before the <code class="docutils literal notranslate"><span class="pre">:</span></code> in their signature:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun return_5() -&gt; Int:
-  return 5
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">return_5</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+  <span class="kr">return</span> <span class="mi">5</span>
 </pre></div>
 </div>
 <p>The previous snippet declares a function called <code class="docutils literal notranslate"><span class="pre">return_5</span></code> with no arguments that returns an integer.</p>
 <p>Functions can have arguments by specifying them as a comma-separated list in the signature brackets:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun sum(Int first, Int second) -&gt; Int:
-  return first + second
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">sum</span><span class="p">(</span><span class="nc">Int</span> <span class="n">first</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+  <span class="kr">return</span> <span class="n">first</span> <span class="o">+</span> <span class="n">second</span>
 </pre></div>
 </div>
 <p>Function arguments have a type and a name, and the type must be specified before the name.</p>
@@ -377,63 +379,63 @@ fun main() -&gt; Int:
 <li><p><code class="docutils literal notranslate"><span class="pre">Action</span> <span class="pre">statements</span></code> must appear in the body of the action function.</p></li>
 </ul>
 <p>For example, a simple action function you can write is:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act play() -&gt; Game:
-    act set_x(Int value)
-    frm x = value
-    act print_x()
-    print(x)
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">set_x</span><span class="p">(</span><span class="nc">Int</span> <span class="n">value</span><span class="p">)</span>
+    <span class="kn">frm</span> <span class="n">x</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="kn">act</span> <span class="n">print_x</span><span class="p">()</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>When the compiler encounters this action declaration, it rewrites it as a class that looks like:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>cls Game:
-    Int x
-    Int resume_index
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">cls</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="nc">Int</span> <span class="n">x</span>
+    <span class="nc">Int</span> <span class="n">resume_index</span>
 
-    fun init():
-        self.resume_index = 0
-        self.x = 0
+    <span class="kn">fun</span> <span class="n">init</span><span class="p">():</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">resume_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
 
-    fun set_x(Int value) {resume_index == 0}:
-        self.x = value
-        self.resume_index = 1
+    <span class="kn">fun</span> <span class="n">set_x</span><span class="p">(</span><span class="nc">Int</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span><span class="n">resume_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">}:</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">resume_index</span> <span class="o">=</span> <span class="mi">1</span>
 
-    fun print_x() {resume_index == 1}:
-        print(self.x)
-        resume_index = -1
+    <span class="kn">fun</span> <span class="n">print_x</span><span class="p">()</span> <span class="p">{</span><span class="n">resume_index</span> <span class="o">==</span> <span class="mi">1</span><span class="p">}:</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">resume_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
-    fun is_done() -&gt; Bool:
-        return self.resume_index == -1
+    <span class="kn">fun</span> <span class="n">is_done</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Bool</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">resume_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
 
-fun play() -&gt; Game:
-    let game: Game
-    return game
+<span class="kn">fun</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">game</span><span class="p">:</span> <span class="nc">Game</span>
+    <span class="kr">return</span> <span class="n">game</span>
 </pre></div>
 </div>
 <p>Why does it do that? Because then you can use the <code class="docutils literal notranslate"><span class="pre">play</span></code> function as follows:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun use_play():
-    let game = play()
-    game.set_x(4)
-    game.print_x()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">use_play</span><span class="p">():</span>
+    <span class="kr">let</span> <span class="n">game</span> <span class="o">=</span> <span class="n">play</span><span class="p">()</span>
+    <span class="n">game</span><span class="p">.</span><span class="n">set_x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">game</span><span class="p">.</span><span class="n">print_x</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>That is, when you were writing <code class="docutils literal notranslate"><span class="pre">play</span></code>, you expressed points of the program where the program was to be suspended, waiting for input from the invoker of <code class="docutils literal notranslate"><span class="pre">play</span></code>. In our particular example, it does not make much sense to do so. Here is a more realistic one:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span># Implements a vending machine that expects
-# coins to be inserted by the user
-act vending_machine(frm Int target_cost) -&gt; VendingMachine:
-    while target_cost != 0:
-        act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
-        target_cost = target_cost - coin_value
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># Implements a vending machine that expects</span>
+<span class="c1"># coins to be inserted by the user</span>
+<span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">target_cost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">insert_coin</span><span class="p">(</span><span class="nc">Int</span> <span class="n">coin_value</span><span class="p">)</span> <span class="p">{</span><span class="n">coin_value</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">or</span> <span class="n">coin_value</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">or</span> <span class="n">coin_value</span> <span class="o">==</span> <span class="mi">10</span><span class="p">}</span>
+        <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="n">coin_value</span>
 
-fun main() -&gt; Int:
-    let machine = vending_machine(16)
-    print(can machine.insert_coin(3))  # false
-    # machine.insert_coin(3)  # would crash
-    print(can machine.insert_coin(1))  # true
-    machine.insert_coin(1)
-    machine.insert_coin(5)
-    machine.insert_coin(10)
-    print(machine.is_done())  # true
-    return 0
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">can</span> <span class="n">machine</span><span class="p">.</span><span class="n">insert_coin</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>  <span class="c1"># false</span>
+    <span class="c1"># machine.insert_coin(3)  # would crash</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">can</span> <span class="n">machine</span><span class="p">.</span><span class="n">insert_coin</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># true</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_coin</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_coin</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_coin</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">machine</span><span class="p">.</span><span class="n">is_done</span><span class="p">())</span>  <span class="c1"># true</span>
+    <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <p>The purpose of action functions is therefore to convert an imperative description of a procedure that requires inputs into a class that can be stopped and resumed at will.</p>
@@ -443,34 +445,34 @@ fun main() -&gt; Int:
 <h3>Frm and Ctx Qualifiers<a class="headerlink" href="#frm-and-ctx-qualifiers" title="Link to this heading"></a></h3>
 <p>Variable declarations, action statement arguments, and action function arguments can be optionally marked with the keyword <code class="docutils literal notranslate"><span class="pre">frm</span></code>.</p>
 <p>For example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost) -&gt; VendingMachine:
-    while target_cost != 0:
-        act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
-        target_cost = target_cost - coin_value
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">target_cost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">insert_coin</span><span class="p">(</span><span class="nc">Int</span> <span class="n">coin_value</span><span class="p">)</span> <span class="p">{</span><span class="n">coin_value</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">or</span> <span class="n">coin_value</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">or</span> <span class="n">coin_value</span> <span class="o">==</span> <span class="mi">10</span><span class="p">}</span>
+        <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="n">coin_value</span>
 
-fun main() -&gt; Int:
-    let machine = vending_machine(16)
-    print(machine.target_cost)  # 16
-    # print(machine.coin_value)  # does not compile
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">machine</span><span class="p">.</span><span class="n">target_cost</span><span class="p">)</span>  <span class="c1"># 16</span>
+    <span class="c1"># print(machine.coin_value)  # does not compile</span>
 </pre></div>
 </div>
 <p>When a variable marked <code class="docutils literal notranslate"><span class="pre">frm</span></code> is promoted to be a local variable, it becomes a member of the class declared by the action function, in this case, the class <code class="docutils literal notranslate"><span class="pre">VendingMachine</span></code>. If a variable is used across actions, it must be marked as <code class="docutils literal notranslate"><span class="pre">frm</span></code>. This is necessary because to be used across actions, the variable must be saved somewhere between actions invocations by the users. If you forget to mark a variable as <code class="docutils literal notranslate"><span class="pre">frm</span></code>, the compiler will prompt you to do so if you use it between actions.</p>
 <p>You can also mark variables not used across actions as <code class="docutils literal notranslate"><span class="pre">frm</span></code>. This is useful to expose data to the caller of the action function.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ctx</span></code> variables are different. They specify that some state of the computation needed by the action function is stored outside of the action function itself. <code class="docutils literal notranslate"><span class="pre">ctx</span></code> variables must be passed as arguments of every function call to an object that has one.</p>
 <p>For example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(ctx Int target_cost, frm Int target_cost2) -&gt; VendingMachine:
-    while target_cost != 0:
-        act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
-        target_cost = target_cost - coin_value
-        target_cost2 = target_cost
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Int</span> <span class="n">target_cost</span><span class="p">,</span> <span class="kn">frm</span> <span class="nc">Int</span> <span class="n">target_cost2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">insert_coin</span><span class="p">(</span><span class="nc">Int</span> <span class="n">coin_value</span><span class="p">)</span> <span class="p">{</span><span class="n">coin_value</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">or</span> <span class="n">coin_value</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">or</span> <span class="n">coin_value</span> <span class="o">==</span> <span class="mi">10</span><span class="p">}</span>
+        <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="n">coin_value</span>
+        <span class="n">target_cost2</span> <span class="o">=</span> <span class="n">target_cost</span>
 
-fun main() -&gt; Int:
-    let x = 16
-    let y = 16
-    let machine = vending_machine(x, y)
-    machine.insert_coin(x, 1)
-    print(x)  # 15
-    print(y)  # 16
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="kr">let</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="kr">let</span> <span class="n">machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_coin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 15</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># 16</span>
 </pre></div>
 </div>
 <p>Since <code class="docutils literal notranslate"><span class="pre">target_cost2</span></code> is marked <code class="docutils literal notranslate"><span class="pre">frm</span></code>, it is copied within the variable <code class="docutils literal notranslate"><span class="pre">machine</span></code>, thus modifying <code class="docutils literal notranslate"><span class="pre">target_cost2</span></code> does not change <code class="docutils literal notranslate"><span class="pre">y</span></code>. <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> is marked as <code class="docutils literal notranslate"><span class="pre">ctx</span></code>, and is not saved within the class <code class="docutils literal notranslate"><span class="pre">VendingMachine</span></code>. It must be passed every time a member function of <code class="docutils literal notranslate"><span class="pre">machine</span></code> (except <code class="docutils literal notranslate"><span class="pre">is_done</span></code>) is invoked.</p>
@@ -479,122 +481,122 @@ fun main() -&gt; Int:
 <section id="action-statements">
 <h3>Action Statements<a class="headerlink" href="#action-statements" title="Link to this heading"></a></h3>
 <p>Action statements are used to specify the points where user information is required. The minimal syntax is as follows:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act action_function() -&gt; ActionFunctionType:
-    ...
-    act wait_to_be_called()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">action_function</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">ActionFunctionType</span><span class="p">:</span>
+    <span class="p">...</span>
+    <span class="kn">act</span> <span class="n">wait_to_be_called</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Optionally, action statements can have arguments:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act action_function() -&gt; ActionFunctionType:
-    act callme(Int x)
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">action_function</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">ActionFunctionType</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">callme</span><span class="p">(</span><span class="nc">Int</span> <span class="n">x</span><span class="p">)</span>
 
-fun f():
-    let state = action_function()
-    state.callme(1)
+<span class="kn">fun</span> <span class="n">f</span><span class="p">():</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">action_function</span><span class="p">()</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">callme</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Similarly, they can have preconditions:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act action_function() -&gt; ActionFunctionType:
-    act callme(Int x) {x != 0}
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">action_function</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">ActionFunctionType</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">callme</span><span class="p">(</span><span class="nc">Int</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span><span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">}</span>
 
-fun f():
-    let state = action_function()
-    print(can state.callme(0))  # false
-    print(can state.callme(1))  # true
+<span class="kn">fun</span> <span class="n">f</span><span class="p">():</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">action_function</span><span class="p">()</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">can</span> <span class="n">state</span><span class="p">.</span><span class="n">callme</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># false</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">can</span> <span class="n">state</span><span class="p">.</span><span class="n">callme</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># true</span>
 </pre></div>
 </div>
 </section>
 <section id="actions-statements">
 <h3>Actions Statements<a class="headerlink" href="#actions-statements" title="Link to this heading"></a></h3>
 <p>Actions statements are used to express alternative actions, meaning actions that can be performed in any order. For example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost2) -&gt; VendingMachine:
-    while target_cost != 0:
-        actions:
-            act insert_5_coin()
-                target_cost = target_cost - 5
-            act insert_1_coin()
-                target_cost = target_cost - 1
-            act insert_10_coin()
-                target_cost = target_cost - 10
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">target_cost2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">actions</span><span class="p">:</span>
+            <span class="kn">act</span> <span class="n">insert_5_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">5</span>
+            <span class="kn">act</span> <span class="n">insert_1_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="kn">act</span> <span class="n">insert_10_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">10</span>
 
-fun main() -&gt; Int:
-    let machine = vending_machine(20)
-    machine.insert_10_coin()
-    machine.insert_10_coin()
-    return 0
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_10_coin</span><span class="p">()</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_10_coin</span><span class="p">()</span>
+    <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
 </section>
 <section id="subaction-statements">
 <h3>Subaction Statements<a class="headerlink" href="#subaction-statements" title="Link to this heading"></a></h3>
 <p>Subaction statements allow for the composition of actions. Just like regular functions can call other functions, subaction statements specify that the computation of the current action function must be suspended until the user invokes an action of the specified subaction. For example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost) -&gt; VendingMachine:
-    while target_cost != 0:
-        actions:
-            act insert_5_coin()
-                target_cost = target_cost - 5
-            act insert_1_coin()
-                target_cost = target_cost - 1
-            act insert_10_coin()
-                target_cost = target_cost - 10
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">target_cost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">actions</span><span class="p">:</span>
+            <span class="kn">act</span> <span class="n">insert_5_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">5</span>
+            <span class="kn">act</span> <span class="n">insert_1_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="kn">act</span> <span class="n">insert_10_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">10</span>
 
-act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
-    subaction* first_machine = vending_machine(first)
-    subaction* second_machine = vending_machine(second)
+<span class="kn">act</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="nc">Int</span> <span class="n">first</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachinePair</span><span class="p">:</span>
+    <span class="kn">subaction</span><span class="o">*</span> <span class="n">first_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="kn">subaction</span><span class="o">*</span> <span class="n">second_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
 
-fun main() -&gt; Int:
-    let machine = vending_machine_times_two(20, 2)
-    machine.insert_10_coin()
-    machine.insert_10_coin()
-    machine.insert_1_coin()
-    machine.insert_1_coin()
-    return 0
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">machine</span> <span class="o">=</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_10_coin</span><span class="p">()</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_10_coin</span><span class="p">()</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()</span>
+    <span class="n">machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()</span>
+    <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <p>The function <code class="docutils literal notranslate"><span class="pre">vending_machine_times_two</span></code> is lowered to the following piece of code:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
-    frm first_machine = vending_machine(first)
-    while !first_machine.is_done():
-        act insert_5_coin() {can first_machine.insert_5_coin()}
-            first_machine.insert_5_coin()
-        act insert_1_coin() {can first_machine.insert_1_coin()}
-            first_machine.insert_1_coin()
-        act insert_10_coin() {can first_machine.insert_1_coin()}
-            first_machine.insert_10_coin()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="nc">Int</span> <span class="n">first</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachinePair</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">first_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="kr">while</span> <span class="o">!</span><span class="n">first_machine</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kn">act</span> <span class="n">insert_5_coin</span><span class="p">()</span> <span class="p">{</span><span class="n">can</span> <span class="n">first_machine</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()}</span>
+            <span class="n">first_machine</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()</span>
+        <span class="kn">act</span> <span class="n">insert_1_coin</span><span class="p">()</span> <span class="p">{</span><span class="n">can</span> <span class="n">first_machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()}</span>
+            <span class="n">first_machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()</span>
+        <span class="kn">act</span> <span class="n">insert_10_coin</span><span class="p">()</span> <span class="p">{</span><span class="n">can</span> <span class="n">first_machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()}</span>
+            <span class="n">first_machine</span><span class="p">.</span><span class="n">insert_10_coin</span><span class="p">()</span>
 
-    frm second_machine = vending_machine(second)
-    while !second_machine.is_done():
-        act insert_5_coin() {can second_machine.insert_5_coin()}
-            second_machine.insert_5_coin()
-        act insert_1_coin() {can second_machine.insert_1_coin()}
-            second_machine.insert_1_coin()
-        act insert_10_coin() {can second_machine.insert_1_coin()}
-            second_machine.insert_10_coin()
+    <span class="kn">frm</span> <span class="n">second_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
+    <span class="kr">while</span> <span class="o">!</span><span class="n">second_machine</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kn">act</span> <span class="n">insert_5_coin</span><span class="p">()</span> <span class="p">{</span><span class="n">can</span> <span class="n">second_machine</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()}</span>
+            <span class="n">second_machine</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()</span>
+        <span class="kn">act</span> <span class="n">insert_1_coin</span><span class="p">()</span> <span class="p">{</span><span class="n">can</span> <span class="n">second_machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()}</span>
+            <span class="n">second_machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()</span>
+        <span class="kn">act</span> <span class="n">insert_10_coin</span><span class="p">()</span> <span class="p">{</span><span class="n">can</span> <span class="n">second_machine</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()}</span>
+            <span class="n">second_machine</span><span class="p">.</span><span class="n">insert_10_coin</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>That is, the computation of the outer action function will not resume until the inner action function named by the subaction statement is terminated.</p>
 <p>If you instead wish to execute a single action statement, instead of executing them all the way to the end, you can use the subaction syntax without <code class="docutils literal notranslate"><span class="pre">*</span></code>. For example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(frm Int target_cost) -&gt; VendingMachine:
-    while target_cost != 0:
-        actions:
-            act insert_5_coin()
-                target_cost = target_cost - 5
-            act insert_1_coin()
-                target_cost = target_cost - 1
-            act insert_10_coin()
-                target_cost = target_cost - 10
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">target_cost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">actions</span><span class="p">:</span>
+            <span class="kn">act</span> <span class="n">insert_5_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">5</span>
+            <span class="kn">act</span> <span class="n">insert_1_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="kn">act</span> <span class="n">insert_10_coin</span><span class="p">()</span>
+                <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">10</span>
 
-act vending_machine_times_two(frm Int first) -&gt; VendingMachinePair:
-    subaction*(first) first_machine = vending_machine(first)
-    subaction*(first) second_machine = vending_machine(second)
+<span class="kn">act</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">first</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachinePair</span><span class="p">:</span>
+    <span class="kn">subaction</span><span class="o">*</span><span class="p">(</span><span class="n">first</span><span class="p">)</span> <span class="n">first_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="kn">subaction</span><span class="o">*</span><span class="p">(</span><span class="n">first</span><span class="p">)</span> <span class="n">second_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
 
-fun main() -&gt; Int:
-    let state = vending_machine_times_two(10)
-    state.insert_5_coin()
-    state.insert_5_coin()
-    if state.is_done():
-        return 0
-    return 1
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()</span>
+    <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kr">return</span> <span class="mi">0</span>
+    <span class="kr">return</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>This example shows how to share state between two subactions. The inner vending machines have their <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> variable marked as <code class="docutils literal notranslate"><span class="pre">ctx</span></code>, and thus owned by the caller. The caller, <code class="docutils literal notranslate"><span class="pre">vending_machine_first_times_two</span></code>, uses two <code class="docutils literal notranslate"><span class="pre">subaction*</span></code> to execute both actions until the <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> reaches 0. Since <code class="docutils literal notranslate"><span class="pre">target_cost</span></code> is zero, they will reach zero at the same time, so when the <code class="docutils literal notranslate"><span class="pre">first_machine</span></code> terminates, so immediately does <code class="docutils literal notranslate"><span class="pre">second_machine</span></code>, and thus <code class="docutils literal notranslate"><span class="pre">vending_machine_times_two</span></code>. The significant improvement is that with the syntax <code class="docutils literal notranslate"><span class="pre">subaction*(first)</span></code>, we are forwarding <code class="docutils literal notranslate"><span class="pre">first</span></code> to every invocation of methods of the subactions, removing the requirement for the function <code class="docutils literal notranslate"><span class="pre">main</span></code> to do so. <code class="docutils literal notranslate"><span class="pre">main</span></code> can simply invoke <code class="docutils literal notranslate"><span class="pre">state.insert_5_coin()</span></code>, unaware of how the state is organized within vending machines.</p>
@@ -602,42 +604,42 @@ fun main() -&gt; Int:
 <section id="context-variables-in-subaction-statements">
 <h3>Context Variables in Subaction Statements<a class="headerlink" href="#context-variables-in-subaction-statements" title="Link to this heading"></a></h3>
 <p>An important language feature built into subaction statements and context variables is the ability to share data between distinct subactions. Let’s look at an example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(ctx Int target_cost) -&gt; VendingMachine:
-    while target_cost != 0:
-        act insert_1_coin()
-        target_cost = target_cost - 1
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Int</span> <span class="n">target_cost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">insert_1_coin</span><span class="p">()</span>
+        <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">1</span>
 
-act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
-    let first_machine = vending_machine(first)
-    let second_machine = vending_machine(second)
+<span class="kn">act</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="nc">Int</span> <span class="n">first</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachinePair</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">first_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="kr">let</span> <span class="n">second_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
 
-    while !first_machine.is_done() and !second_machine.is_done():
-        subaction
+    <span class="kr">while</span> <span class="o">!</span><span class="n">first_machine</span><span class="p">.</span><span class="n">is_done</span><span class="p">()</span> <span class="o">and</span> <span class="o">!</span><span class="n">second_machine</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kn">subaction</span>
 </pre></div>
 </div>
 <p>This example illustrates how to use context variables with subactions. Here is a more detailed version:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>act vending_machine(ctx Int target_cost) -&gt; VendingMachine:
-    while target_cost != 0:
-        act insert_1_coin()
-        target_cost = target_cost - 1
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">vending_machine</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Int</span> <span class="n">target_cost</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachine</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">target_cost</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">insert_1_coin</span><span class="p">()</span>
+        <span class="n">target_cost</span> <span class="o">=</span> <span class="n">target_cost</span> <span class="o">-</span> <span class="mi">1</span>
 
-act vending_machine_times_two(Int first, Int second) -&gt; VendingMachinePair:
-    frm first_machine = vending_machine(first)
-    frm second_machine = vending_machine(second)
+<span class="kn">act</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="nc">Int</span> <span class="n">first</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">VendingMachinePair</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">first_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">first</span><span class="p">)</span>
+    <span class="kn">frm</span> <span class="n">second_machine</span> <span class="o">=</span> <span class="n">vending_machine</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
 
-    while !first_machine.is_done() and !second_machine.is_done():
-        subaction first_machine
-        subaction second_machine
+    <span class="kr">while</span> <span class="o">!</span><span class="n">first_machine</span><span class="p">.</span><span class="n">is_done</span><span class="p">()</span> <span class="o">and</span> <span class="o">!</span><span class="n">second_machine</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kn">subaction</span> <span class="n">first_machine</span>
+        <span class="kn">subaction</span> <span class="n">second_machine</span>
 
-fun main() -&gt; Int:
-    let state = vending_machine_times_two(10, 2)
-    state.insert_5_coin()
-    state.insert_1_coin()
-    state.insert_5_coin()
-    state.insert_1_coin()
-    if state.is_done():
-        return 0
-    return 1
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">vending_machine_times_two</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">insert_5_coin</span><span class="p">()</span>
+    <span class="n">state</span><span class="p">.</span><span class="n">insert_1_coin</span><span class="p">()</span>
+    <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kr">return</span> <span class="mi">0</span>
+    <span class="kr">return</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>In this case, <code class="docutils literal notranslate"><span class="pre">vending_machine_times_two</span></code> is set up to handle two vending machines in parallel. Each machine runs independently but shares the control flow. This allows for flexible and efficient handling of multiple actions.</p>
@@ -645,8 +647,8 @@ fun main() -&gt; Int:
 <section id="return-statements">
 <h3>Return Statements<a class="headerlink" href="#return-statements" title="Link to this heading"></a></h3>
 <p>Functions with a return type must include at least one return statement, and such a return statement must have an expression, as shown in the following snippet:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun sum(Int first, Int second) -&gt; Int:
-  return first + second
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">sum</span><span class="p">(</span><span class="nc">Int</span> <span class="n">first</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+  <span class="kr">return</span> <span class="n">first</span> <span class="o">+</span> <span class="n">second</span>
 </pre></div>
 </div>
 <p>The expression in the return statement must have the same type as the function signature. When a return statement is encountered, the execution of the function immediately terminates, and statements that follow the return statement are not executed.</p>
@@ -654,19 +656,19 @@ fun main() -&gt; Int:
 <section id="if-statements">
 <h3>If Statements<a class="headerlink" href="#if-statements" title="Link to this heading"></a></h3>
 <p>If statements can either include an else-branch or not. Here is the syntax for if statements without an else-branch:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>if bool_returning_expression():
-  some_call1()
-  some_call2()
-some_call3()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">bool_returning_expression</span><span class="p">():</span>
+  <span class="n">some_call1</span><span class="p">()</span>
+  <span class="n">some_call2</span><span class="p">()</span>
+<span class="n">some_call3</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The true-branch (e.g., <code class="docutils literal notranslate"><span class="pre">some_call1()</span></code> and <code class="docutils literal notranslate"><span class="pre">some_call2()</span></code>) is executed if and only if the condition expression evaluates to true (<code class="docutils literal notranslate"><span class="pre">bool_returning_expression()</span></code>).</p>
 <p>If statements with an else-branch follow this syntax:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>if bool_returning_expression():
-  some_call1()
-  some_call2()
-else:
-  some_call3()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">bool_returning_expression</span><span class="p">():</span>
+  <span class="n">some_call1</span><span class="p">()</span>
+  <span class="n">some_call2</span><span class="p">()</span>
+<span class="kr">else</span><span class="p">:</span>
+  <span class="n">some_call3</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The else-branch is executed only if the true-branch is not.</p>
@@ -674,38 +676,38 @@ else:
 <section id="while-statements">
 <h3>While Statements<a class="headerlink" href="#while-statements" title="Link to this heading"></a></h3>
 <p>While statements follow this syntax:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>while bool_returning_expression():
-    call1()
-    call2()
-call3()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">while</span> <span class="n">bool_returning_expression</span><span class="p">():</span>
+    <span class="n">call1</span><span class="p">()</span>
+    <span class="n">call2</span><span class="p">()</span>
+<span class="n">call3</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The body of the while loop keeps being executed until the condition expression (<code class="docutils literal notranslate"><span class="pre">bool_returning_expression</span></code> in the example) evaluates to false.</p>
 <section id="break-statements">
 <h4>Break Statements<a class="headerlink" href="#break-statements" title="Link to this heading"></a></h4>
 <p>When a break statement is encountered, control flow jumps to the statement following the nearest while statement. For example, the following code prints <code class="docutils literal notranslate"><span class="pre">1</span></code> but not <code class="docutils literal notranslate"><span class="pre">0</span></code>:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x = 0
-while x != 2:
-    while x != 2:
-        if x == 0:
-            break
-        else:
-            print(x)
-    x = x + 1
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kr">while</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="kr">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="kr">break</span>
+        <span class="kr">else</span><span class="p">:</span>
+            <span class="n">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 </pre></div>
 </div>
 </section>
 <section id="continue-statements">
 <h4>Continue Statements<a class="headerlink" href="#continue-statements" title="Link to this heading"></a></h4>
 <p>When a continue statement is encountered, control flow jumps to the statement following the nearest while statement. For example, the following code prints <code class="docutils literal notranslate"><span class="pre">2</span></code> but not <code class="docutils literal notranslate"><span class="pre">1</span></code>:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x = 0
-while x != 2:
-    while x != 2:
-        x = x + 1
-        if x == 1:
-            continue
-        else:
-            print(x)
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kr">while</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="kr">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="kr">continue</span>
+        <span class="kr">else</span><span class="p">:</span>
+            <span class="n">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -713,28 +715,28 @@ while x != 2:
 <section id="using-statements">
 <h3>Using Statements<a class="headerlink" href="#using-statements" title="Link to this heading"></a></h3>
 <p>Type aliases can be introduced with the use of alias statements. For example:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>fun main() -&gt; Int:
-    using T = type(6)
-    let asd : T
-    asd = 10
-    return asd - 10
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">using</span> <span class="nc">T</span> <span class="o">=</span> <span class="n">type</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="kr">let</span> <span class="n">asd</span> <span class="p">:</span> <span class="nc">T</span>
+    <span class="n">asd</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="kr">return</span> <span class="n">asd</span> <span class="o">-</span> <span class="mi">10</span>
 </pre></div>
 </div>
 <p>Using statements can be used both at the function scope or at the global scope. Aliases introduced this way do not generate a new type; instead, they simply redirect all uses of the alias type to the aliased type.</p>
 <p>Aliases offer the following syntax as well, which deduces the aliased type from the expression appearing inside the <code class="docutils literal notranslate"><span class="pre">type()</span></code> clause:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>using T = type(6)
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">using</span> <span class="nc">T</span> <span class="o">=</span> <span class="n">type</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="declaration-statements">
 <h3>Declaration Statements<a class="headerlink" href="#declaration-statements" title="Link to this heading"></a></h3>
 <p>In RL, there are two flavors of declaration statements and three types of storage qualifiers. The simplest declaration statement is an assign declaration statement, in the form:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x = exp()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span> <span class="o">=</span> <span class="n">exp</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>This deduces the type of <code class="docutils literal notranslate"><span class="pre">x</span></code> from the expression <code class="docutils literal notranslate"><span class="pre">exp()</span></code>, and removes a reference qualifier from the type if there is any, making a copy of <code class="docutils literal notranslate"><span class="pre">exp()</span></code> result if it was a reference.</p>
 <p>Alternatively, declaration statements can be construction declaration statements, in the form:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>let x : Int
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kr">let</span> <span class="n">x</span> <span class="p">:</span> <span class="nc">Int</span>
 </pre></div>
 </div>
 <p>Construction declaration statements allocate a variable of the type specified after the colon and initialize them by invoking the member function <code class="docutils literal notranslate"><span class="pre">init</span></code> on them.</p>
@@ -742,7 +744,7 @@ while x != 2:
 <section id="reference-declaration-statements">
 <h3>Reference Declaration Statements<a class="headerlink" href="#reference-declaration-statements" title="Link to this heading"></a></h3>
 <p>Instead of declaring a variable with the keyword <code class="docutils literal notranslate"><span class="pre">let</span></code>, <code class="docutils literal notranslate"><span class="pre">ref</span></code> can be used instead:</p>
-<div class="highlight-rl notranslate"><div class="highlight"><pre><span></span>ref x = ref_returning_exp()
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">ref</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ref_returning_exp</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>In this case, <code class="docutils literal notranslate"><span class="pre">x</span></code> is not a new variable but a reference to the variable returned by <code class="docutils literal notranslate"><span class="pre">ref_returning_exp()</span></code>.</p>

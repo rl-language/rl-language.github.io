@@ -1,3 +1,13 @@
 # UI, Controller and Gameplay
 
-some content
+# 4Hammer
+Our flagship example is 4Hammer ([source code](https://github.com/rl-language/4Hammer)), a reinforcement-learning environment with extreamly complex interactive sequences into \~5 k lines of code (graphics included). Thanks to Rulebook, 4Hammer automatically gains:
+
+* reinforcement-learning support
+* fuzzer-based testing
+* textual state encoding
+* trace replay
+* remote execution
+* self-configuring UIs
+
+—all in both browser and desktop builds.

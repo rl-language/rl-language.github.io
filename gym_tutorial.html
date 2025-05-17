@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul class="current">
@@ -79,6 +80,7 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -142,31 +144,31 @@
 <section id="example-program">
 <h2>Example Program<a class="headerlink" href="#example-program" title="Link to this heading"></a></h2>
 <p>Let’s begin with a simple RLC program and build on top of it. Below is an implementation of the classic game <em>rock-paper-scissors</em>. Note that this example does not define the number of players or specify how the game state maps to the current player—these details are left implicit.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># rockpaperscizzor.rl</span>
-<span class="n">enum</span> <span class="n">Gesture</span><span class="p">:</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># rockpaperscizzor.rl</span>
+<span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">paper</span>
     <span class="n">rock</span>
     <span class="n">scizzor</span>
 
-<span class="nd">@classes</span>
-<span class="n">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Game</span><span class="p">:</span>
-    <span class="n">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g1</span><span class="p">)</span>
-    <span class="n">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g2</span><span class="p">)</span>
+<span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">g1</span><span class="p">)</span>
+    <span class="kn">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">g2</span><span class="p">)</span>
 
-<span class="n">fun</span> <span class="n">score</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">,</span> <span class="n">Int</span> <span class="n">player_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">:</span>
-    <span class="k">if</span> <span class="err">!</span><span class="n">game</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
-        <span class="k">return</span> <span class="mf">0.0</span>
-    <span class="n">let</span> <span class="n">winner</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+<span class="kn">fun</span> <span class="n">score</span><span class="p">(</span><span class="nc">Game</span> <span class="n">game</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">player_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Float</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="o">!</span><span class="n">game</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kr">return</span> <span class="mf">0.0</span>
+    <span class="kr">let</span> <span class="n">winner</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="kr">if</span> <span class="n">game</span><span class="p">.</span><span class="n">g1</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">g2</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="err">%</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">winner</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="n">game</span><span class="p">.</span><span class="n">g2</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">g1</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="err">%</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">winner</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.0</span>
-    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">1.0</span>
-    <span class="k">return</span> <span class="o">-</span><span class="mf">1.0</span>
+    <span class="kr">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="mf">0.0</span>
+    <span class="kr">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="mf">1.0</span>
+    <span class="kr">return</span> <span class="o">-</span><span class="mf">1.0</span>
 </pre></div>
 </div>
 </section>
@@ -204,11 +206,11 @@
 </ul>
 <p>Additionally, <code class="docutils literal notranslate"><span class="pre">exit_on_invalid_env</span></code> will emit warnings if the program contains objects meant to be used in training (e.g., tensors) but that lack a valid serialization strategy.</p>
 <p>For example, consider this modification to the <code class="docutils literal notranslate"><span class="pre">play</span></code> action:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@classes</span>
-<span class="n">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Game</span><span class="p">:</span>
-    <span class="n">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g1</span><span class="p">)</span>
-    <span class="n">frm</span> <span class="n">local_var</span> <span class="p">:</span> <span class="n">Int</span>
-    <span class="n">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Gesture</span> <span class="n">g2</span><span class="p">)</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">g1</span><span class="p">)</span>
+    <span class="kn">frm</span> <span class="n">local_var</span> <span class="p">:</span> <span class="nc">Int</span>
+    <span class="kn">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">g2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This will trigger a warning like the following:</p>
@@ -354,13 +356,13 @@
 <section id="multiplayer">
 <h2>Multiplayer<a class="headerlink" href="#multiplayer" title="Link to this heading"></a></h2>
 <p>In your Rulebook code, you can enable multiplayer support by defining two additional functions: <code class="docutils literal notranslate"><span class="pre">get_num_players</span></code> and <code class="docutils literal notranslate"><span class="pre">get_current_player</span></code>. For example, add the following to your Rulebook file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
-    <span class="k">return</span> <span class="mi">2</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">return</span> <span class="mi">2</span>
 
-<span class="n">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">can</span> <span class="n">game</span><span class="o">.</span><span class="n">player1_move</span><span class="p">(</span><span class="n">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mi">0</span>
-    <span class="k">return</span> <span class="mi">1</span>
+<span class="kn">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="nc">Game</span> <span class="n">game</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="n">can</span> <span class="n">game</span><span class="p">.</span><span class="n">player1_move</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">):</span>
+        <span class="kr">return</span> <span class="mi">0</span>
+    <span class="kr">return</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>You can get the ID of the player who needs to act next with:</p>
@@ -450,41 +452,41 @@ Only after <code class="docutils literal notranslate"><span class="pre">is_done_
 <h2>Hidden Information<a class="headerlink" href="#hidden-information" title="Link to this heading"></a></h2>
 <p>To handle hidden information—data that should not be visible in the tensor serialization—you can use the <code class="docutils literal notranslate"><span class="pre">Hidden</span></code> type from the standard library.</p>
 <p>Here’s an updated version of the program using hidden actions:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">machine_learning</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">machine_learning</span>
 
-<span class="n">enum</span> <span class="n">Gesture</span><span class="p">:</span>
+<span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">paper</span>
     <span class="n">rock</span>
     <span class="n">scizzor</span>
 
-<span class="nd">@classes</span>
-<span class="n">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Game</span><span class="p">:</span>
-    <span class="n">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Hidden</span><span class="o">&lt;</span><span class="n">Gesture</span><span class="o">&gt;</span> <span class="n">g1</span><span class="p">)</span>
-    <span class="n">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="n">frm</span> <span class="n">Hidden</span><span class="o">&lt;</span><span class="n">Gesture</span><span class="o">&gt;</span> <span class="n">g2</span><span class="p">)</span>
+<span class="p">@</span><span class="n">classes</span>
+<span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
+    <span class="kn">act</span> <span class="n">player1_move</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Hidden</span><span class="o">&lt;</span><span class="nc">Gesture</span><span class="o">&gt;</span> <span class="n">g1</span><span class="p">)</span>
+    <span class="kn">act</span> <span class="n">player2_move</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Hidden</span><span class="o">&lt;</span><span class="nc">Gesture</span><span class="o">&gt;</span> <span class="n">g2</span><span class="p">)</span>
 
-<span class="n">fun</span> <span class="n">score</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">,</span> <span class="n">Int</span> <span class="n">player_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">:</span>
-    <span class="k">if</span> <span class="err">!</span><span class="n">game</span><span class="o">.</span><span class="n">is_done</span><span class="p">():</span>
-        <span class="k">return</span> <span class="mf">0.0</span>
-    <span class="n">let</span> <span class="n">winner</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+<span class="kn">fun</span> <span class="n">score</span><span class="p">(</span><span class="nc">Game</span> <span class="n">game</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">player_id</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Float</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="o">!</span><span class="n">game</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="kr">return</span> <span class="mf">0.0</span>
+    <span class="kr">let</span> <span class="n">winner</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="kr">if</span> <span class="n">game</span><span class="p">.</span><span class="n">g1</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">g2</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="err">%</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">winner</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">g2</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="kr">if</span> <span class="n">game</span><span class="p">.</span><span class="n">g2</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">g1</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="err">%</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">winner</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.0</span>
-    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">1.0</span>
-    <span class="k">return</span> <span class="o">-</span><span class="mf">1.0</span>
+    <span class="kr">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="mf">0.0</span>
+    <span class="kr">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
+        <span class="kr">return</span> <span class="mf">1.0</span>
+    <span class="kr">return</span> <span class="o">-</span><span class="mf">1.0</span>
 
-<span class="n">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
-    <span class="k">return</span> <span class="mi">1</span>
+<span class="kn">fun</span> <span class="n">get_num_players</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">return</span> <span class="mi">1</span>
 
-<span class="n">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="n">Game</span> <span class="n">game</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
-    <span class="n">let</span> <span class="n">x</span> <span class="p">:</span> <span class="n">Hidden</span><span class="o">&lt;</span><span class="n">Gesture</span><span class="o">&gt;</span>
-    <span class="k">if</span> <span class="n">can</span> <span class="n">game</span><span class="o">.</span><span class="n">player1_move</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mi">0</span>
-    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+<span class="kn">fun</span> <span class="n">get_current_player</span><span class="p">(</span><span class="nc">Game</span> <span class="n">game</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">let</span> <span class="n">x</span> <span class="p">:</span> <span class="nc">Hidden</span><span class="o">&lt;</span><span class="nc">Gesture</span><span class="o">&gt;</span>
+    <span class="kr">if</span> <span class="n">can</span> <span class="n">game</span><span class="p">.</span><span class="n">player1_move</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="kr">return</span> <span class="mi">0</span>
+    <span class="kr">return</span> <span class="o">-</span><span class="mi">1</span>
 </pre></div>
 </div>
 <p>Running the following:</p>
@@ -500,8 +502,8 @@ Only after <code class="docutils literal notranslate"><span class="pre">is_done_
 <section id="custom-tensor-representation">
 <h2>Custom Tensor Representation<a class="headerlink" href="#custom-tensor-representation" title="Link to this heading"></a></h2>
 <p>Your machine learning algorithms might require custom tensor representations different from the default one provided. You can define these by implementing two simple functions:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">write_in_observation_tensor</span><span class="p">(</span><span class="n">T</span> <span class="n">obj</span><span class="p">,</span> <span class="n">Int</span> <span class="n">observer_id</span><span class="p">,</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Float</span><span class="o">&gt;</span> <span class="n">output</span><span class="p">,</span> <span class="n">Int</span> <span class="n">counter</span><span class="p">)</span>
-<span class="n">fun</span> <span class="n">size_as_observation_tensor</span><span class="p">(</span><span class="n">T</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">write_in_observation_tensor</span><span class="p">(</span><span class="nc">T</span> <span class="n">obj</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">observer_id</span><span class="p">,</span> <span class="nc">Vector</span><span class="o">&lt;</span><span class="nc">Float</span><span class="o">&gt;</span> <span class="n">output</span><span class="p">,</span> <span class="nc">Int</span> <span class="n">counter</span><span class="p">)</span>
+<span class="kn">fun</span> <span class="n">size_as_observation_tensor</span><span class="p">(</span><span class="nc">T</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span>
 </pre></div>
 </div>
 <p>For example, to serialize the <code class="docutils literal notranslate"><span class="pre">Gesture</span></code> enum as a single float instead of a one-hot vector:</p>
@@ -530,8 +532,8 @@ Only after <code class="docutils literal notranslate"><span class="pre">is_done_
 </pre></div>
 </div>
 <p>Finally, <code class="docutils literal notranslate"><span class="pre">size_as_observation_tensor</span></code> must return the maximum number of floats your type will ever write:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fun</span> <span class="n">size_as_observation_tensor</span><span class="p">(</span><span class="n">Gesture</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">:</span>
-    <span class="k">return</span> <span class="mi">1</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">fun</span> <span class="n">size_as_observation_tensor</span><span class="p">(</span><span class="nc">Gesture</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="kr">return</span> <span class="mi">1</span>
 </pre></div>
 </div>
 </section>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Architecture &mdash; Rulebook documentation 0.3.0 documentation</title>
+  <title>Tools &mdash; Rulebook documentation 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Tutorial for RL people" href="tutorial.html" />
+    <link rel="next" title="Building RLC from sources" href="building.html" />
     <link rel="prev" title="Graphic engines and machine learning" href="project_rationale.html" /> 
 </head>
 
@@ -52,7 +52,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tools</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rlc">rlc</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#hammer-graphical-engine">4Hammer graphical engine</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#python-drivers">Python drivers</a></li>
@@ -66,8 +66,30 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#rlc-test">rlc-test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rlc-random">rlc-random</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-learn">rlc-learn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-play">rlc-play</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-probs">rlc-probs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-action">rlc-action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-for-compiler-people">Tools for compiler people</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rlc-internals">RLC internals</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lexer">Lexer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#parser">Parser</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unchecked-ast">Unchecked AST</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#typechecked-ast">Typechecked AST</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implicit-instantiation">Implicit instantiation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flattened">Flattened</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#action-rewriting">Action rewriting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lowering-to-llvm-ir">Lowering to LLVM IR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#making-ir-more-readable">Making IR more readable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mlir">MLIR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-single-rlc-passes">Running single RLC passes</a></li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
@@ -77,6 +99,7 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -98,7 +121,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Architecture</li>
+      <li class="breadcrumb-item active">Tools</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/architecture.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -108,8 +131,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="architecture">
-<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h1>
+  <section id="tools">
+<h1>Tools<a class="headerlink" href="#tools" title="Link to this heading"></a></h1>
 <p>This document describes the architecture of <code class="docutils literal notranslate"><span class="pre">RLC</span></code>, the rulebook compiler, and of the other tools of the RLC suite. The intent is to provide a high level description of how the various parts of Rulebook fit into a product built on top of it, as well as a description of RLC command line facilities. More exhaustive descriptions of all tools can be found in the <a class="reference internal" href="language-reference.html"><span class="std std-doc">reference</span></a>.</p>
 <section id="rlc">
 <h2>rlc<a class="headerlink" href="#rlc" title="Link to this heading"></a></h2>
@@ -222,7 +245,156 @@ Since the rules are the same between the engine and python, python can connect o
 <h2>rlc-random<a class="headerlink" href="#rlc-random" title="Link to this heading"></a></h2>
 <p>rlc-random runs random actions on a program with a finite amount of actions, and does until it reaches the end of the program. It prints the selected actions.</p>
 <p>This tool is usefull as a command line utility to quickly test a interactive program, or to produce a trace usefull to some other program.</p>
+<p>To be usable with rlc-random, a program just requires that to have a entry point with the following signature <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">play()</span> <span class="pre">-&gt;</span> <span class="pre">Game</span></code>, and that all <code class="docutils literal notranslate"><span class="pre">action</span> <span class="pre">statements</span></code> that appear in <code class="docutils literal notranslate"><span class="pre">play</span></code> are enumerable.</p>
 <p>This program is only available in a pip installation.</p>
+</section>
+<section id="rlc-learn">
+<h2>rlc-learn<a class="headerlink" href="#rlc-learn" title="Link to this heading"></a></h2>
+<p>rlc-learn uses a off-the-shelf implmentation of PPO to maximize some metric in a given Rulebook program. This tool is intended to be used to perform sanity checks by those that wish to roll out their own machine learning algorithm, or by those that do not have knowledge of reinforcement learning and wish to use a acceptable off-the-shelf implementation. A basic tutorial is shown <a class="reference internal" href="tutorial.html"><span class="std std-doc">here</span></a>.</p>
+<p>This program is only available in a pip installation.</p>
+</section>
+<section id="rlc-play">
+<h2>rlc-play<a class="headerlink" href="#rlc-play" title="Link to this heading"></a></h2>
+<p>Given a Rulebook program file.rl, and the network obtained from <code class="docutils literal notranslate"><span class="pre">rlc-learn</span> <span class="pre">file.rl</span></code>, rlc-play generates a playout of that environment from start to finish according to the probabilities assigned by the network. A basic tutorial is shown <a class="reference internal" href="tutorial.html"><span class="std std-doc">here</span></a>.</p>
+<p>This program is only available in a pip installation.</p>
+</section>
+<section id="rlc-probs">
+<h2>rlc-probs<a class="headerlink" href="#rlc-probs" title="Link to this heading"></a></h2>
+<p>rlc-probs uses the network generated by rlc-learn to display on screen the actions available to the network in a given state of the input interactive program, and their respective probabilities. This tool is intended to be use to inspect the decision making skills of a trained network, beside gaining more insight than observing a single decision at the time.</p>
+<p>A basic tutorial is shown <a class="reference internal" href="tutorial.html"><span class="std std-doc">here</span></a>.</p>
+<p>This program is only available in a pip installation.</p>
+</section>
+<section id="rlc-action">
+<h2>rlc-action<a class="headerlink" href="#rlc-action" title="Link to this heading"></a></h2>
+<p>Applies a execution trace to a rulebook program, and then prints the final result. This tool is usefull to check if a trace is valid, if the traced program is correct.</p>
+<p>This program is only available in a pip installation.</p>
+</section>
+<section id="tools-for-compiler-people">
+<h2>Tools for compiler people<a class="headerlink" href="#tools-for-compiler-people" title="Link to this heading"></a></h2>
+<p>This section of the document talks about the internal components of RLC, and is meant for compiler developers, not users of the language. If you are confused about what this means and you are wondering if this section is for your, it is not, altough you can still read it if you are interested in knowing what goes on under rlc hood.</p>
+<section id="rlc-internals">
+<h3>RLC internals<a class="headerlink" href="#rlc-internals" title="Link to this heading"></a></h3>
+<p>RLC is a <a class="reference external" href="https://llvm.org">LLVM</a> and <a class="reference external" href="https://mlir.llvm.org">MLIR</a> based compiler. It has a custom recursive descent parser, and a custom AST built on top of MLIR, called the RLC Dialect.</p>
+<div class="graphviz"><img src="_images/graphviz-12f785f77145101bbf15aa3cf2d39d2dabf5eda0.png" alt="digraph RLC_Pipeline_V {
+    rankdir = TB;           /* vertical (top-to-bottom) layout          */
+    nodesep = 0.6;
+    ranksep = 1;
+    dpi     = 100;          /* higher resolution                        */
+
+    node [shape=box, style=filled, color=&quot;#dddddd&quot;,
+          fontname=&quot;Helvetica&quot;, fontsize=11];
+    edge [arrowsize=0.7];
+
+    /* main pipeline */
+    lexer                 [label=&quot;Lexer&quot;];
+    parser                [label=&quot;Parser&quot;];
+    unchecked_ast         [label=&quot;Unchecked AST&quot;];
+    typechecked_ast       [label=&quot;Typechecked AST&quot;];
+    implicit_instantiation[label=&quot;Implicit Instantiation&quot;];
+    flattened             [label=&quot;Flattened&quot;];
+    action_rewriting      [label=&quot;Action Rewriting&quot;];
+    llvm_ir               [label=&quot;LLVM IR&quot;];
+    file_a                [label=&quot;file.a&quot;];
+    linker                [label=&quot;Linker&quot;];
+    lib_so                [label=&quot;lib.so&quot;];
+
+    /* auxiliary */
+    libruntime [label=&quot;libruntime&quot;, shape=note,
+                style=&quot;filled,rounded&quot;, color=&quot;#8ecae6&quot;,
+                fontcolor=&quot;#0a3045&quot;];
+    wrappers   [label=&quot;Wrappers&quot;];
+
+    /* sequential flow */
+    lexer  -&gt; parser
+    parser -&gt; unchecked_ast
+    unchecked_ast -&gt; typechecked_ast
+    typechecked_ast -&gt; implicit_instantiation
+    implicit_instantiation -&gt; flattened
+    flattened -&gt; action_rewriting
+    action_rewriting -&gt; llvm_ir
+    llvm_ir -&gt; file_a
+    file_a  -&gt; linker
+    linker  -&gt; lib_so
+
+    /* extra edges */
+    libruntime -&gt; linker ;
+    implicit_instantiation -&gt; wrappers;
+}" class="graphviz" /></div>
+<section id="lexer">
+<h4>Lexer<a class="headerlink" href="#lexer" title="Link to this heading"></a></h4>
+<p>The lexer of RLC takes the input file and turns them into token to be consumed by the parser. There is nothing fancy here except that since the language has semantical whitespaces, the lexer must keep track of the indentation.</p>
+<p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--token</span> <span class="pre">file.rl</span></code></p>
+</section>
+<section id="parser">
+<h4>Parser<a class="headerlink" href="#parser" title="Link to this heading"></a></h4>
+<p>The parser is a recursive descent handwritten parser, the parser takes the tokens, and creates on the fly the unchecked AST.</p>
+</section>
+<section id="unchecked-ast">
+<h4>Unchecked AST<a class="headerlink" href="#unchecked-ast" title="Link to this heading"></a></h4>
+<p>Before typechecking the AST of the language is unchecked, it means that almost every non trivial operation is marked as having unkown type.</p>
+<p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--unchecked</span> <span class="pre">file.rl</span></code></p>
+</section>
+<section id="typechecked-ast">
+<h4>Typechecked AST<a class="headerlink" href="#typechecked-ast" title="Link to this heading"></a></h4>
+<p>The typechecked IR knows all types of all expressions, except for templates, which have been typechecked, but are not expanded yet.</p>
+<p>Ideally, all static errors in the input program should be discovered during typechecking. In practice this is true for every error except errors relating to <code class="docutils literal notranslate"><span class="pre">drop</span></code>, <code class="docutils literal notranslate"><span class="pre">init</span></code> and <code class="docutils literal notranslate"><span class="pre">assign</span></code> when they are used inside templates.</p>
+<p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--type-checked</span> <span class="pre">file.rl</span></code></p>
+</section>
+<section id="implicit-instantiation">
+<h4>Implicit instantiation<a class="headerlink" href="#implicit-instantiation" title="Link to this heading"></a></h4>
+<p>During the implicit instantiation step templates end up being generated, and implicit init, drop and assign functions emitted.</p>
+<p>After the implicit step, no object of the module can be a template, and all non external declared entities must have been discovered.</p>
+<p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--after-implicit</span> <span class="pre">file.rl</span></code></p>
+<p>Wrappers for other languages are emitted after this step, when all concrete functions are accounted for.</p>
+</section>
+<section id="flattened">
+<h4>Flattened<a class="headerlink" href="#flattened" title="Link to this heading"></a></h4>
+<p>During the flattening step all control flow constructs are removed and replaced with jumps.</p>
+<p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--flattened</span> <span class="pre">file.rl</span></code></p>
+</section>
+<section id="action-rewriting">
+<h4>Action rewriting<a class="headerlink" href="#action-rewriting" title="Link to this heading"></a></h4>
+<p>During action rewriting all Action Functions <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">$name()</span> <span class="pre">-&gt;</span> <span class="pre">$Type:</span></code> end up being replaced with the functions they declare. This includes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">$name()</span> <span class="pre">-&gt;</span> <span class="pre">$Type:</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">can_$name()</span> <span class="pre">-&gt;</span> <span class="pre">Bool:</span></code> if the action function <code class="docutils literal notranslate"><span class="pre">$name</span></code> has a precondition.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">$act($Type,</span> <span class="pre">args...)</span></code> for each action statement called <code class="docutils literal notranslate"><span class="pre">$act</span></code> in <code class="docutils literal notranslate"><span class="pre">$name</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">can_$act($Type,</span> <span class="pre">args...)</span> <span class="pre">-&gt;</span> <span class="pre">Bool</span></code> for each action statement called <code class="docutils literal notranslate"><span class="pre">$act</span></code> in <code class="docutils literal notranslate"><span class="pre">$name</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">is_done($Type)</span> <span class="pre">-&gt;</span> <span class="pre">Bool</span></code></p></li>
+</ul>
+<p>After action rewrting the module contains only types and functions.</p>
+</section>
+<section id="lowering-to-llvm-ir">
+<h4>Lowering to LLVM IR<a class="headerlink" href="#lowering-to-llvm-ir" title="Link to this heading"></a></h4>
+<p>The module is translated to LLVM IR to be optimized and compiled.</p>
+<p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--ir</span> <span class="pre">file.rl</span></code> to see the LLVM ir. You can use <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--ir</span> <span class="pre">file.rl</span> <span class="pre">-O2</span></code> if you want to see the optimized IR.</p>
+</section>
+<section id="making-ir-more-readable">
+<h4>Making IR more readable<a class="headerlink" href="#making-ir-more-readable" title="Link to this heading"></a></h4>
+<p>When priting the RLC IR you can pass <code class="docutils literal notranslate"><span class="pre">--hide-positions</span></code> and <code class="docutils literal notranslate"><span class="pre">--hide-dl</span></code> to omit the module data layout and the module debug positions. That makes the IR slightly more readable.</p>
+</section>
+<section id="mlir">
+<h4>MLIR<a class="headerlink" href="#mlir" title="Link to this heading"></a></h4>
+<p>I know you are looking for a explanation of how MLIR works since MLIR documentation is arcane. Good luck!</p>
+<p>Once you figure it out: RLC uses MLIR as a mere intermediate rappresentation generator, and as a way to convert to LLVM IR. We use nothing about Dialect interoperability or tensorial stuff. Every MLIR operation we use(except when converting to LLVM IR) is custom made for RLC.</p>
+<p>In practice what we get out MLIR is:</p>
+<ul class="simple">
+<li><p>the pipeline infrastructure</p></li>
+<li><p>the declarative way of creating new operation types</p></li>
+<li><p>the textual serializers for MLIR</p></li>
+<li><p>mlir-opt which runs single passes of mlir</p></li>
+<li><p>some basic type interfaces</p></li>
+<li><p>MLIR dataflow analisys</p></li>
+</ul>
+</section>
+<section id="running-single-rlc-passes">
+<h4>Running single RLC passes<a class="headerlink" href="#running-single-rlc-passes" title="Link to this heading"></a></h4>
+<p>If you want to run a RLC pass in isolation after a particular step of the rlc pipeline, say the typechecking step, you can run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span> <span class="o">--</span><span class="nb">type</span><span class="o">-</span><span class="n">checked</span> <span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="o">-</span> <span class="o">|</span> <span class="n">rlc</span><span class="o">-</span><span class="n">opt</span> <span class="o">--</span><span class="n">PASS_NAME</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 </section>
 
@@ -231,7 +403,7 @@ Since the rules are the same between the engine and python, python can connect o
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="project_rationale.html" class="btn btn-neutral float-left" title="Graphic engines and machine learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial for RL people" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="building.html" class="btn btn-neutral float-right" title="Building RLC from sources" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

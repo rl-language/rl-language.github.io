@@ -39,7 +39,7 @@ pip install numpy
 
 Let’s begin with a simple RLC program and build on top of it. Below is an implementation of the classic game *rock-paper-scissors*. Note that this example does not define the number of players or specify how the game state maps to the current player—these details are left implicit.
 
-```python
+```rlc
 # rockpaperscizzor.rl
 enum Gesture:
     paper
@@ -113,7 +113,7 @@ Additionally, `exit_on_invalid_env` will emit warnings if the program contains o
 
 For example, consider this modification to the `play` action:
 
-```python
+```rlc
 @classes
 act play() -> Game:
     act player1_move(frm Gesture g1)
@@ -285,7 +285,7 @@ The second mechanism is discussed in the multiplayer section.
 
 In your Rulebook code, you can enable multiplayer support by defining two additional functions: `get_num_players` and `get_current_player`. For example, add the following to your Rulebook file:
 
-```python
+```rlc
 fun get_num_players() -> Int:
     return 2
 
@@ -401,7 +401,7 @@ To handle hidden information—data that should not be visible in the tensor ser
 
 Here's an updated version of the program using hidden actions:
 
-```python
+```rlc
 import machine_learning
 
 enum Gesture:
@@ -456,7 +456,7 @@ will produce a serialized state where the player's actions are omitted, and only
 
 Your machine learning algorithms might require custom tensor representations different from the default one provided. You can define these by implementing two simple functions:
 
-```python
+```rlc
 fun write_in_observation_tensor(T obj, Int observer_id, Vector<Float> output, Int counter)
 fun size_as_observation_tensor(T obj) -> Int
 ```
@@ -494,7 +494,7 @@ counter = counter + 1
 
 Finally, `size_as_observation_tensor` must return the maximum number of floats your type will ever write:
 
-```python
+```rlc
 fun size_as_observation_tensor(Gesture obj) -> Int:
     return 1
 ```

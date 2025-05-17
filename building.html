@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building RLC from sources &mdash; Rulebook documentation 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial for RL people" href="tutorial.html" />
+    <link rel="prev" title="Tools" href="architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Rulebook documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Building RLC from sources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#downloading-sources">Downloading sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment-sh">environment.sh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building">Building</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#successive-builds">Successive builds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-tests">Running tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-built-rlc">Running the built rlc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#packaging-for-pip">Packaging for PIP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compiler-speed">Compiler speed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-benchmarks">Running benchmarks</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rulebook documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Building RLC from sources</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/building.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-rlc-from-sources">
+<h1>Building RLC from sources<a class="headerlink" href="#building-rlc-from-sources" title="Link to this heading"></a></h1>
+<p>This section is about <strong>building rlc itself</strong>, not about building things with Rulebook. If the difference is not clear to you, you are not interested in this page.</p>
+<p>Building on windows is supported but at the moment undocumented.</p>
+<section id="downloading-sources">
+<h2>Downloading sources<a class="headerlink" href="#downloading-sources" title="Link to this heading"></a></h2>
+<p>Execute line by line the content of <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/setup.sh">setup.sh</a>. If you are on a “normal enough” linux or mac machine you can just download the file and execute it, but the stranger is your machine configuration the more likelly is to break.</p>
+<p><strong>setup.sh</strong> will</p>
+<ul class="simple">
+<li><p>check that you have python3, ninja and cmake.</p></li>
+<li><p>it will clone rlc into rlc_infrastructure.</p></li>
+<li><p>it will create a python virtual environment to not pollute your machine with python packages.</p></li>
+<li><p>it will install those packages.</p></li>
+<li><p>it will initialize python submodules (google-test, and google-benchmarks, a testing and a benchmarking library used by rlc at build time only.)</p></li>
+</ul>
+<p>At this stage you will have a folder with the following structure</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span><span class="n">rlc</span> <span class="c1"># source directory</span>
+<span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/.</span><span class="n">venv</span> <span class="c1"># python cache for packages</span>
+</pre></div>
+</div>
+</section>
+<section id="environment-sh">
+<h2>environment.sh<a class="headerlink" href="#environment-sh" title="Link to this heading"></a></h2>
+<p><strong>IMPORTANT</strong>  every time you open a new shell that you wish to use for RLC, you must run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span><span class="n">rlc</span><span class="o">/</span><span class="n">environment</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Beside making sure that you have the correct python virtual environment enabled, this command will make sure that when we build LLVM it is available to RLC, even without installing LLVM.</p>
+</section>
+<section id="building">
+<h2>Building<a class="headerlink" href="#building" title="Link to this heading"></a></h2>
+<p>A properly compiled RLC minimal installation depends on nothing except typical cpp libraries, but when building RLC itself we need a specific configuration of LLVM. For this reason we provide a build script that will configure the directories in a resonable configuration.</p>
+<p>to do so, you can run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># linux</span>
+<span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span>
+<span class="n">python</span> <span class="n">rlc</span><span class="o">/</span><span class="n">build</span><span class="o">.</span><span class="n">py</span> <span class="c1"># --dry-run to see what it does without running it</span>
+
+<span class="c1"># mac</span>
+<span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span>
+<span class="n">python</span> <span class="n">rlc</span><span class="o">/</span><span class="n">build</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">use</span><span class="o">-</span><span class="n">lld</span> <span class="c1"># --dry-run to see what it does without running it</span>
+</pre></div>
+</div>
+<p>What the script will do is:</p>
+<ul class="simple">
+<li><p>clone LLVM</p></li>
+<li><p>build LLVM in debug mode</p></li>
+<li><p>install LLVM debug inside rlc-infrastructure</p></li>
+<li><p>build LLVM in release mode</p></li>
+<li><p>install LLVM release inside rlc-infrastructure</p></li>
+<li><p>build rlc-debug</p></li>
+<li><p>test rlc-debug</p></li>
+<li><p>build rlc-release</p></li>
+<li><p>test rlc-release</p></li>
+<li><p>install rlc-release in rlc-infrastructure/rlc-release</p></li>
+</ul>
+<p>at the end of this step you will have in your rlc-infrastructure-directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span>
+<span class="o">.</span><span class="n">venv</span>
+<span class="n">llvm</span><span class="o">-</span><span class="n">debug</span>
+<span class="n">llvm</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">debug</span>
+<span class="n">llvm</span><span class="o">-</span><span class="n">release</span>
+<span class="n">llvm</span><span class="o">-</span><span class="n">install</span><span class="o">-</span><span class="n">release</span>
+<span class="n">rlc</span><span class="o">-</span><span class="n">debug</span>
+<span class="n">rlc</span><span class="o">-</span><span class="n">release</span>
+<span class="n">rlc</span><span class="o">-</span><span class="n">release</span><span class="o">/</span><span class="n">install</span> <span class="c1"># here is the installation you care about, probably</span>
+</pre></div>
+</div>
+<p>After this has compleated successfully, you can disregard build.py, use regular ninja commands</p>
+</section>
+<section id="successive-builds">
+<h2>Successive builds<a class="headerlink" href="#successive-builds" title="Link to this heading"></a></h2>
+<p>After the first build, if you change the source code of rlc you don’t need to run build.py, you can run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span><span class="n">rlc</span><span class="o">-</span><span class="n">release</span> <span class="c1"># or rlc-debug</span>
+<span class="n">ninja</span> <span class="nb">all</span>
+<span class="n">ninja</span> <span class="n">install</span> <span class="c1"># optional</span>
+</pre></div>
+</div>
+<p>this will build and install rlc.</p>
+</section>
+<section id="running-tests">
+<h2>Running tests<a class="headerlink" href="#running-tests" title="Link to this heading"></a></h2>
+<p>You can can run all tests as follow</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span><span class="n">rlc</span><span class="o">-</span><span class="n">release</span> <span class="c1"># or rlc-debug</span>
+<span class="n">ctest</span> <span class="o">--</span><span class="n">verbose</span> <span class="c1"># runs all tests</span>
+<span class="n">ctest</span> <span class="o">-</span><span class="n">R</span> <span class="n">name</span> <span class="o">--</span><span class="n">verbose</span> <span class="c1"># filter tests by name</span>
+<span class="n">lit</span> <span class="o">--</span><span class="n">verbose</span> <span class="n">tool</span><span class="o">/</span><span class="n">rlc</span><span class="o">/</span><span class="n">test</span> <span class="c1"># run end to end compiler tests</span>
+<span class="n">lit</span> <span class="o">--</span><span class="n">verbose</span> <span class="n">tool</span><span class="o">/</span><span class="n">rlc</span><span class="o">/</span><span class="n">test</span> <span class="o">--</span><span class="nb">filter</span> <span class="n">NAME</span> <span class="c1"># run end to end compiler tests</span>
+</pre></div>
+</div>
+</section>
+<section id="running-the-built-rlc">
+<h2>Running the built rlc<a class="headerlink" href="#running-the-built-rlc" title="Link to this heading"></a></h2>
+<p>If you have built rlc from sources there are two ways of doing it. You can first install it, and use it from the insall directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span>
+<span class="n">ninja</span> <span class="nb">all</span>
+<span class="n">ninja</span> <span class="n">install</span>
+<span class="o">./</span><span class="n">install</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">rlc</span> <span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="n">executable</span>
+</pre></div>
+</div>
+<p>of you can skip installing it every time and use the built one.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span><span class="n">rlc</span><span class="o">-</span><span class="n">release</span> <span class="c1"># will not work in debug, there you have to write tests</span>
+<span class="n">ninja</span> <span class="nb">all</span>
+<span class="o">./</span><span class="n">tool</span><span class="o">/</span><span class="n">rlc</span><span class="o">/</span><span class="n">rlc</span> <span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="n">exec</span> <span class="o">-</span><span class="n">i</span> <span class="o">../</span><span class="n">rlc</span><span class="o">/</span><span class="n">stdlib</span> <span class="o">--</span><span class="n">runtime</span><span class="o">-</span><span class="n">lib</span> <span class="n">lib</span><span class="o">/</span><span class="n">runtime</span><span class="o">/</span><span class="n">libruntime</span><span class="o">.</span><span class="n">so</span> <span class="c1"># or libruntime.dylib on mac.</span>
+</pre></div>
+</div>
+<p>You must manually specify the location of the standard library and of the runtime lib because the directory structure of the build directory is different than the release structure, and so the built version has no idea where those things are.</p>
+</section>
+<section id="packaging-for-pip">
+<h2>Packaging for PIP<a class="headerlink" href="#packaging-for-pip" title="Link to this heading"></a></h2>
+<p>You can make a pip package with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span>
+<span class="n">ninja</span> <span class="nb">all</span>
+<span class="n">ninja</span> <span class="n">install</span>
+<span class="n">ninja</span> <span class="n">pip_package</span>
+</pre></div>
+</div>
+<p>which you can then install with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span><span class="n">rlc</span><span class="o">-</span><span class="n">release</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">PACKAGE_NAME</span><span class="o">.</span><span class="n">whl</span>
+</pre></div>
+</div>
+<p>where the package name depends on the current version of rlc.</p>
+</section>
+<section id="compiler-speed">
+<h2>Compiler speed<a class="headerlink" href="#compiler-speed" title="Link to this heading"></a></h2>
+<p>You can use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span> <span class="o">--</span><span class="n">timing</span> <span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="n">out</span>
+</pre></div>
+</div>
+<p>to see the time it takes to run each compiler pass.</p>
+</section>
+<section id="running-benchmarks">
+<h2>Running benchmarks<a class="headerlink" href="#running-benchmarks" title="Link to this heading"></a></h2>
+<p>We have some benchmarks for the speed of the produced code. You can run them with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">rlc</span><span class="o">-</span><span class="n">infrastructure</span><span class="o">/</span><span class="n">rlc</span><span class="o">-</span><span class="n">release</span>
+<span class="o">./</span><span class="n">lib</span><span class="o">/</span><span class="n">utils</span><span class="o">/</span><span class="n">benchmark</span><span class="o">/</span><span class="n">ConnectFourBenchmark</span>
+</pre></div>
+</div>
+<p>All benchmarks live in the <code class="docutils literal notranslate"><span class="pre">./lib/utils/benchmark</span></code> directory.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="architecture.html" class="btn btn-neutral float-left" title="Tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial for RL people" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

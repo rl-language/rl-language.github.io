@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="RLC and GYM" href="gym_tutorial.html" />
-    <link rel="prev" title="Architecture" href="architecture.html" /> 
+    <link rel="prev" title="Building RLC from sources" href="building.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul class="current">
@@ -70,6 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -103,7 +105,7 @@
              
   <section id="tutorial-for-rl-people">
 <h1>Tutorial for RL people<a class="headerlink" href="#tutorial-for-rl-people" title="Link to this heading"></a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language is designed, among other things, to help you use reinforcement learning techniques. It does so by helping you write simulated environments in which machine learning agents can learn. Let us see how:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language is designed, among other things, to help you use reinforcement learning techniques. It does so by helping you write simulated environments in which machine learning agents can learn, without requiring the user to write any code related to machine learning, beside specificing minimal and maximal bounds of variables.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">RL</span></code> language does not provide new reinforcement learning methods; instead, it concerns itself with the issue of writing simulations only. You can use any learning algorithm you wish when using an <code class="docutils literal notranslate"><span class="pre">RL</span></code> language simulation.</p>
 <p>Of course, included in the <code class="docutils literal notranslate"><span class="pre">RL</span></code> language package are off-the-shelf machine learning algorithms for those who do not have the skill required to write a custom solution. We will see how a user with no machine learning knowledge can still use <code class="docutils literal notranslate"><span class="pre">RL</span></code> and obtain solutions for their own optimization problems.</p>
 <section id="requirements">
@@ -148,7 +150,7 @@ pip<span class="w"> </span>install<span class="w"> </span>rl_language
 </section>
 <section id="training-and-running">
 <h2>Training and Running<a class="headerlink" href="#training-and-running" title="Link to this heading"></a></h2>
-<p>Now that you’ve ensured your system works, download the <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">jack</span></code> example from <a class="reference external" href="https://github.com/drblallo/rlc/tool/rlc/test/examples/black_jack.rl">here</a> and save it in a file in the directory we created at the start of this example.</p>
+<p>Now that you’ve ensured your system works, download the <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">jack</span></code> example from <a class="reference external" href="https://github.com/rl-language/rlc/tool/rlc/test/examples/black_jack.rl">here</a> and save it in a file in the directory we created at the start of this example.</p>
 <p>Black jack is example that shows how to handle games with randomness and imperfect information. Indeed the actions taken by the real user are usually just one or two, while most of the game is spent by the <code class="docutils literal notranslate"><span class="pre">randomness</span> <span class="pre">player</span></code> shuffling the deck, which is a fake player that performs actions at random.</p>
 <p>After you have copied it, let us make sure we can run generate a random game.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">random</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span>
@@ -276,7 +278,7 @@ You can visualize what is happeing with</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="building.html" class="btn btn-neutral float-left" title="Building RLC from sources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="gym_tutorial.html" class="btn btn-neutral float-right" title="RLC and GYM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

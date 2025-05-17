@@ -1,6 +1,6 @@
 # Tutorial for RL people
 
-The `Rulebook` language is designed, among other things, to help you use reinforcement learning techniques. It does so by helping you write simulated environments in which machine learning agents can learn. Let us see how:
+The `Rulebook` language is designed, among other things, to help you use reinforcement learning techniques. It does so by helping you write simulated environments in which machine learning agents can learn, without requiring the user to write any code related to machine learning, beside specificing minimal and maximal bounds of variables.
 
 The `RL` language does not provide new reinforcement learning methods; instead, it concerns itself with the issue of writing simulations only. You can use any learning algorithm you wish when using an `RL` language simulation.
 
@@ -51,7 +51,7 @@ rlc example.rl -o executable
 
 ## Training and Running
 
-Now that you've ensured your system works, download the `black jack` example from [here](https://github.com/drblallo/rlc/tool/rlc/test/examples/black_jack.rl) and save it in a file in the directory we created at the start of this example.
+Now that you've ensured your system works, download the `black jack` example from [here](https://github.com/rl-language/rlc/tool/rlc/test/examples/black_jack.rl) and save it in a file in the directory we created at the start of this example.
 
 Black jack is example that shows how to handle games with randomness and imperfect information. Indeed the actions taken by the real user are usually just one or two, while most of the game is spent by the `randomness player` shuffling the deck, which is a fake player that performs actions at random.
 

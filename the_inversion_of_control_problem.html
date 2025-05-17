@@ -66,7 +66,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
@@ -76,6 +77,7 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -109,7 +111,7 @@
              
   <section id="interactive-inversion-of-control">
 <h1>Interactive Inversion of control<a class="headerlink" href="#interactive-inversion-of-control" title="Link to this heading"></a></h1>
-<p>When imperative <a class="reference internal" href="#complex-interactive-subsystems"><span class="xref myst">complex interactive subsystems</span></a> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor, and maintain. Imperative languages provide <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem, but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features <a class="reference internal" href="#the-limits-of-coroutines"><span class="xref myst">decreases</span></a>.</p>
+<p>When imperative <a class="reference internal" href="#complex-interactive-subsystems"><span class="xref myst">complex interactive subsystems</span></a> are subjected to <a class="reference external" href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> (<strong>IOC</strong>), they <a class="reference internal" href="#the-mental-burden"><span class="xref myst">become superlinearly harder</span></a> to reason about, refactor, and maintain. Imperative languages provide low overhead <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem, but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features <a class="reference internal" href="#the-limits-of-coroutines"><span class="xref myst">decreases</span></a>.</p>
 <p>Here are practical examples of real-world code that is hard to reason about, has inverted control, and is interactive.</p>
 <ul class="simple">
 <li><p>Blender’s stateful <a class="reference external" href="https://github.com/blender/blender/blob/main/source/blender/windowmanager/intern/wm_event_system.cc">user input event manager</a>. Because the event loop owns the timing of every mouse‑move, key‑press, and redraw, a small logic change (say, deferring key‑repeat) can subtly reorder callbacks. Reproducing a bug in similar <strong>scenarios may require replaying</strong> an entire input trace, and unit tests must mock dozens of event types to reach a single branch.</p></li>
@@ -372,7 +374,7 @@ In particular, <a class="reference external" href="https://en.wikipedia.org/wiki
 <h2>The limits of coroutines<a class="headerlink" href="#the-limits-of-coroutines" title="Link to this heading"></a></h2>
 <p>Remember the second sentence in the original statement.</p>
 <ul class="simple">
-<li><p>Languages provide <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem (coroutines), but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features decreases.</p></li>
+<li><p>Imperative languages provide low overhead <a class="reference internal" href="#mitigations-coroutines"><span class="xref myst">solutions</span></a> to this problem (coroutines), but when the complexity of the <strong>interactive subsystems</strong> increases, the probability of being able to use those features decreases.</p></li>
 </ul>
 <p>Complexity here is intrinsic to the business rules: no amount of engineering can remove the six screens in Amazon’s checkout if management requires them. That complexity therefore lies outside the programmer’s control.</p>
 <p>Each new rule, branch, or state transition is another chance that some part of the flow will demand a capability absent from the coroutine model. Once a single branch cannot be expressed, you sometimes can keep half the program in coroutines and the rest elsewhere—sometimes you must rewrite the entire interaction as an explicit class‑based state machine.</p>

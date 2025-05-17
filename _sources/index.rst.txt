@@ -3,52 +3,67 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Rulebook documentation
+Rulebook Documentation
 ======================
 
-**Rulebook** is a imperative language for `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_  (reinforcement learning environments, videogames, UIs with graph-like transitions, multistep procedures, ...).
+**Rulebook** is a *statically-checked imperative language* that turns **interactive behaviour**—reinforcement-learning, video-game logic, or in general `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_—into something you can **query, replay, fuzz, and formally verify**.
 
-Rulebook is compiled and statically checked, the key and innovative feature of the language are `Action functions with SPIN properties <./language_tour.html#action-functions>`_ , which help to:
+`4hammer (our flagship demo) <./ui_gameplay.html#4hammer>`_ shows Rulebook in action.
 
-* `store, load, print, replay, modify <./language_tour.html#spin-functions-implications>`_ both execution traces and the program state
-* **automatically test** your interactive code using off-the-shelf `fuzzers <./language_tour.html#automatic-testing>`_ , `proofs <./language_tour.html#finite-interactive-programs>`_ and `reinforcement learning <./language_tour.html#reinforcement-learning>`_.
-* write `self-configuring UIs <./language_tour.html#self-configuring-uis>`_, where UIs can inspect the underlying program they present and configure themselves accordingly.
-* `automatically remote execute <./language_tour.html#remote-execution>`_ interactive code over the network.
-* solves the `interactive inversion of control problem <./the_inversion_of_control_problem.html>`_ at the language level.
+**Why Rulebook?**
+
+* `Capture every run <./language_tour.html#spin-functions-implications>`_ – automatically store, load, print, replay, and mutate both state *and* execution traces.
+* **Push-button testing** – drop in standard `fuzzers <./language_tour.html#automatic-testing>`_, formal `proofs <./language_tour.html#finite-interactive-programs>`_, or `reinforcement-learning agents <./language_tour.html#reinforcement-learning>`_.
+* `Self-configuring UIs <./language_tour.html#self-configuring-uis>`_ – the UI introspects your program graph and adapts its controls on the fly.
+* `Remote execution <./language_tour.html#remote-execution>`_ – ship interactive logic across the network with a zero-boilerplate RPC layer.
+* Solve the `interactive inversion-of-control problem <./the_inversion_of_control_problem.html>`_ at the language level—no more interactive spaghetti.
+
+**Under the hood**
+
+Rulebook’s defining idea is the notion of `Action functions with SPIN properties <./language_tour.html#action-functions>`_, which make all of the above possible.
+
+**Integration**
+
+Rulebook compiles to **one shared library (or WebAssembly module)** with a C-compatible ABI and generated bindings for `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_. Use it the way SQL complements those languages—drop it in wherever **interactive logic** is the hard part.
+
+**Rulebook** is an **imperative language** for building `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_—­reinforcement-learning environments, video games, UIs with graph-like transitions, multistep procedures, and more.
+
+`Check out <./ui_gameplay.html#4hammer>`_ our flagship example program.
+
+The language is **compiled and statically checked**. Its defining innovation is the notion of `Action functions with SPIN properties <./language_tour.html#action-functions>`_, which let you:
+
+* `store, load, print, replay, and modify <./language_tour.html#spin-functions-implications>`_ both execution traces and program state
+* **automatically test** interactive code with off-the-shelf `fuzzers <./language_tour.html#automatic-testing>`_, formal `proofs <./language_tour.html#finite-interactive-programs>`_, and `reinforcement-learning agents <./language_tour.html#reinforcement-learning>`_
+* build `self-configuring UIs <./language_tour.html#self-configuring-uis>`_ that introspect the programs they present and adapt themselves automatically
+* `execute interactive code remotely <./language_tour.html#remote-execution>`_ over the network
+* solve the `interactive inversion-of-control problem <./the_inversion_of_control_problem.html>`_ at the language level
+
 
 Rulebook:
 
-* **aids**, not replaces `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_  (just like SQL aids but not replaces those languages)
-* produces a single shared library (or webassembly if targeting the web) with the same ABI as C that you can embed in your software, wrapped into generated file native to your language.
+* **aids—rather than replaces—** `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_, (just like SQL aids but replaces those languages) 
+* emits a single shared library (or WebAssembly module for web targets) with a C-compatible ABI, plus generated bindings for your host language
 
-Our key proof of concept example is `4Hammer <https://github.com/rl-language/4Hammer>`_ . A never before implemented reinforcement learning environment with huge amounts of user actions in only ~5k lines of code (including graphical code). It runs in the browser and on desktop and all the features described in this section are present.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Concepts:
 
    language_tour.md
    the_inversion_of_control_problem.md
    project_rationale.md
 
-
-Reinforcement learning usecase
-##############################
-
-**Reinforcement learning environments** are often subject to the **interactive inversion of control problem**, since they must be stopped and resumed every time the artificial agent wishes to take an action. The following documents in detail what **Rulebook** does in that domain. In particular, we show:
-
-* how to interoperate **Rulebook** with **Python**.
-* how you can write almost arbitrary functions, turn them into a **GYM** environment, and have your custom agents learn from such environments.
-
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Architecture 
 
    architecture.md 
+   building.md 
+
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Reinforcement Learning Docs:
 
    tutorial.md

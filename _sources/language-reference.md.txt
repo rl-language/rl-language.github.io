@@ -8,7 +8,7 @@ This is a technical document intended for advanced programmers. If you are a new
 
 `rlc` is the Rulebook compiler. It has a command-line interface similar to that of gcc and clang. Given a minimal `rl` file:
 
-```rl
+```rlc
 # example.rl
 import serialization.print
 
@@ -104,7 +104,7 @@ Primitive types are:
 Enum types are declared with enum declarations, and they are converted to a class type that contains a single `Int` called `value`.
 
 The syntax of enums is:
-```rl
+```rlc
 enum Color:
   red
   blue
@@ -117,7 +117,7 @@ fun red_value() -> Int:
 ```
 
 Enums can declare functions in their body as well:
-```rl
+```rlc
 enum Color:
   red
   blue
@@ -134,7 +134,7 @@ fun red_name() -> String:
 
 Finally, enums have a special syntax to write code such as the one in the last snippet faster. You can specify an enum member clause in each field of an enum.
 
-```rl
+```rlc
 enum Color:
   red:
     String name = "red"s
@@ -150,7 +150,7 @@ The last two snippets generate the same code.
 ### Array Types
 
 Array types are composed of a compile-time known size and an underlying type:
-```rl
+```rlc
 let x: Int[10]
 x[2] = 1
 x[1] = x[2] + 2
@@ -161,14 +161,14 @@ Array accesses are checked by default on optimization level 0, and not checked o
 ### Alternative Types
 
 Alternative types are used to describe objects that can be of two different types. For example, an object that can be a `Float` or an `Int` can be declared as:
-```rl
+```rlc
 let x: Float | Int
 ```
 
 Declaration statements such as this one will initialize `x` to be an alternative that contains the first possible type of the list. In this case, the content will be `0.0`.
 
 Objects of type alternative can be assigned from any right-hand operand that is either an alternative type with the same alternatives or any of the possible types of the alternative. For example:
-```rl
+```rlc
 let x: Float | Int
 x = 0     # valid
 x = 1.0   # valid
@@ -180,7 +180,7 @@ x = y     # valid
 ```
 
 Alternative types can be upcasted with the use of type guards. For example, the following snippet of code is valid and will ensure that `y` will always be of type `Float`:
-```rl
+```rlc
 let x: Float | Int
 if x is Float:
   using T = type(x)
@@ -191,7 +191,7 @@ if x is Float:
 ### Class Types
 
 Class types are the most common type of user-defined type. A class includes both members and methods. For example, a tic-tac-toe board can be defined as follows:
-```rl
+```rlc
 cls Board:
     BInt<0, 3>[3][3] slots
     Bool player_turn
@@ -200,7 +200,7 @@ cls Board:
 Member variables whose names start with `_`, such as `_player_turn`, are not accessible from outside the file in which they have been declared.
 
 The default value of a member when an object is constructed can be overridden by defining the `init` method:
-```rl
+```rlc
 class IntegerThatStartsAt3:
   Int x
   fun init():
@@ -223,21 +223,21 @@ ToDo: explain how they work.
 ### Functions
 
 RLC functions can be declared only in the global scope of a program. The simplest function that can be declared is a function with no arguments and no return values:
-```rl
+```rlc
 fun NAME():
   return
 ```
 The previous snippet declares a function called `NAME`, with no parameters and no return value, that does nothing.
 
 Functions that return a value must declare their intention by specifying the return type before the `:` in their signature:
-```rl
+```rlc
 fun return_5() -> Int:
   return 5
 ```
 The previous snippet declares a function called `return_5` with no arguments that returns an integer.
 
 Functions can have arguments by specifying them as a comma-separated list in the signature brackets:
-```rl
+```rlc
 fun sum(Int first, Int second) -> Int:
   return first + second
 ```
@@ -261,7 +261,7 @@ Action functions are the most important language feature of the `Rulebook` langu
 * `Action statements` must appear in the body of the action function.
 
 For example, a simple action function you can write is:
-```rl
+```rlc
 act play() -> Game:
     act set_x(Int value)
     frm x = value
@@ -270,7 +270,7 @@ act play() -> Game:
 ```
 
 When the compiler encounters this action declaration, it rewrites it as a class that looks like:
-```rl
+```rlc
 cls Game:
     Int x
     Int resume_index
@@ -296,14 +296,14 @@ fun play() -> Game:
 ```
 
 Why does it do that? Because then you can use the `play` function as follows:
-```rl
+```rlc
 fun use_play():
     let game = play()
     game.set_x(4)
     game.print_x()
 ```
 That is, when you were writing `play`, you expressed points of the program where the program was to be suspended, waiting for input from the invoker of `play`. In our particular example, it does not make much sense to do so. Here is a more realistic one:
-```rl
+```rlc
 # Implements a vending machine that expects
 # coins to be inserted by the user
 act vending_machine(frm Int target_cost) -> VendingMachine:
@@ -332,7 +332,7 @@ Action functions cannot return objects; their return type is instead used to dec
 Variable declarations, action statement arguments, and action function arguments can be optionally marked with the keyword `frm`.
 
 For example:
-```rl
+```rlc
 act vending_machine(frm Int target_cost) -> VendingMachine:
     while target_cost != 0:
         act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
@@ -351,7 +351,7 @@ You can also mark variables not used across actions as `frm`. This is useful to 
 `ctx` variables are different. They specify that some state of the computation needed by the action function is stored outside of the action function itself. `ctx` variables must be passed as arguments of every function call to an object that has one.
 
 For example:
-```rl
+```rlc
 act vending_machine(ctx Int target_cost, frm Int target_cost2) -> VendingMachine:
     while target_cost != 0:
         act insert_coin(Int coin_value) {coin_value == 1 or coin_value == 5 or coin_value == 10}
@@ -374,14 +374,14 @@ Context variables are very useful when combined with `subaction` statements.
 ### Action Statements
 
 Action statements are used to specify the points where user information is required. The minimal syntax is as follows:
-```rl
+```rlc
 act action_function() -> ActionFunctionType:
     ...
     act wait_to_be_called()
 ```
 
 Optionally, action statements can have arguments:
-```rl
+```rlc
 act action_function() -> ActionFunctionType:
     act callme(Int x)
 
@@ -391,7 +391,7 @@ fun f():
 ```
 
 Similarly, they can have preconditions:
-```rl
+```rlc
 act action_function() -> ActionFunctionType:
     act callme(Int x) {x != 0}
 
@@ -404,7 +404,7 @@ fun f():
 ### Actions Statements
 
 Actions statements are used to express alternative actions, meaning actions that can be performed in any order. For example:
-```rl
+```rlc
 act vending_machine(frm Int target_cost2) -> VendingMachine:
     while target_cost != 0:
         actions:
@@ -425,7 +425,7 @@ fun main() -> Int:
 ### Subaction Statements
 
 Subaction statements allow for the composition of actions. Just like regular functions can call other functions, subaction statements specify that the computation of the current action function must be suspended until the user invokes an action of the specified subaction. For example:
-```rl
+```rlc
 act vending_machine(frm Int target_cost) -> VendingMachine:
     while target_cost != 0:
         actions:
@@ -450,7 +450,7 @@ fun main() -> Int:
 ```
 
 The function `vending_machine_times_two` is lowered to the following piece of code:
-```rl
+```rlc
 act vending_machine_times_two(Int first, Int second) -> VendingMachinePair:
     frm first_machine = vending_machine(first)
     while !first_machine.is_done():
@@ -473,7 +473,7 @@ act vending_machine_times_two(Int first, Int second) -> VendingMachinePair:
 That is, the computation of the outer action function will not resume until the inner action function named by the subaction statement is terminated.
 
 If you instead wish to execute a single action statement, instead of executing them all the way to the end, you can use the subaction syntax without `*`. For example:
-```rl
+```rlc
 act vending_machine(frm Int target_cost) -> VendingMachine:
     while target_cost != 0:
         actions:
@@ -502,7 +502,7 @@ This example shows how to share state between two subactions. The inner vending 
 
 An important language feature built into subaction statements and context variables is the ability to share data between distinct subactions. Let's look at an example:
 
-```rl
+```rlc
 act vending_machine(ctx Int target_cost) -> VendingMachine:
     while target_cost != 0:
         act insert_1_coin()
@@ -518,7 +518,7 @@ act vending_machine_times_two(Int first, Int second) -> VendingMachinePair:
 
 This example illustrates how to use context variables with subactions. Here is a more detailed version:
 
-```rl
+```rlc
 act vending_machine(ctx Int target_cost) -> VendingMachine:
     while target_cost != 0:
         act insert_1_coin()
@@ -549,7 +549,7 @@ In this case, `vending_machine_times_two` is set up to handle two vending machin
 
 Functions with a return type must include at least one return statement, and such a return statement must have an expression, as shown in the following snippet:
 
-```rl
+```rlc
 fun sum(Int first, Int second) -> Int:
   return first + second
 ```
@@ -560,7 +560,7 @@ The expression in the return statement must have the same type as the function s
 
 If statements can either include an else-branch or not. Here is the syntax for if statements without an else-branch:
 
-```rl
+```rlc
 if bool_returning_expression():
   some_call1()
   some_call2()
@@ -571,7 +571,7 @@ The true-branch (e.g., `some_call1()` and `some_call2()`) is executed if and onl
 
 If statements with an else-branch follow this syntax:
 
-```rl
+```rlc
 if bool_returning_expression():
   some_call1()
   some_call2()
@@ -585,7 +585,7 @@ The else-branch is executed only if the true-branch is not.
 
 While statements follow this syntax:
 
-```rl
+```rlc
 while bool_returning_expression():
     call1()
     call2()
@@ -598,7 +598,7 @@ The body of the while loop keeps being executed until the condition expression (
 
 When a break statement is encountered, control flow jumps to the statement following the nearest while statement. For example, the following code prints `1` but not `0`:
 
-```rl
+```rlc
 let x = 0
 while x != 2:
     while x != 2:
@@ -613,7 +613,7 @@ while x != 2:
 
 When a continue statement is encountered, control flow jumps to the statement following the nearest while statement. For example, the following code prints `2` but not `1`:
 
-```rl
+```rlc
 let x = 0
 while x != 2:
     while x != 2:
@@ -628,7 +628,7 @@ while x != 2:
 
 Type aliases can be introduced with the use of alias statements. For example:
 
-```rl
+```rlc
 fun main() -> Int:
     using T = type(6)
     let asd : T
@@ -640,7 +640,7 @@ Using statements can be used both at the function scope or at the global scope. 
 
 Aliases offer the following syntax as well, which deduces the aliased type from the expression appearing inside the `type()` clause:
 
-```rl
+```rlc
 using T = type(6)
 ```
 
@@ -648,7 +648,7 @@ using T = type(6)
 
 In RL, there are two flavors of declaration statements and three types of storage qualifiers. The simplest declaration statement is an assign declaration statement, in the form:
 
-```rl
+```rlc
 let x = exp()
 ```
 
@@ -656,7 +656,7 @@ This deduces the type of `x` from the expression `exp()`, and removes a referenc
 
 Alternatively, declaration statements can be construction declaration statements, in the form:
 
-```rl
+```rlc
 let x : Int
 ```
 
@@ -666,7 +666,7 @@ Construction declaration statements allocate a variable of the type specified af
 
 Instead of declaring a variable with the keyword `let`, `ref` can be used instead:
 
-```rl
+```rlc
 ref x = ref_returning_exp()
 ```
 
