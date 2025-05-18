@@ -109,7 +109,8 @@
 <p><strong>Under the hood</strong></p>
 <p>Rulebook’s defining idea is the notion of <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a>, which make all of the above possible.</p>
 <p><strong>Integration</strong></p>
-<p>Rulebook compiles to <strong>one shared library (or WebAssembly module)</strong> with a C-compatible ABI and generated bindings for <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>. Use it the way SQL complements those languages—drop it in wherever <strong>interactive logic</strong> is the hard part.</p>
+<p>Rulebook compiles to <strong>one shared library (or WebAssembly module)</strong> with a C-compatible ABI and generated bindings for <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>. Use it the way SQL complements those languages—drop it in wherever <strong>interactive logic</strong> is the hard part.
+Rulebook puts action functions on the stack, unless you want it on the heap. Zero mallocs unless explicitly requested by the user.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul>

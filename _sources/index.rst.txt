@@ -25,6 +25,7 @@ Rulebook’s defining idea is the notion of `Action functions with SPIN properti
 **Integration**
 
 Rulebook compiles to **one shared library (or WebAssembly module)** with a C-compatible ABI and generated bindings for `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_. Use it the way SQL complements those languages—drop it in wherever **interactive logic** is the hard part.
+Rulebook puts action functions on the stack, unless you want it on the heap. Zero mallocs unless explicitly requested by the user.
 
 
 .. toctree::
