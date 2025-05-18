@@ -26,25 +26,6 @@ Rulebook’s defining idea is the notion of `Action functions with SPIN properti
 
 Rulebook compiles to **one shared library (or WebAssembly module)** with a C-compatible ABI and generated bindings for `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_. Use it the way SQL complements those languages—drop it in wherever **interactive logic** is the hard part.
 
-**Rulebook** is an **imperative language** for building `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_—­reinforcement-learning environments, video games, UIs with graph-like transitions, multistep procedures, and more.
-
-`Check out <./ui_gameplay.html#4hammer>`_ our flagship example program.
-
-The language is **compiled and statically checked**. Its defining innovation is the notion of `Action functions with SPIN properties <./language_tour.html#action-functions>`_, which let you:
-
-* `store, load, print, replay, and modify <./language_tour.html#spin-functions-implications>`_ both execution traces and program state
-* **automatically test** interactive code with off-the-shelf `fuzzers <./language_tour.html#automatic-testing>`_, formal `proofs <./language_tour.html#finite-interactive-programs>`_, and `reinforcement-learning agents <./language_tour.html#reinforcement-learning>`_
-* build `self-configuring UIs <./language_tour.html#self-configuring-uis>`_ that introspect the programs they present and adapt themselves automatically
-* `execute interactive code remotely <./language_tour.html#remote-execution>`_ over the network
-* solve the `interactive inversion-of-control problem <./the_inversion_of_control_problem.html>`_ at the language level
-
-
-Rulebook:
-
-* **aids—rather than replaces—** `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_, (just like SQL aids but not replaces those languages) 
-* emits a single shared library (or WebAssembly module for web targets) with a C-compatible ABI, plus generated bindings for your host language
-
-
 
 .. toctree::
    :maxdepth: 1
@@ -81,6 +62,7 @@ UI, Controller and Gameplay Programming
    :caption: UIs, Controllers, Gameplay:
 
    ui_gameplay.md 
+   4hammer.md
 
 
 .. toctree::

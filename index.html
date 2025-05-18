@@ -62,7 +62,7 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -110,21 +110,6 @@
 <p>Rulebook’s defining idea is the notion of <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a>, which make all of the above possible.</p>
 <p><strong>Integration</strong></p>
 <p>Rulebook compiles to <strong>one shared library (or WebAssembly module)</strong> with a C-compatible ABI and generated bindings for <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>. Use it the way SQL complements those languages—drop it in wherever <strong>interactive logic</strong> is the hard part.</p>
-<p><strong>Rulebook</strong> is an <strong>imperative language</strong> for building <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>—­reinforcement-learning environments, video games, UIs with graph-like transitions, multistep procedures, and more.</p>
-<p><a class="reference external" href="./ui_gameplay.html#4hammer">Check out</a> our flagship example program.</p>
-<p>The language is <strong>compiled and statically checked</strong>. Its defining innovation is the notion of <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a>, which let you:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="./language_tour.html#spin-functions-implications">store, load, print, replay, and modify</a> both execution traces and program state</p></li>
-<li><p><strong>automatically test</strong> interactive code with off-the-shelf <a class="reference external" href="./language_tour.html#automatic-testing">fuzzers</a>, formal <a class="reference external" href="./language_tour.html#finite-interactive-programs">proofs</a>, and <a class="reference external" href="./language_tour.html#reinforcement-learning">reinforcement-learning agents</a></p></li>
-<li><p>build <a class="reference external" href="./language_tour.html#self-configuring-uis">self-configuring UIs</a> that introspect the programs they present and adapt themselves automatically</p></li>
-<li><p><a class="reference external" href="./language_tour.html#remote-execution">execute interactive code remotely</a> over the network</p></li>
-<li><p>solve the <a class="reference external" href="./the_inversion_of_control_problem.html">interactive inversion-of-control problem</a> at the language level</p></li>
-</ul>
-<p>Rulebook:</p>
-<ul class="simple">
-<li><p><strong>aids—rather than replaces—</strong> <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>, (just like SQL aids but not replaces those languages)</p></li>
-<li><p>emits a single shared library (or WebAssembly module for web targets) with a C-compatible ABI, plus generated bindings for your host language</p></li>
-</ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul>
@@ -153,15 +138,37 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#the-size-of-the-problem">The size of the problem.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#scope">Scope</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#rolling-a-dice">Rolling a dice</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#software-architecture">Software architecture</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#hammer-graphical-engine">4Hammer graphical engine</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#python-drivers">Python drivers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#fuzzer">Fuzzer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#mvc">MVC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#view">View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#controller">Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#view-rulebook-pattern">VIEW-Rulebook pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#efficient-view-rulebook-pattern">Efficient VIEW-Rulebook pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#view-rulebook-model-pattern">View-Rulebook-Model Pattern</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#automatic-textual-and-binary-serialization-of-the-model">automatic textual and binary serialization of the model.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#automatic-tracing-and-textual-and-binary-serialization-for-the-tracing-o-f-the-controller">automatic tracing, and textual and binary serialization for the tracing o f the controller.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#automatic-testing-with-fuzzers-machine-learning-and-proofs">automatic testing with fuzzers, machine learning and proofs.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#automatic-bindings-to-execute-the-view-indipendently-from-rulebook">automatic bindings to execute the view indipendently from rulebook.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#automatic-bindings-to-write-the-view-in-multiple-languages">automatic bindings to write the view in multiple languages.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#view-multi-rulebook-controller-pattern">View-Multi Rulebook Controller pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#multilayer-rulebook-controllers">Multilayer Rulebook Controllers.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="4hammer.html#the-size-of-the-problem">The size of the problem.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="4hammer.html#scope">Scope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4hammer.html#rolling-a-dice">Rolling a dice</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="4hammer.html#software-architecture">Software architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="4hammer.html#hammer-graphical-engine">4Hammer graphical engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4hammer.html#python-drivers">Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4hammer.html#fuzzer">Fuzzer</a></li>
 </ul>
 </li>
 </ul>
