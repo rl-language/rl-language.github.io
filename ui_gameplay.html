@@ -50,9 +50,9 @@
 <li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rlc.html">RLC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
@@ -63,7 +63,18 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">UI, Controller and Gameplay</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#hammer">4Hammer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#hammer">4Hammer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-size-of-the-problem">The size of the problem.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scope">Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rolling-a-dice">Rolling a dice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-architecture">Software architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hammer-graphical-engine">4Hammer graphical engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-drivers">Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fuzzer">Fuzzer</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -97,6 +108,7 @@
              
   <section id="ui-controller-and-gameplay">
 <h1>UI, Controller and Gameplay<a class="headerlink" href="#ui-controller-and-gameplay" title="Link to this heading"></a></h1>
+<p>This page describes the inteded development cycle of a <a class="reference internal" href="#./the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="xref myst">complex interactive program</span></a>. It does so showing the architecture of 4Hammer, our flagship example. Your interactive problems will not have the exact same features of 4Hammer, but remember that 4Hammer leverages general and flexible language constructs that could be adapted to yours.</p>
 </section>
 <section id="hammer">
 <h1>4Hammer<a class="headerlink" href="#hammer" title="Link to this heading"></a></h1>
@@ -110,6 +122,624 @@
 <li><p>self-configuring UIs</p></li>
 </ul>
 <p>—all in both browser and desktop builds.</p>
+<p>Depending on the innate complexity of the problem 4hammer is trying to solve, 5k lines can be a lot, or not.</p>
+<section id="the-size-of-the-problem">
+<h2>The size of the problem.<a class="headerlink" href="#the-size-of-the-problem" title="Link to this heading"></a></h2>
+<p>4Hammer implements a digital version of <a class="reference external" href="https://en.wikipedia.org/wiki/Warhammer_40,000">Warhammer 40,000</a>, for the purpose of <a class="reference external" href="https://en.wikipedia.org/wiki/Reinforcement_learning">validating reinforcement learning environments</a>. <strong>Warhammer 40,000</strong> is the most played miniature board game in the world, with hundred of thousands of games being played at the tournament level each year. The community of players has interest in developing tools to understand the game better, and has done so in limited domains, such as building dice rolling applications that evaluate the probability of a cercain event happening, but the general problem is untractable.</p>
+<ul class="simple">
+<li><p>The game includes hundreds of slightly different game pieces, all with their own quirks.</p></li>
+<li><p>The game includes components that would require a physic engine to evaluate.</p></li>
+<li><p>The game game has very convoluted interactive sequences, where small difference in game state can lead to compleatly different interactive sequences. (example, attacching the special rules <strong>Torrent</strong> and <strong>Devastating wounds</strong> to a game pieces almost entirelly modifies how that model behaves in the <strong>Single Attack</strong> game sequence).</p></li>
+<li><p>The rules of the game are updated by the parent company at high speed, making the job of mantaining a digital implementation unsustainable.</p></li>
+</ul>
+</section>
+<section id="scope">
+<h2>Scope<a class="headerlink" href="#scope" title="Link to this heading"></a></h2>
+<p>4Hammer does not implement every single profile of every unit, which are hundreds and not particularly interesting unless one wants a perfect digital twin to sell. Similarly it does not implement the physic system required to fully simulate the game.</p>
+<p>Instead we focus on implenting all rules needed to play 6 factions of the 35 factions available in <strong>combact patrol mode</strong> so that we can validate neural networks by seeing how well they can play with convoluted game mechanics.</p>
+<p>This design decisions are acceptable because what we have implemented allows the network to play out the strategic level, where network decide where to allocate their game resources while playing, and this is still an unsolved problem. When this will be solved we can start implementing all the minute physical rules that affect game tactics instead of game strategy, so that we can obtain networks that are superhuman at playing the full rules or warhammer 40,000.</p>
+<p>The following are all possible interactive actions the player game execute in the 4Hammer implementation. Edges means that RLC thinks a the target of the arrow can sometimes(or always) be executed after the previous action. Diamonds rappresent choise points, where the player can decide among the successors of the diamon to select which action they want to perform. Solid boxes are atomic choises, such as deciding to use a optional rule or not. Dashes boxes are the invocation of a sub interactive sequence.</p>
+<div class="graphviz"><img src="_images/graphviz-faad5935f804aea33b538cc0af19717412c1c509.png" alt="digraph g {
+&quot;0x615cd69d1760&quot;[shape=ellipse, label=&quot;evaluate_random_stat&quot;, style=solid]
+&quot;0x615cd69d1760&quot; -&gt; &quot;0x615cd69d17f0&quot;
+&quot;0x615cd69d1760&quot; -&gt; &quot;0x615cd69d3e50&quot;
+&quot;0x615cd69d17f0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69d3e50&quot;[shape=box, label=&quot;quantity&quot;, style=solid]
+&quot;0x615cd69d3e50&quot; -&gt; &quot;0x615cd69d17f0&quot;
+&quot;0x615cd6943ae0&quot;[shape=box, label=&quot;reroll_pair&quot;, style=solid]
+&quot;0x615cd6943ae0&quot; -&gt; &quot;0x615cd69d4c40&quot;
+&quot;0x615cd69a20b0&quot;[shape=ellipse, label=&quot;rerollable_pair_dices_roll&quot;, style=solid]
+&quot;0x615cd69a20b0&quot; -&gt; &quot;0x615cd69a6330&quot;
+&quot;0x615cd69a38b0&quot;[shape=box, label=&quot;keep_it&quot;, style=solid]
+&quot;0x615cd69a38b0&quot; -&gt; &quot;0x615cd69d4c40&quot;
+&quot;0x615cd69a38b0&quot; -&gt; &quot;0x615cd6943ae0&quot;
+&quot;0x615cd69a6330&quot;[shape=box, label=&quot;roll_pair&quot;, style=solid]
+&quot;0x615cd69a6330&quot; -&gt; &quot;0x615cd69d4c40&quot;
+&quot;0x615cd69a6330&quot; -&gt; &quot;0x615cd69a38b0&quot;
+&quot;0x615cd69d4c40&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69484e0&quot;[shape=ellipse, label=&quot;rerollable_dice_roll&quot;, style=solid]
+&quot;0x615cd69484e0&quot; -&gt; &quot;0x615cd69984f0&quot;
+&quot;0x615cd6948780&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69984f0&quot;[shape=box, label=&quot;roll&quot;, style=solid]
+&quot;0x615cd69984f0&quot; -&gt; &quot;0x615cd6948780&quot;
+&quot;0x615cd69984f0&quot; -&gt; &quot;0x615cd69cb3b0&quot;
+&quot;0x615cd69cb3b0&quot;[shape=box, label=&quot;keep_it&quot;, style=solid]
+&quot;0x615cd69cb3b0&quot; -&gt; &quot;0x615cd6948780&quot;
+&quot;0x615cd69cb3b0&quot; -&gt; &quot;0x615cd69d1be0&quot;
+&quot;0x615cd69d1be0&quot;[shape=box, label=&quot;reroll&quot;, style=solid]
+&quot;0x615cd69d1be0&quot; -&gt; &quot;0x615cd6948780&quot;
+&quot;0x615cd694bf00&quot;[shape=box, label=&quot;devastating_damage_roll&quot;, style=dotted]
+&quot;0x615cd694bf00&quot; -&gt; &quot;0x615cd69f7270&quot;
+&quot;0x615cd694bf00&quot; -&gt; &quot;0x615cd6a0e2e0&quot;
+&quot;0x615cd694bf00&quot; -&gt; &quot;0x615cd6a02200&quot;
+&quot;0x615cd69da5b0&quot;[shape=box, label=&quot;damage_roll&quot;, style=dotted]
+&quot;0x615cd69da5b0&quot; -&gt; &quot;0x615cd69f7270&quot;
+&quot;0x615cd69da5b0&quot; -&gt; &quot;0x615cd69db690&quot;
+&quot;0x615cd69da5b0&quot; -&gt; &quot;0x615cd6a14040&quot;
+&quot;0x615cd69db690&quot;[shape=box, label=&quot;on_model_destroyed&quot;, style=dotted]
+&quot;0x615cd69db690&quot; -&gt; &quot;0x615cd69f7270&quot;
+&quot;0x615cd69f7270&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69fa690&quot;[shape=ellipse, label=&quot;single_attack&quot;, style=solid]
+&quot;0x615cd69fa690&quot; -&gt; &quot;0x615cd69f7270&quot;
+&quot;0x615cd69fa690&quot; -&gt; &quot;0x615cd6a0e2e0&quot;
+&quot;0x615cd69fa690&quot; -&gt; &quot;0x615cd69fbbe0&quot;
+&quot;0x615cd69fa690&quot; -&gt; &quot;0x615cd6a02200&quot;
+&quot;0x615cd69fbbe0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd69fbbe0&quot; -&gt; &quot;0x615cd69f7270&quot;
+&quot;0x615cd69fbbe0&quot; -&gt; &quot;0x615cd6a0e2e0&quot;
+&quot;0x615cd69fbbe0&quot; -&gt; &quot;0x615cd6a02200&quot;
+&quot;0x615cd6a02200&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a02200&quot; -&gt; &quot;0x615cd69f7270&quot;
+&quot;0x615cd6a02200&quot; -&gt; &quot;0x615cd6a0e2e0&quot;
+&quot;0x615cd6a02200&quot; -&gt; &quot;0x615cd694bf00&quot;
+&quot;0x615cd6a02200&quot; -&gt; &quot;0x615cd6a02200&quot;
+&quot;0x615cd6a0e2e0&quot;[shape=box, label=&quot;allocate_wound&quot;, style=solid]
+&quot;0x615cd6a0e2e0&quot; -&gt; &quot;0x615cd69f7270&quot;
+&quot;0x615cd6a0e2e0&quot; -&gt; &quot;0x615cd69db690&quot;
+&quot;0x615cd6a0e2e0&quot; -&gt; &quot;0x615cd6a14040&quot;
+&quot;0x615cd6a14040&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a14040&quot; -&gt; &quot;0x615cd69da5b0&quot;
+&quot;0x615cd69ab780&quot;[shape=box, label=&quot;roll&quot;, style=solid]
+&quot;0x615cd69ab780&quot; -&gt; &quot;0x615cd69d7be0&quot;
+&quot;0x615cd69acf70&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd69acf70&quot; -&gt; &quot;0x615cd69d7be0&quot;
+&quot;0x615cd69ad060&quot;[shape=box, label=&quot;use_violent_unbidding&quot;, style=solid]
+&quot;0x615cd69ad060&quot; -&gt; &quot;0x615cd69d96f0&quot;
+&quot;0x615cd69d7a90&quot;[shape=ellipse, label=&quot;on_model_destroyed&quot;, style=solid]
+&quot;0x615cd69d7a90&quot; -&gt; &quot;0x615cd69e5670&quot;
+&quot;0x615cd69d7a90&quot; -&gt; &quot;0x615cd69d7be0&quot;
+&quot;0x615cd69d7be0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69d96f0&quot;[shape=box, label=&quot;roll&quot;, style=solid]
+&quot;0x615cd69d96f0&quot; -&gt; &quot;0x615cd69ab780&quot;
+&quot;0x615cd69d96f0&quot; -&gt; &quot;0x615cd69d7be0&quot;
+&quot;0x615cd69e5670&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd69e5670&quot; -&gt; &quot;0x615cd69acf70&quot;
+&quot;0x615cd69e5670&quot; -&gt; &quot;0x615cd69ad060&quot;
+&quot;0x615cd69ede10&quot;[shape=box, label=&quot;attack&quot;, style=dotted]
+&quot;0x615cd69ede10&quot; -&gt; &quot;0x615cd69ede10&quot;
+&quot;0x615cd69ede10&quot; -&gt; &quot;0x615cd69f2a40&quot;
+&quot;0x615cd69f2800&quot;[shape=ellipse, label=&quot;resolve_weapon&quot;, style=solid]
+&quot;0x615cd69f2800&quot; -&gt; &quot;0x615cd69f42c0&quot;
+&quot;0x615cd69f2a40&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69f42c0&quot;[shape=box, label=&quot;attacks_roll&quot;, style=dotted]
+&quot;0x615cd69f42c0&quot; -&gt; &quot;0x615cd69ede10&quot;
+&quot;0x615cd69f42c0&quot; -&gt; &quot;0x615cd69f2a40&quot;
+&quot;0x615cd69f1240&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a34d00&quot;[shape=ellipse, label=&quot;resolve_model_attack&quot;, style=solid]
+&quot;0x615cd6a34d00&quot; -&gt; &quot;0x615cd69f1240&quot;
+&quot;0x615cd6a34d00&quot; -&gt; &quot;0x615cd6a3ca30&quot;
+&quot;0x615cd6a35970&quot;[shape=box, label=&quot;select_weapon&quot;, style=solid]
+&quot;0x615cd6a35970&quot; -&gt; &quot;0x615cd6a3cf40&quot;
+&quot;0x615cd6a3c800&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6a3c800&quot; -&gt; &quot;0x615cd69f1240&quot;
+&quot;0x615cd6a3ca30&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6a3ca30&quot; -&gt; &quot;0x615cd6a3c800&quot;
+&quot;0x615cd6a3ca30&quot; -&gt; &quot;0x615cd6a35970&quot;
+&quot;0x615cd6a3cf40&quot;[shape=box, label=&quot;resolve_weapon&quot;, style=dotted]
+&quot;0x615cd6a3cf40&quot; -&gt; &quot;0x615cd69f1240&quot;
+&quot;0x615cd6a3cf40&quot; -&gt; &quot;0x615cd6a3ca30&quot;
+&quot;0x615cd695d090&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd695d090&quot; -&gt; &quot;0x615cd6a4cdc0&quot;
+&quot;0x615cd695d090&quot; -&gt; &quot;0x615cd6a4ccd0&quot;
+&quot;0x615cd695d090&quot; -&gt; &quot;0x615cd6a50990&quot;
+&quot;0x615cd695d090&quot; -&gt; &quot;0x615cd6a54a40&quot;
+&quot;0x615cd695d090&quot; -&gt; &quot;0x615cd6a5b6a0&quot;
+&quot;0x615cd695d090&quot; -&gt; &quot;0x615cd6a581b0&quot;
+&quot;0x615cd6a40890&quot;[shape=ellipse, label=&quot;use_attack_stratagems&quot;, style=solid]
+&quot;0x615cd6a40890&quot; -&gt; &quot;0x615cd6a4c230&quot;
+&quot;0x615cd6a40b00&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a417e0&quot;[shape=box, label=&quot;no_defensive_stratagem&quot;, style=solid]
+&quot;0x615cd6a417e0&quot; -&gt; &quot;0x615cd695d090&quot;
+&quot;0x615cd6a428e0&quot;[shape=box, label=&quot;tough_as_squig_hide&quot;, style=solid]
+&quot;0x615cd6a428e0&quot; -&gt; &quot;0x615cd695d090&quot;
+&quot;0x615cd6a44600&quot;[shape=box, label=&quot;use_gene_wrought_resiliance&quot;, style=solid]
+&quot;0x615cd6a44600&quot; -&gt; &quot;0x615cd695d090&quot;
+&quot;0x615cd6a470b0&quot;[shape=box, label=&quot;use_daemonic_fervour&quot;, style=solid]
+&quot;0x615cd6a470b0&quot; -&gt; &quot;0x615cd695d090&quot;
+&quot;0x615cd6a48cc0&quot;[shape=box, label=&quot;use_unyielding&quot;, style=solid]
+&quot;0x615cd6a48cc0&quot; -&gt; &quot;0x615cd695d090&quot;
+&quot;0x615cd6a4c230&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6a4c230&quot; -&gt; &quot;0x615cd6a44600&quot;
+&quot;0x615cd6a4c230&quot; -&gt; &quot;0x615cd6a428e0&quot;
+&quot;0x615cd6a4c230&quot; -&gt; &quot;0x615cd6a470b0&quot;
+&quot;0x615cd6a4c230&quot; -&gt; &quot;0x615cd6a48cc0&quot;
+&quot;0x615cd6a4c230&quot; -&gt; &quot;0x615cd6a417e0&quot;
+&quot;0x615cd6a4ccd0&quot;[shape=box, label=&quot;no_offensive_stratagem&quot;, style=solid]
+&quot;0x615cd6a4ccd0&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a4cdc0&quot;[shape=box, label=&quot;use_veteran_instincts&quot;, style=solid]
+&quot;0x615cd6a4cdc0&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a504e0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a504e0&quot; -&gt; &quot;0x615cd6a535e0&quot;
+&quot;0x615cd6a504e0&quot; -&gt; &quot;0x615cd6a529c0&quot;
+&quot;0x615cd6a50990&quot;[shape=box, label=&quot;use_dark_pact&quot;, style=solid]
+&quot;0x615cd6a50990&quot; -&gt; &quot;0x615cd6a504e0&quot;
+&quot;0x615cd6a529c0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a529c0&quot; -&gt; &quot;0x615cd6a535e0&quot;
+&quot;0x615cd6a535e0&quot;[shape=box, label=&quot;select_ability&quot;, style=solid]
+&quot;0x615cd6a535e0&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a54a40&quot;[shape=box, label=&quot;use_swift_kill&quot;, style=solid]
+&quot;0x615cd6a54a40&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a581b0&quot;[shape=box, label=&quot;use_vindictive_strategy&quot;, style=solid]
+&quot;0x615cd6a581b0&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a59a20&quot;[shape=box, label=&quot;select_model&quot;, style=solid]
+&quot;0x615cd6a59a20&quot; -&gt; &quot;0x615cd6a5f590&quot;
+&quot;0x615cd6a59a20&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a5b6a0&quot;[shape=box, label=&quot;use_sacrificial_dagger&quot;, style=solid]
+&quot;0x615cd6a5b6a0&quot; -&gt; &quot;0x615cd6a59a20&quot;
+&quot;0x615cd6a5eeb0&quot;[shape=box, label=&quot;use_dacatarai_stance&quot;, style=solid]
+&quot;0x615cd6a5eeb0&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a5f260&quot;[shape=box, label=&quot;use_rendax_stance&quot;, style=solid]
+&quot;0x615cd6a5f260&quot; -&gt; &quot;0x615cd6a40b00&quot;
+&quot;0x615cd6a5f590&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6a5f590&quot; -&gt; &quot;0x615cd6a5eeb0&quot;
+&quot;0x615cd6a5f590&quot; -&gt; &quot;0x615cd6a5f260&quot;
+&quot;0x615cd6a1dcb0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a1dcb0&quot; -&gt; &quot;0x615cd6a1e280&quot;
+&quot;0x615cd6a1e280&quot;[shape=box, label=&quot;select_model&quot;, style=solid]
+&quot;0x615cd6a1e280&quot; -&gt; &quot;0x615cd6a60460&quot;
+&quot;0x615cd6a1e280&quot; -&gt; &quot;0x615cd6a21720&quot;
+&quot;0x615cd6a1e280&quot; -&gt; &quot;0x615cd6a1ff50&quot;
+&quot;0x615cd6a1e280&quot; -&gt; &quot;0x615cd6a1dcb0&quot;
+&quot;0x615cd6a1ff50&quot;[shape=box, label=&quot;roll&quot;, style=solid]
+&quot;0x615cd6a1ff50&quot; -&gt; &quot;0x615cd6a21720&quot;
+&quot;0x615cd6a21720&quot;[shape=box, label=&quot;fight_on_death_attack&quot;, style=dotted]
+&quot;0x615cd6a21720&quot; -&gt; &quot;0x615cd6a60460&quot;
+&quot;0x615cd6a21720&quot; -&gt; &quot;0x615cd6a21720&quot;
+&quot;0x615cd6a21720&quot; -&gt; &quot;0x615cd6a1ff50&quot;
+&quot;0x615cd6a60120&quot;[shape=ellipse, label=&quot;attack&quot;, style=solid]
+&quot;0x615cd6a60120&quot; -&gt; &quot;0x615cd6a60460&quot;
+&quot;0x615cd6a60120&quot; -&gt; &quot;0x615cd6a62640&quot;
+&quot;0x615cd6a60460&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a62640&quot;[shape=box, label=&quot;strats&quot;, style=dotted]
+&quot;0x615cd6a62640&quot; -&gt; &quot;0x615cd6a60460&quot;
+&quot;0x615cd6a62640&quot; -&gt; &quot;0x615cd6a21720&quot;
+&quot;0x615cd6a62640&quot; -&gt; &quot;0x615cd6a1ff50&quot;
+&quot;0x615cd6a62640&quot; -&gt; &quot;0x615cd6a1dcb0&quot;
+&quot;0x615cd6a62640&quot; -&gt; &quot;0x615cd6a65940&quot;
+&quot;0x615cd6a65940&quot;[shape=box, label=&quot;model_attack&quot;, style=dotted]
+&quot;0x615cd6a65940&quot; -&gt; &quot;0x615cd6a60460&quot;
+&quot;0x615cd6a65940&quot; -&gt; &quot;0x615cd6a21720&quot;
+&quot;0x615cd6a65940&quot; -&gt; &quot;0x615cd6a1ff50&quot;
+&quot;0x615cd6a65940&quot; -&gt; &quot;0x615cd6a1dcb0&quot;
+&quot;0x615cd6a65940&quot; -&gt; &quot;0x615cd6a65940&quot;
+&quot;0x615cd69e7150&quot;[shape=ellipse, label=&quot;spawn_unit&quot;, style=solid]
+&quot;0x615cd69e7150&quot; -&gt; &quot;0x615cd6a26e90&quot;
+&quot;0x615cd69e7210&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69e7860&quot;[shape=box, label=&quot;set_owner&quot;, style=solid]
+&quot;0x615cd69e7860&quot; -&gt; &quot;0x615cd69ea7d0&quot;
+&quot;0x615cd69e7b70&quot;[shape=box, label=&quot;place_at&quot;, style=solid]
+&quot;0x615cd69e7b70&quot; -&gt; &quot;0x615cd69e7210&quot;
+&quot;0x615cd69e8320&quot;[shape=box, label=&quot;place_in_reserve&quot;, style=solid]
+&quot;0x615cd69e8320&quot; -&gt; &quot;0x615cd69e7210&quot;
+&quot;0x615cd69ea7d0&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd69ea7d0&quot; -&gt; &quot;0x615cd69e8320&quot;
+&quot;0x615cd69ea7d0&quot; -&gt; &quot;0x615cd69e7b70&quot;
+&quot;0x615cd6a26e90&quot;[shape=box, label=&quot;spawn&quot;, style=solid]
+&quot;0x615cd6a26e90&quot; -&gt; &quot;0x615cd69e7860&quot;
+&quot;0x615cd69e96d0&quot;[shape=box, label=&quot;insane_bravery&quot;, style=solid]
+&quot;0x615cd69e96d0&quot; -&gt; &quot;0x615cd6a28ea0&quot;
+&quot;0x615cd69e96d0&quot; -&gt; &quot;0x615cd69eaae0&quot;
+&quot;0x615cd69ea9c0&quot;[shape=ellipse, label=&quot;battle_shock_test&quot;, style=solid]
+&quot;0x615cd69ea9c0&quot; -&gt; &quot;0x615cd69e96d0&quot;
+&quot;0x615cd69ea9c0&quot; -&gt; &quot;0x615cd6a28ea0&quot;
+&quot;0x615cd69eaae0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a28ea0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a28ea0&quot; -&gt; &quot;0x615cd69eaae0&quot;
+&quot;0x615cd6a2b140&quot;[shape=ellipse, label=&quot;battle_shock_step&quot;, style=solid]
+&quot;0x615cd6a2b140&quot; -&gt; &quot;0x615cd6a2b200&quot;
+&quot;0x615cd6a2b140&quot; -&gt; &quot;0x615cd6aa22b0&quot;
+&quot;0x615cd6a2b200&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6aa22b0&quot;[shape=box, label=&quot;shock_test&quot;, style=dotted]
+&quot;0x615cd6aa22b0&quot; -&gt; &quot;0x615cd6a2b200&quot;
+&quot;0x615cd6aa22b0&quot; -&gt; &quot;0x615cd6aa22b0&quot;
+&quot;0x615cd6aa5190&quot;[shape=ellipse, label=&quot;shadow_in_the_warp&quot;, style=solid]
+&quot;0x615cd6aa5190&quot; -&gt; &quot;0x615cd6aa57f0&quot;
+&quot;0x615cd6aa5190&quot; -&gt; &quot;0x615cd6aa52b0&quot;
+&quot;0x615cd6aa52b0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6aa57f0&quot;[shape=box, label=&quot;use_shadow_in_the_warp&quot;, style=solid]
+&quot;0x615cd6aa57f0&quot; -&gt; &quot;0x615cd6aa52b0&quot;
+&quot;0x615cd6aa57f0&quot; -&gt; &quot;0x615cd6aa7f50&quot;
+&quot;0x615cd6aa7f50&quot;[shape=box, label=&quot;shock_test&quot;, style=dotted]
+&quot;0x615cd6aa7f50&quot; -&gt; &quot;0x615cd6aa52b0&quot;
+&quot;0x615cd6aa7f50&quot; -&gt; &quot;0x615cd6aa7f50&quot;
+&quot;0x615cd6aa9b60&quot;[shape=ellipse, label=&quot;neural_disruption&quot;, style=solid]
+&quot;0x615cd6aa9b60&quot; -&gt; &quot;0x615cd6aa9c50&quot;
+&quot;0x615cd6aa9b60&quot; -&gt; &quot;0x615cd6ab07c0&quot;
+&quot;0x615cd6aa9c50&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6aaa140&quot;[shape=box, label=&quot;select_neural_disruption_target&quot;, style=solid]
+&quot;0x615cd6aaa140&quot; -&gt; &quot;0x615cd6aae560&quot;
+&quot;0x615cd6aae560&quot;[shape=box, label=&quot;shock_test&quot;, style=dotted]
+&quot;0x615cd6aae560&quot; -&gt; &quot;0x615cd6aa9c50&quot;
+&quot;0x615cd6aae560&quot; -&gt; &quot;0x615cd6ab07c0&quot;
+&quot;0x615cd6ab06d0&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6ab06d0&quot; -&gt; &quot;0x615cd6aa9c50&quot;
+&quot;0x615cd6ab06d0&quot; -&gt; &quot;0x615cd6ab07c0&quot;
+&quot;0x615cd6ab07c0&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6ab07c0&quot; -&gt; &quot;0x615cd6aaa140&quot;
+&quot;0x615cd6ab07c0&quot; -&gt; &quot;0x615cd6ab06d0&quot;
+&quot;0x615cd6ab0dd0&quot;[shape=ellipse, label=&quot;command_phase&quot;, style=solid]
+&quot;0x615cd6ab0dd0&quot; -&gt; &quot;0x615cd6ab1b70&quot;
+&quot;0x615cd6ab0e90&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6ab1b70&quot;[shape=box, label=&quot;shadow1&quot;, style=dotted]
+&quot;0x615cd6ab1b70&quot; -&gt; &quot;0x615cd6ab24c0&quot;
+&quot;0x615cd6ab24c0&quot;[shape=box, label=&quot;shadow2&quot;, style=dotted]
+&quot;0x615cd6ab24c0&quot; -&gt; &quot;0x615cd6ab3de0&quot;
+&quot;0x615cd6ab3de0&quot;[shape=box, label=&quot;neural_disruption&quot;, style=dotted]
+&quot;0x615cd6ab3de0&quot; -&gt; &quot;0x615cd6ab6090&quot;
+&quot;0x615cd6ab3de0&quot; -&gt; &quot;0x615cd6abd070&quot;
+&quot;0x615cd6ab4620&quot;[shape=box, label=&quot;select_oath_of_moment_target&quot;, style=solid]
+&quot;0x615cd6ab4620&quot; -&gt; &quot;0x615cd6ab9bb0&quot;
+&quot;0x615cd6ab51f0&quot;[shape=box, label=&quot;use_duty_and_honour&quot;, style=solid]
+&quot;0x615cd6ab51f0&quot; -&gt; &quot;0x615cd6abd070&quot;
+&quot;0x615cd6ab5fa0&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6ab5fa0&quot; -&gt; &quot;0x615cd6ab9bb0&quot;
+&quot;0x615cd6ab6090&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6ab6090&quot; -&gt; &quot;0x615cd6ab5fa0&quot;
+&quot;0x615cd6ab6090&quot; -&gt; &quot;0x615cd6ab4620&quot;
+&quot;0x615cd6ab7b00&quot;[shape=box, label=&quot;use_pheromone_trail&quot;, style=solid]
+&quot;0x615cd6ab7b00&quot; -&gt; &quot;0x615cd6abd070&quot;
+&quot;0x615cd6ab9bb0&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6ab9bb0&quot; -&gt; &quot;0x615cd6ab7b00&quot;
+&quot;0x615cd6ab9bb0&quot; -&gt; &quot;0x615cd6ab51f0&quot;
+&quot;0x615cd6ab9bb0&quot; -&gt; &quot;0x615cd6abc9f0&quot;
+&quot;0x615cd6abc9f0&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6abc9f0&quot; -&gt; &quot;0x615cd6abd070&quot;
+&quot;0x615cd6abd070&quot;[shape=box, label=&quot;shock_step&quot;, style=dotted]
+&quot;0x615cd6abd070&quot; -&gt; &quot;0x615cd6ab0e90&quot;
+&quot;0x615cd6abd6e0&quot;[shape=ellipse, label=&quot;overwatch&quot;, style=solid]
+&quot;0x615cd6abd6e0&quot; -&gt; &quot;0x615cd6abd7a0&quot;
+&quot;0x615cd6abd6e0&quot; -&gt; &quot;0x615cd6ac4f80&quot;
+&quot;0x615cd6abd7a0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6abd9c0&quot;[shape=box, label=&quot;overwatch&quot;, style=solid]
+&quot;0x615cd6abd9c0&quot; -&gt; &quot;0x615cd6ac3e00&quot;
+&quot;0x615cd6ac0080&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6ac0080&quot; -&gt; &quot;0x615cd6abd7a0&quot;
+&quot;0x615cd6ac3e00&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6ac3e00&quot; -&gt; &quot;0x615cd6abd7a0&quot;
+&quot;0x615cd6ac4f80&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6ac4f80&quot; -&gt; &quot;0x615cd6ac0080&quot;
+&quot;0x615cd6ac4f80&quot; -&gt; &quot;0x615cd6abd9c0&quot;
+&quot;0x615cd69e5930&quot;[shape=ellipse, label=&quot;move&quot;, style=solid]
+&quot;0x615cd69e5930&quot; -&gt; &quot;0x615cd69e5ab0&quot;
+&quot;0x615cd69e5930&quot; -&gt; &quot;0x615cd69e5d20&quot;
+&quot;0x615cd69e5ab0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69e5d20&quot;[shape=box, label=&quot;move_to&quot;, style=solid]
+&quot;0x615cd69e5d20&quot; -&gt; &quot;0x615cd6ac83e0&quot;
+&quot;0x615cd6ac83e0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6ac83e0&quot; -&gt; &quot;0x615cd69e5ab0&quot;
+&quot;0x615cd6acb2a0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6acbe20&quot;[shape=ellipse, label=&quot;fight_step&quot;, style=solid]
+&quot;0x615cd6acbe20&quot; -&gt; &quot;0x615cd6ad7720&quot;
+&quot;0x615cd6acbe20&quot; -&gt; &quot;0x615cd6acb2a0&quot;
+&quot;0x615cd6acde40&quot;[shape=box, label=&quot;end_fight_step&quot;, style=solid]
+&quot;0x615cd6acde40&quot; -&gt; &quot;0x615cd6ad7720&quot;
+&quot;0x615cd6acde40&quot; -&gt; &quot;0x615cd6acb2a0&quot;
+&quot;0x615cd6aceb00&quot;[shape=box, label=&quot;select_target&quot;, style=solid]
+&quot;0x615cd6aceb00&quot; -&gt; &quot;0x615cd6ad3c90&quot;
+&quot;0x615cd6ad3c90&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6ad3c90&quot; -&gt; &quot;0x615cd6ad7720&quot;
+&quot;0x615cd6ad3c90&quot; -&gt; &quot;0x615cd6acb2a0&quot;
+&quot;0x615cd6ad7720&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6ad7720&quot; -&gt; &quot;0x615cd6acde40&quot;
+&quot;0x615cd6ad7720&quot; -&gt; &quot;0x615cd6aceb00&quot;
+&quot;0x615cd6ad7910&quot;[shape=ellipse, label=&quot;fight_phase&quot;, style=solid]
+&quot;0x615cd6ad7910&quot; -&gt; &quot;0x615cd6adcab0&quot;
+&quot;0x615cd6ad7910&quot; -&gt; &quot;0x615cd6adbe40&quot;
+&quot;0x615cd6ad79d0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6ad85e0&quot;[shape=box, label=&quot;use_bestial_bellow&quot;, style=solid]
+&quot;0x615cd6ad85e0&quot; -&gt; &quot;0x615cd6ada750&quot;
+&quot;0x615cd6ada750&quot;[shape=box, label=&quot;shock_test&quot;, style=dotted]
+&quot;0x615cd6ada750&quot; -&gt; &quot;0x615cd6adbe40&quot;
+&quot;0x615cd6adbe40&quot;[shape=box, label=&quot;fight_first_step&quot;, style=dotted]
+&quot;0x615cd6adbe40&quot; -&gt; &quot;0x615cd6add1b0&quot;
+&quot;0x615cd6adc9c0&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6adc9c0&quot; -&gt; &quot;0x615cd6adbe40&quot;
+&quot;0x615cd6adcab0&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6adcab0&quot; -&gt; &quot;0x615cd6ad85e0&quot;
+&quot;0x615cd6adcab0&quot; -&gt; &quot;0x615cd6adc9c0&quot;
+&quot;0x615cd6add1b0&quot;[shape=box, label=&quot;fight_step&quot;, style=dotted]
+&quot;0x615cd6add1b0&quot; -&gt; &quot;0x615cd6ad79d0&quot;
+&quot;0x615cd6ade620&quot;[shape=ellipse, label=&quot;charge&quot;, style=solid]
+&quot;0x615cd6ade620&quot; -&gt; &quot;0x615cd6ade860&quot;
+&quot;0x615cd6ade620&quot; -&gt; &quot;0x615cd6ae0c90&quot;
+&quot;0x615cd6ade620&quot; -&gt; &quot;0x615cd6aded50&quot;
+&quot;0x615cd6ade860&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6aded50&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6aded50&quot; -&gt; &quot;0x615cd6ade860&quot;
+&quot;0x615cd6aded50&quot; -&gt; &quot;0x615cd6ae0c90&quot;
+&quot;0x615cd6ae0c90&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6ae0c90&quot; -&gt; &quot;0x615cd6ade860&quot;
+&quot;0x615cd6ae46a0&quot;[shape=ellipse, label=&quot;charge_phase&quot;, style=solid]
+&quot;0x615cd6ae46a0&quot; -&gt; &quot;0x615cd6ae4760&quot;
+&quot;0x615cd6ae46a0&quot; -&gt; &quot;0x615cd6af4fb0&quot;
+&quot;0x615cd6ae4760&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6ae5ef0&quot;[shape=box, label=&quot;end_charge&quot;, style=solid]
+&quot;0x615cd6ae5ef0&quot; -&gt; &quot;0x615cd6ae4760&quot;
+&quot;0x615cd6ae5ef0&quot; -&gt; &quot;0x615cd6af4fb0&quot;
+&quot;0x615cd6ae6180&quot;[shape=box, label=&quot;select_target&quot;, style=solid]
+&quot;0x615cd6ae6180&quot; -&gt; &quot;0x615cd6aeed40&quot;
+&quot;0x615cd6aec290&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6aec290&quot; -&gt; &quot;0x615cd6aec830&quot;
+&quot;0x615cd6aec3b0&quot;[shape=box, label=&quot;use_overawing_magnificence&quot;, style=solid]
+&quot;0x615cd6aec3b0&quot; -&gt; &quot;0x615cd6aec830&quot;
+&quot;0x615cd6aec830&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6aec830&quot; -&gt; &quot;0x615cd6af4de0&quot;
+&quot;0x615cd6aec930&quot;[shape=box, label=&quot;use_heroic_intervention&quot;, style=solid]
+&quot;0x615cd6aec930&quot; -&gt; &quot;0x615cd6af3a60&quot;
+&quot;0x615cd6aeed40&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6aeed40&quot; -&gt; &quot;0x615cd6aec290&quot;
+&quot;0x615cd6aeed40&quot; -&gt; &quot;0x615cd6aec3b0&quot;
+&quot;0x615cd6aeef80&quot;[shape=box, label=&quot;skip&quot;, style=solid]
+&quot;0x615cd6aeef80&quot; -&gt; &quot;0x615cd6ae4760&quot;
+&quot;0x615cd6aeef80&quot; -&gt; &quot;0x615cd6af4fb0&quot;
+&quot;0x615cd6af3a60&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6af3a60&quot; -&gt; &quot;0x615cd6ae4760&quot;
+&quot;0x615cd6af3a60&quot; -&gt; &quot;0x615cd6af4fb0&quot;
+&quot;0x615cd6af4de0&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6af4de0&quot; -&gt; &quot;0x615cd6aec930&quot;
+&quot;0x615cd6af4de0&quot; -&gt; &quot;0x615cd6aeef80&quot;
+&quot;0x615cd6af4fb0&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6af4fb0&quot; -&gt; &quot;0x615cd6ae5ef0&quot;
+&quot;0x615cd6af4fb0&quot; -&gt; &quot;0x615cd6ae6180&quot;
+&quot;0x615cd6af4330&quot;[shape=box, label=&quot;select_reserve_unit&quot;, style=solid]
+&quot;0x615cd6af4330&quot; -&gt; &quot;0x615cd6afc180&quot;
+&quot;0x615cd6af5210&quot;[shape=ellipse, label=&quot;reserve_deployment&quot;, style=solid]
+&quot;0x615cd6af5210&quot; -&gt; &quot;0x615cd6afc350&quot;
+&quot;0x615cd6af5400&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6af6a60&quot;[shape=box, label=&quot;nothing_to_deploy&quot;, style=solid]
+&quot;0x615cd6af6a60&quot; -&gt; &quot;0x615cd6af5400&quot;
+&quot;0x615cd6af78f0&quot;[shape=box, label=&quot;place_at&quot;, style=solid]
+&quot;0x615cd6af78f0&quot; -&gt; &quot;0x615cd6af5400&quot;
+&quot;0x615cd6afbd40&quot;[shape=box, label=&quot;nothing_to_deploy&quot;, style=solid]
+&quot;0x615cd6afbd40&quot; -&gt; &quot;0x615cd6af5400&quot;
+&quot;0x615cd6afc180&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6afc180&quot; -&gt; &quot;0x615cd6af78f0&quot;
+&quot;0x615cd6afc180&quot; -&gt; &quot;0x615cd6afbd40&quot;
+&quot;0x615cd6afc350&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6afc350&quot; -&gt; &quot;0x615cd6af4330&quot;
+&quot;0x615cd6afc350&quot; -&gt; &quot;0x615cd6af6a60&quot;
+&quot;0x615cd6afc5b0&quot;[shape=ellipse, label=&quot;desperate_escape&quot;, style=solid]
+&quot;0x615cd6afc5b0&quot; -&gt; &quot;0x615cd6afcdd0&quot;
+&quot;0x615cd6afc5b0&quot; -&gt; &quot;0x615cd6b001a0&quot;
+&quot;0x615cd6afc5b0&quot; -&gt; &quot;0x615cd6afc7a0&quot;
+&quot;0x615cd6afc7a0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6afcdd0&quot;[shape=box, label=&quot;use_predators_not_prey&quot;, style=solid]
+&quot;0x615cd6afcdd0&quot; -&gt; &quot;0x615cd6afc7a0&quot;
+&quot;0x615cd6b001a0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6b001a0&quot; -&gt; &quot;0x615cd6b001a0&quot;
+&quot;0x615cd6b001a0&quot; -&gt; &quot;0x615cd6afc7a0&quot;
+&quot;0x615cd6b02c00&quot;[shape=ellipse, label=&quot;movement&quot;, style=solid]
+&quot;0x615cd6b02c00&quot; -&gt; &quot;0x615cd6b03290&quot;
+&quot;0x615cd6b02c00&quot; -&gt; &quot;0x615cd6b048c0&quot;
+&quot;0x615cd6b02d80&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6b03290&quot;[shape=box, label=&quot;desperate_escape&quot;, style=dotted]
+&quot;0x615cd6b03290&quot; -&gt; &quot;0x615cd6b034b0&quot;
+&quot;0x615cd6b034b0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6b034b0&quot; -&gt; &quot;0x615cd6b02d80&quot;
+&quot;0x615cd6b048c0&quot;[shape=box, label=&quot;advance&quot;, style=solid]
+&quot;0x615cd6b048c0&quot; -&gt; &quot;0x615cd6b062d0&quot;
+&quot;0x615cd6b048c0&quot; -&gt; &quot;0x615cd6b080f0&quot;
+&quot;0x615cd6b062d0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6b062d0&quot; -&gt; &quot;0x615cd6b02d80&quot;
+&quot;0x615cd6b080f0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6b080f0&quot; -&gt; &quot;0x615cd6b098d0&quot;
+&quot;0x615cd6b098d0&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6b098d0&quot; -&gt; &quot;0x615cd6b02d80&quot;
+&quot;0x615cd6b09b60&quot;[shape=box, label=&quot;move_unit&quot;, style=solid]
+&quot;0x615cd6b09b60&quot; -&gt; &quot;0x615cd6b0f1e0&quot;
+&quot;0x615cd6b09b60&quot; -&gt; &quot;0x615cd6b0cdb0&quot;
+&quot;0x615cd6b0b3e0&quot;[shape=ellipse, label=&quot;movement_phase&quot;, style=solid]
+&quot;0x615cd6b0b3e0&quot; -&gt; &quot;0x615cd6b12f30&quot;
+&quot;0x615cd6b0b3e0&quot; -&gt; &quot;0x615cd6b10950&quot;
+&quot;0x615cd6b0b3e0&quot; -&gt; &quot;0x615cd6b0b4a0&quot;
+&quot;0x615cd6b0b3e0&quot; -&gt; &quot;0x615cd6b10120&quot;
+&quot;0x615cd6b0b4a0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6b0bc20&quot;[shape=box, label=&quot;end_move&quot;, style=solid]
+&quot;0x615cd6b0bc20&quot; -&gt; &quot;0x615cd6b12f30&quot;
+&quot;0x615cd6b0bc20&quot; -&gt; &quot;0x615cd6b10950&quot;
+&quot;0x615cd6b0bc20&quot; -&gt; &quot;0x615cd6b0b4a0&quot;
+&quot;0x615cd6b0bc20&quot; -&gt; &quot;0x615cd6b10120&quot;
+&quot;0x615cd6b0cdb0&quot;[shape=box, label=&quot;use_gilded_spear&quot;, style=solid]
+&quot;0x615cd6b0cdb0&quot; -&gt; &quot;0x615cd6b0f1e0&quot;
+&quot;0x615cd6b0f1e0&quot;[shape=box, label=&quot;move&quot;, style=dotted]
+&quot;0x615cd6b0f1e0&quot; -&gt; &quot;0x615cd6b12f30&quot;
+&quot;0x615cd6b0f1e0&quot; -&gt; &quot;0x615cd6b10950&quot;
+&quot;0x615cd6b0f1e0&quot; -&gt; &quot;0x615cd6b0b4a0&quot;
+&quot;0x615cd6b0f1e0&quot; -&gt; &quot;0x615cd6b10120&quot;
+&quot;0x615cd6b10120&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6b10120&quot; -&gt; &quot;0x615cd6b09b60&quot;
+&quot;0x615cd6b10120&quot; -&gt; &quot;0x615cd6b0bc20&quot;
+&quot;0x615cd6b10950&quot;[shape=box, label=&quot;reserve_deployment&quot;, style=dotted]
+&quot;0x615cd6b10950&quot; -&gt; &quot;0x615cd6b12f30&quot;
+&quot;0x615cd6b10950&quot; -&gt; &quot;0x615cd6b10950&quot;
+&quot;0x615cd6b10950&quot; -&gt; &quot;0x615cd6b0b4a0&quot;
+&quot;0x615cd6b12f30&quot;[shape=box, label=&quot;rapid_ingress&quot;, style=dotted]
+&quot;0x615cd6b12f30&quot; -&gt; &quot;0x615cd6b0b4a0&quot;
+&quot;0x615cd6b149c0&quot;[shape=ellipse, label=&quot;shooting_phase&quot;, style=solid]
+&quot;0x615cd6b149c0&quot; -&gt; &quot;0x615cd6b14a80&quot;
+&quot;0x615cd6b149c0&quot; -&gt; &quot;0x615cd6b1b270&quot;
+&quot;0x615cd6b14a80&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6b15f20&quot;[shape=box, label=&quot;end_shooting_phase&quot;, style=solid]
+&quot;0x615cd6b15f20&quot; -&gt; &quot;0x615cd6b14a80&quot;
+&quot;0x615cd6b15f20&quot; -&gt; &quot;0x615cd6b1b270&quot;
+&quot;0x615cd6b161b0&quot;[shape=box, label=&quot;select_target&quot;, style=solid]
+&quot;0x615cd6b161b0&quot; -&gt; &quot;0x615cd6b1ab90&quot;
+&quot;0x615cd6b1ab90&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6b1ab90&quot; -&gt; &quot;0x615cd6b14a80&quot;
+&quot;0x615cd6b1ab90&quot; -&gt; &quot;0x615cd6b1b270&quot;
+&quot;0x615cd6b1b270&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6b1b270&quot; -&gt; &quot;0x615cd6b161b0&quot;
+&quot;0x615cd6b1b270&quot; -&gt; &quot;0x615cd6b15f20&quot;
+&quot;0x615cd6a65e80&quot;[shape=box, label=&quot;fight_phase&quot;, style=dotted]
+&quot;0x615cd6a65e80&quot; -&gt; &quot;0x615cd6b1b6b0&quot;
+&quot;0x615cd6b1b4f0&quot;[shape=ellipse, label=&quot;turn&quot;, style=solid]
+&quot;0x615cd6b1b4f0&quot; -&gt; &quot;0x615cd6b1bd30&quot;
+&quot;0x615cd6b1b6b0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6b1bd30&quot;[shape=box, label=&quot;command_phase&quot;, style=dotted]
+&quot;0x615cd6b1bd30&quot; -&gt; &quot;0x615cd6b1c1c0&quot;
+&quot;0x615cd6b1c1c0&quot;[shape=box, label=&quot;movement_phase&quot;, style=dotted]
+&quot;0x615cd6b1c1c0&quot; -&gt; &quot;0x615cd6b1c5e0&quot;
+&quot;0x615cd6b1c5e0&quot;[shape=box, label=&quot;shooting_phase&quot;, style=dotted]
+&quot;0x615cd6b1c5e0&quot; -&gt; &quot;0x615cd6b1dc80&quot;
+&quot;0x615cd6b1dc80&quot;[shape=box, label=&quot;charge_phase&quot;, style=dotted]
+&quot;0x615cd6b1dc80&quot; -&gt; &quot;0x615cd6a65e80&quot;
+&quot;0x615cd6a664f0&quot;[shape=ellipse, label=&quot;round&quot;, style=solid]
+&quot;0x615cd6a664f0&quot; -&gt; &quot;0x615cd6a66910&quot;
+&quot;0x615cd6a665b0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a66910&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a66910&quot; -&gt; &quot;0x615cd6a66f80&quot;
+&quot;0x615cd6a66f80&quot;[shape=box, label=&quot;&quot;, style=dotted]
+&quot;0x615cd6a66f80&quot; -&gt; &quot;0x615cd6a665b0&quot;
+&quot;0x615cd6a67610&quot;[shape=ellipse, label=&quot;attach_leaders&quot;, style=solid]
+&quot;0x615cd6a67610&quot; -&gt; &quot;0x615cd6a6ff20&quot;
+&quot;0x615cd6a67610&quot; -&gt; &quot;0x615cd6a67700&quot;
+&quot;0x615cd6a67700&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a69880&quot;[shape=box, label=&quot;done_attaching&quot;, style=solid]
+&quot;0x615cd6a69880&quot; -&gt; &quot;0x615cd6a6ff20&quot;
+&quot;0x615cd6a69880&quot; -&gt; &quot;0x615cd6a67700&quot;
+&quot;0x615cd6a6a540&quot;[shape=box, label=&quot;attack_character&quot;, style=solid]
+&quot;0x615cd6a6a540&quot; -&gt; &quot;0x615cd6a6ff20&quot;
+&quot;0x615cd6a6a540&quot; -&gt; &quot;0x615cd6a67700&quot;
+&quot;0x615cd6a6ff20&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6a6ff20&quot; -&gt; &quot;0x615cd6a6a540&quot;
+&quot;0x615cd6a6ff20&quot; -&gt; &quot;0x615cd6a69880&quot;
+&quot;0x615cd6a71b70&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a75540&quot;[shape=ellipse, label=&quot;deploy&quot;, style=solid]
+&quot;0x615cd6a75540&quot; -&gt; &quot;0x615cd6a8c390&quot;
+&quot;0x615cd6a75540&quot; -&gt; &quot;0x615cd6a71b70&quot;
+&quot;0x615cd6a76360&quot;[shape=box, label=&quot;select_unit&quot;, style=solid]
+&quot;0x615cd6a76360&quot; -&gt; &quot;0x615cd6a781c0&quot;
+&quot;0x615cd6a76710&quot;[shape=box, label=&quot;done_deploying&quot;, style=solid]
+&quot;0x615cd6a76710&quot; -&gt; &quot;0x615cd6a8c390&quot;
+&quot;0x615cd6a76710&quot; -&gt; &quot;0x615cd6a71b70&quot;
+&quot;0x615cd6a781c0&quot;[shape=box, label=&quot;deploy_at&quot;, style=solid]
+&quot;0x615cd6a781c0&quot; -&gt; &quot;0x615cd6a8c390&quot;
+&quot;0x615cd6a781c0&quot; -&gt; &quot;0x615cd6a71b70&quot;
+&quot;0x615cd6a8c390&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6a8c390&quot; -&gt; &quot;0x615cd6a76360&quot;
+&quot;0x615cd6a8c390&quot; -&gt; &quot;0x615cd6a76710&quot;
+&quot;0x615cd69dc8d0&quot;[shape=box, label=&quot;deploy&quot;, style=dotted]
+&quot;0x615cd69dc8d0&quot; -&gt; &quot;0x615cd69dcf60&quot;
+&quot;0x615cd69dc8d0&quot; -&gt; &quot;0x615cd6a8c610&quot;
+&quot;0x615cd69dcf60&quot;[shape=box, label=&quot;round&quot;, style=dotted]
+&quot;0x615cd69dcf60&quot; -&gt; &quot;0x615cd69dcf60&quot;
+&quot;0x615cd69dcf60&quot; -&gt; &quot;0x615cd6a8c610&quot;
+&quot;0x615cd6a8c580&quot;[shape=ellipse, label=&quot;battle&quot;, style=solid]
+&quot;0x615cd6a8c580&quot; -&gt; &quot;0x615cd6a8d940&quot;
+&quot;0x615cd6a8c610&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd6a8d940&quot;[shape=box, label=&quot;attach_leaders&quot;, style=dotted]
+&quot;0x615cd6a8d940&quot; -&gt; &quot;0x615cd69dc8d0&quot;
+&quot;0x615cd6924230&quot;[shape=diamond, label=&quot;&quot;, style=solid]
+&quot;0x615cd6924230&quot; -&gt; &quot;0x615cd69e4050&quot;
+&quot;0x615cd6924230&quot; -&gt; &quot;0x615cd6a92500&quot;
+&quot;0x615cd6924230&quot; -&gt; &quot;0x615cd6a8f180&quot;
+&quot;0x615cd6924230&quot; -&gt; &quot;0x615cd6a8fa10&quot;
+&quot;0x615cd6924230&quot; -&gt; &quot;0x615cd6a91c70&quot;
+&quot;0x615cd6924230&quot; -&gt; &quot;0x615cd6a912b0&quot;
+&quot;0x615cd69dddd0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69e3c90&quot;[shape=ellipse, label=&quot;pick_army&quot;, style=solid]
+&quot;0x615cd69e3c90&quot; -&gt; &quot;0x615cd6924230&quot;
+&quot;0x615cd69e4050&quot;[shape=box, label=&quot;pick_strike_force_octavious&quot;, style=solid]
+&quot;0x615cd69e4050&quot; -&gt; &quot;0x615cd69dddd0&quot;
+&quot;0x615cd6a8f180&quot;[shape=box, label=&quot;pick_insidious_infiltrators&quot;, style=solid]
+&quot;0x615cd6a8f180&quot; -&gt; &quot;0x615cd69dddd0&quot;
+&quot;0x615cd6a8fa10&quot;[shape=box, label=&quot;pick_zarkan_deamonkin&quot;, style=solid]
+&quot;0x615cd6a8fa10&quot; -&gt; &quot;0x615cd69dddd0&quot;
+&quot;0x615cd6a912b0&quot;[shape=box, label=&quot;pick_morgrim_butcha&quot;, style=solid]
+&quot;0x615cd6a912b0&quot; -&gt; &quot;0x615cd69dddd0&quot;
+&quot;0x615cd6a91c70&quot;[shape=box, label=&quot;pick_tristean_gilded_blade&quot;, style=solid]
+&quot;0x615cd6a91c70&quot; -&gt; &quot;0x615cd69dddd0&quot;
+&quot;0x615cd6a92500&quot;[shape=box, label=&quot;pick_vengeful_brethren&quot;, style=solid]
+&quot;0x615cd6a92500&quot; -&gt; &quot;0x615cd69dddd0&quot;
+&quot;0x615cd690e7a0&quot;[shape=ellipse, label=&quot;play&quot;, style=solid]
+&quot;0x615cd690e7a0&quot; -&gt; &quot;0x615cd697d820&quot;
+&quot;0x615cd6979fa0&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd697d820&quot;[shape=box, label=&quot;p1&quot;, style=dotted]
+&quot;0x615cd697d820&quot; -&gt; &quot;0x615cd697f550&quot;
+&quot;0x615cd697f550&quot;[shape=box, label=&quot;p2&quot;, style=dotted]
+&quot;0x615cd697f550&quot; -&gt; &quot;0x615cd697f9f0&quot;
+&quot;0x615cd697f9f0&quot;[shape=box, label=&quot;battle&quot;, style=dotted]
+&quot;0x615cd697f9f0&quot; -&gt; &quot;0x615cd6979fa0&quot;
+ }" class="graphviz" /></div>
+</section>
+<section id="rolling-a-dice">
+<h2>Rolling a dice<a class="headerlink" href="#rolling-a-dice" title="Link to this heading"></a></h2>
+<p>Let us focus on the simples game sequence. Rolling a dice.
+Here are all the rules (excluding modifiers which are applied later) about how you roll dice in <strong>Warhammer 40,000</strong>.</p>
+<ul class="simple">
+<li><p>Dice have a number of faces, typically 3 or 6.</p></li>
+<li><p>Non-rerollable rolls are atomic, a random number between 1 and the number  of faces of the dice is extracted, then game sequence invoking the non-rerollable dice resumes.</p></li>
+<li><p>Rerollable dices trigger a non-rerollable roll, then depending on the state of the game, may offer to the player that rolled the dice the decision of rerolling it. The second result must be kept. (making it distict from rules that say “roll 2 dices and pick the best”).</p>
+<ul>
+<li><p>sometimes the dice can be rerolled for free</p></li>
+<li><p>sometimes the player can reroll for free, but only if the roll resulted int a 1.</p></li>
+<li><p>sometimes the player can reroll the dice, but only by paying a command point</p></li>
+<li><p>if the player has already used a command point to reroll a dice, theyn cannot do so for the rest of the phase.</p></li>
+<li><p>the player knows the the result of the dice before deciding if they wish to reroll or not, so that information must be exposed to the user.</p></li>
+<li><p>the player knows if rerolling the dice costs command points or not, so that information must be exposed to the user.</p></li>
+</ul>
+</li>
+</ul>
+<p>Here is the graph showing all possible ways of navigating the roll dice sequence.</p>
+<div class="graphviz"><img src="_images/graphviz-4b245b4a5d464d610517bf920409796bdfdfa02f.png" alt="digraph g {
+&quot;0x615cd69484e0&quot;[shape=ellipse, label=&quot;rerollable_dice_roll&quot;, style=solid]
+&quot;0x615cd69484e0&quot; -&gt; &quot;0x615cd69984f0&quot;
+&quot;0x615cd6948780&quot;[shape=ellipse, label=&quot;ret&quot;, style=solid]
+&quot;0x615cd69984f0&quot;[shape=box, label=&quot;roll&quot;, style=solid]
+&quot;0x615cd69984f0&quot; -&gt; &quot;0x615cd6948780&quot;
+&quot;0x615cd69984f0&quot; -&gt; &quot;0x615cd69cb3b0&quot;
+&quot;0x615cd69cb3b0&quot;[shape=box, label=&quot;keep_it&quot;, style=solid]
+&quot;0x615cd69cb3b0&quot; -&gt; &quot;0x615cd6948780&quot;
+&quot;0x615cd69cb3b0&quot; -&gt; &quot;0x615cd69d1be0&quot;
+&quot;0x615cd69d1be0&quot;[shape=box, label=&quot;reroll&quot;, style=solid]
+&quot;0x615cd69d1be0&quot; -&gt; &quot;0x615cd6948780&quot;
+}" class="graphviz" /></div>
+</section>
+<section id="software-architecture">
+<h2>Software architecture<a class="headerlink" href="#software-architecture" title="Link to this heading"></a></h2>
+<p>Here is the architecture of our example project <a class="reference external" href="https://github.com/rl-language/4Hammer">4hammer</a>. 4Hammer is a <a class="reference external" href="https://godotengine.org">godot</a> based reinforcement learning environments. What is relevant to this section is that:</p>
+<ul class="simple">
+<li><p>4Hammer has a architecture and usecase similar to other graphical engine programs, such as videogames.</p></li>
+<li><p>Rulebook code is invoked by godot scripts, so that godot can decide what to render on screen.</p></li>
+<li><p>Rulebook code is used by python reinforcement learning scripts to maximize arbitrary objectives.</p></li>
+</ul>
+<div class="figure" style="text-align: center"><p><img  src="_images/tikz-506dfc568dc3bf1b967c0ca5467239360de6b5bc.png" alt="Figure made with TikZ" /></p>
+</div><p>Rulebook code(red) describing the rules of the environment is compiled into a shared library(lib.so) using RLC. RLC emits as well a wrapper for Python(wrapper.py) and for Godot(godot_header.h).</p>
+<section id="hammer-graphical-engine">
+<h3>4Hammer graphical engine<a class="headerlink" href="#hammer-graphical-engine" title="Link to this heading"></a></h3>
+<p>The Godot wrapper and simulation rules are used to compile a Godot plugin, which exposes Rulebook typesafe rules, types and functions to godot scripts.</p>
+<p>The godot plugin and the godot graphical elements are exported by the godot editor to produce 4hammer_graphical_engine  which is the final product that can be used by users as a standalone application. Since godot can run on the web, and rlc exports webassembly files too, you can use 4hammer_graphical_engine on the web too.</p>
+</section>
+<section id="python-drivers">
+<h3>Python drivers<a class="headerlink" href="#python-drivers" title="Link to this heading"></a></h3>
+<p>The rulebook code is as well executed by python scripts that load the wrapper and the library.
+Since the rules are the same between the engine and python, python can connect over network to the engine and issue commands related to rulebook components.</p>
+</section>
+<section id="fuzzer">
+<h3>Fuzzer<a class="headerlink" href="#fuzzer" title="Link to this heading"></a></h3>
+<p>The rulebook libraries have been designed to expose a <a class="reference internal" href="#./language_tour.html#finite-interactive-programs"><span class="xref myst">finite interactive program</span></a>. This allows to automatically compile a <a class="reference internal" href="#./language_tour.html#automatic-testing"><span class="xref myst">fuzzer</span></a>, which stresses the controller of the environment for free.</p>
+</section>
+</section>
 </section>
 
 

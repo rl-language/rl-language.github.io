@@ -49,9 +49,9 @@
 <li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rlc.html">RLC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
@@ -96,7 +96,7 @@
              
   <section id="rulebook-documentation">
 <h1>Rulebook Documentation<a class="headerlink" href="#rulebook-documentation" title="Link to this heading"></a></h1>
-<p><strong>Rulebook</strong> is a <em>statically-checked imperative language</em> that turns <strong>interactive behaviour</strong>—reinforcement-learning, video-game logic, or in general <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>—into something you can <strong>query, replay, fuzz, and formally verify</strong>.</p>
+<p><strong>Rulebook</strong> is a <em>statically-checked imperative language</em> that turns <strong>interactive behaviour</strong>—reinforcement-learning environments, video-games, or in general <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>—into something you can <strong>query, replay, fuzz, and formally verify</strong>.</p>
 <p><a class="reference external" href="./ui_gameplay.html#4hammer">4hammer (our flagship demo)</a> shows Rulebook in action.</p>
 <p><strong>Why Rulebook?</strong></p>
 <ul class="simple">
@@ -122,7 +122,7 @@
 </ul>
 <p>Rulebook:</p>
 <ul class="simple">
-<li><p><strong>aids—rather than replaces—</strong> <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>, (just like SQL aids but replaces those languages)</p></li>
+<li><p><strong>aids—rather than replaces—</strong> <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>, (just like SQL aids but not replaces those languages)</p></li>
 <li><p>emits a single shared library (or WebAssembly module for web targets) with a C-compatible ABI, plus generated bindings for your host language</p></li>
 </ul>
 <div class="toctree-wrapper compound">
@@ -134,9 +134,9 @@
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rlc.html">RLC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
 </ul>
 </div>
@@ -154,7 +154,18 @@
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html#hammer">4Hammer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#the-size-of-the-problem">The size of the problem.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#scope">Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#rolling-a-dice">Rolling a dice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ui_gameplay.html#software-architecture">Software architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#hammer-graphical-engine">4Hammer graphical engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#python-drivers">Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ui_gameplay.html#fuzzer">Fuzzer</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">

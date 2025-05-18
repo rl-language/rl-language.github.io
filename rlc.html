@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tools &mdash; Rulebook documentation 0.3.0 documentation</title>
+  <title>RLC &mdash; Rulebook documentation 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -50,15 +50,9 @@
 <li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
 <li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Architecture</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#rlc">rlc</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#hammer-graphical-engine">4Hammer graphical engine</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#python-drivers">Python drivers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#fuzzer">Fuzzer</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RLC</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#rlc-lsp-and-autocomplete">rlc-lsp and autocomplete</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#vscode">VSCODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vim-with-youcompleteme">VIM with YouCompleteMe</a></li>
@@ -70,21 +64,19 @@
 <li class="toctree-l2"><a class="reference internal" href="#rlc-play">rlc-play</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rlc-probs">rlc-probs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rlc-action">rlc-action</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tools-for-compiler-people">Tools for compiler people</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#rlc-internals">RLC internals</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#lexer">Lexer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#parser">Parser</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unchecked-ast">Unchecked AST</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#typechecked-ast">Typechecked AST</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#implicit-instantiation">Implicit instantiation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#flattened">Flattened</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#action-rewriting">Action rewriting</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lowering-to-llvm-ir">Lowering to LLVM IR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#making-ir-more-readable">Making IR more readable</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#mlir">MLIR</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#running-single-rlc-passes">Running single RLC passes</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-for-compiler-people">Tools for compiler people</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rlc-internals">RLC internals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lexer">Lexer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parser">Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unchecked-ast">Unchecked AST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#typechecked-ast">Typechecked AST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implicit-instantiation">Implicit instantiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flattened">Flattened</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action-rewriting">Action rewriting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lowering-to-llvm-ir">Lowering to LLVM IR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#making-ir-more-readable">Making IR more readable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mlir">MLIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-single-rlc-passes">Running single RLC passes</a></li>
 </ul>
 </li>
 </ul>
@@ -121,9 +113,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Tools</li>
+      <li class="breadcrumb-item active">RLC</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/architecture.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/rlc.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -131,13 +123,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tools">
-<h1>Tools<a class="headerlink" href="#tools" title="Link to this heading"></a></h1>
+  <section id="rlc">
+<h1>RLC<a class="headerlink" href="#rlc" title="Link to this heading"></a></h1>
 <p>This document describes the architecture of <code class="docutils literal notranslate"><span class="pre">RLC</span></code>, the rulebook compiler, and of the other tools of the RLC suite. The intent is to provide a high level description of how the various parts of Rulebook fit into a product built on top of it, as well as a description of RLC command line facilities. More exhaustive descriptions of all tools can be found in the <a class="reference internal" href="language-reference.html"><span class="std std-doc">reference</span></a>.</p>
-<section id="rlc">
-<h2>rlc<a class="headerlink" href="#rlc" title="Link to this heading"></a></h2>
 <p>RLC is a <a class="reference external" href="https://llvm.org">LLVM</a> based compiler, it ingest one or more rulebook files and various possible outputs depending on the user request.</p>
-<div class="graphviz"><img src="_images/graphviz-321f793b2840b5c2cbf4f3573bb454888b0e97e7.png" alt="digraph RLC_Compiler {
+<div class="graphviz"><img src="_images/graphviz-af7e321713df6766eb45f70dd8af6c88d2777649.png" alt="digraph RLC_Compiler {
     /*––Layout––*/
     rankdir = LR;
     nodesep = 0.6;
@@ -183,29 +173,6 @@
 <li><p>native libraries to reuse in other languages.</p></li>
 <li><p>a wrapper to use the library in that language.</p></li>
 </ul>
-<p>Here is the architecture of our example project <a class="reference external" href="https://github.com/rl-language/4Hammer">4hammer</a>. 4Hammer is a <a class="reference external" href="https://godotengine.org">godot</a> based reinforcement learning environments. What is relevant to this section is that:</p>
-<ul class="simple">
-<li><p>4Hammer has a architecture and usecase similar to other graphical engine programs, such as videogames.</p></li>
-<li><p>Rulebook code is invoked by godot scripts, so that godot can decide what to render on screen.</p></li>
-<li><p>Rulebook code is used by python reinforcement learning scripts to maximize arbitrary objectives.</p></li>
-</ul>
-<div class="figure" style="text-align: center"><p><img  src="_images/tikz-506dfc568dc3bf1b967c0ca5467239360de6b5bc.png" alt="Figure made with TikZ" /></p>
-</div><p>Rulebook code(red) describing the rules of the environment is compiled into a shared library(lib.so) using RLC. RLC emits as well a wrapper for Python(wrapper.py) and for Godot(godot_header.h).</p>
-<section id="hammer-graphical-engine">
-<h3>4Hammer graphical engine<a class="headerlink" href="#hammer-graphical-engine" title="Link to this heading"></a></h3>
-<p>The Godot wrapper and simulation rules are used to compile a Godot plugin, which exposes Rulebook typesafe rules, types and functions to godot scripts.</p>
-<p>The godot plugin and the godot graphical elements are exported by the godot editor to produce 4hammer_graphical_engine  which is the final product that can be used by users as a standalone application. Since godot can run on the web, and rlc exports webassembly files too, you can use 4hammer_graphical_engine on the web too.</p>
-</section>
-<section id="python-drivers">
-<h3>Python drivers<a class="headerlink" href="#python-drivers" title="Link to this heading"></a></h3>
-<p>The rulebook code is as well executed by python scripts that load the wrapper and the library.
-Since the rules are the same between the engine and python, python can connect over network to the engine and issue commands related to rulebook components.</p>
-</section>
-<section id="fuzzer">
-<h3>Fuzzer<a class="headerlink" href="#fuzzer" title="Link to this heading"></a></h3>
-<p>The rulebook libraries have been designed to expose a <a class="reference internal" href="#./language_tour.html#finite-interactive-programs"><span class="xref myst">finite interactive program</span></a>. This allows to automatically compile a <a class="reference internal" href="#./language_tour.html#automatic-testing"><span class="xref myst">fuzzer</span></a>, which stresses the controller of the environment for free.</p>
-</section>
-</section>
 <section id="rlc-lsp-and-autocomplete">
 <h2>rlc-lsp and autocomplete<a class="headerlink" href="#rlc-lsp-and-autocomplete" title="Link to this heading"></a></h2>
 <p>rlc-lsp is a <a class="reference external" href="https://en.wikipedia.org/wiki/Language_Server_Protocol">language server</a> for the Rulebook language. It allows users to get autocomplete in their ide.</p>
@@ -272,10 +239,11 @@ Since the rules are the same between the engine and python, python can connect o
 <section id="tools-for-compiler-people">
 <h2>Tools for compiler people<a class="headerlink" href="#tools-for-compiler-people" title="Link to this heading"></a></h2>
 <p>This section of the document talks about the internal components of RLC, and is meant for compiler developers, not users of the language. If you are confused about what this means and you are wondering if this section is for your, it is not, altough you can still read it if you are interested in knowing what goes on under rlc hood.</p>
+</section>
 <section id="rlc-internals">
-<h3>RLC internals<a class="headerlink" href="#rlc-internals" title="Link to this heading"></a></h3>
+<h2>RLC internals<a class="headerlink" href="#rlc-internals" title="Link to this heading"></a></h2>
 <p>RLC is a <a class="reference external" href="https://llvm.org">LLVM</a> and <a class="reference external" href="https://mlir.llvm.org">MLIR</a> based compiler. It has a custom recursive descent parser, and a custom AST built on top of MLIR, called the RLC Dialect.</p>
-<div class="graphviz"><img src="_images/graphviz-12f785f77145101bbf15aa3cf2d39d2dabf5eda0.png" alt="digraph RLC_Pipeline_V {
+<div class="graphviz"><img src="_images/graphviz-9a6be1fc809ecb1bbc57774bce5c92edb8b876d7.png" alt="digraph RLC_Pipeline_V {
     rankdir = TB;           /* vertical (top-to-bottom) layout          */
     nodesep = 0.6;
     ranksep = 1;
@@ -321,39 +289,39 @@ Since the rules are the same between the engine and python, python can connect o
     implicit_instantiation -&gt; wrappers;
 }" class="graphviz" /></div>
 <section id="lexer">
-<h4>Lexer<a class="headerlink" href="#lexer" title="Link to this heading"></a></h4>
+<h3>Lexer<a class="headerlink" href="#lexer" title="Link to this heading"></a></h3>
 <p>The lexer of RLC takes the input file and turns them into token to be consumed by the parser. There is nothing fancy here except that since the language has semantical whitespaces, the lexer must keep track of the indentation.</p>
 <p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--token</span> <span class="pre">file.rl</span></code></p>
 </section>
 <section id="parser">
-<h4>Parser<a class="headerlink" href="#parser" title="Link to this heading"></a></h4>
+<h3>Parser<a class="headerlink" href="#parser" title="Link to this heading"></a></h3>
 <p>The parser is a recursive descent handwritten parser, the parser takes the tokens, and creates on the fly the unchecked AST.</p>
 </section>
 <section id="unchecked-ast">
-<h4>Unchecked AST<a class="headerlink" href="#unchecked-ast" title="Link to this heading"></a></h4>
+<h3>Unchecked AST<a class="headerlink" href="#unchecked-ast" title="Link to this heading"></a></h3>
 <p>Before typechecking the AST of the language is unchecked, it means that almost every non trivial operation is marked as having unkown type.</p>
 <p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--unchecked</span> <span class="pre">file.rl</span></code></p>
 </section>
 <section id="typechecked-ast">
-<h4>Typechecked AST<a class="headerlink" href="#typechecked-ast" title="Link to this heading"></a></h4>
+<h3>Typechecked AST<a class="headerlink" href="#typechecked-ast" title="Link to this heading"></a></h3>
 <p>The typechecked IR knows all types of all expressions, except for templates, which have been typechecked, but are not expanded yet.</p>
 <p>Ideally, all static errors in the input program should be discovered during typechecking. In practice this is true for every error except errors relating to <code class="docutils literal notranslate"><span class="pre">drop</span></code>, <code class="docutils literal notranslate"><span class="pre">init</span></code> and <code class="docutils literal notranslate"><span class="pre">assign</span></code> when they are used inside templates.</p>
 <p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--type-checked</span> <span class="pre">file.rl</span></code></p>
 </section>
 <section id="implicit-instantiation">
-<h4>Implicit instantiation<a class="headerlink" href="#implicit-instantiation" title="Link to this heading"></a></h4>
+<h3>Implicit instantiation<a class="headerlink" href="#implicit-instantiation" title="Link to this heading"></a></h3>
 <p>During the implicit instantiation step templates end up being generated, and implicit init, drop and assign functions emitted.</p>
 <p>After the implicit step, no object of the module can be a template, and all non external declared entities must have been discovered.</p>
 <p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--after-implicit</span> <span class="pre">file.rl</span></code></p>
 <p>Wrappers for other languages are emitted after this step, when all concrete functions are accounted for.</p>
 </section>
 <section id="flattened">
-<h4>Flattened<a class="headerlink" href="#flattened" title="Link to this heading"></a></h4>
+<h3>Flattened<a class="headerlink" href="#flattened" title="Link to this heading"></a></h3>
 <p>During the flattening step all control flow constructs are removed and replaced with jumps.</p>
 <p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--flattened</span> <span class="pre">file.rl</span></code></p>
 </section>
 <section id="action-rewriting">
-<h4>Action rewriting<a class="headerlink" href="#action-rewriting" title="Link to this heading"></a></h4>
+<h3>Action rewriting<a class="headerlink" href="#action-rewriting" title="Link to this heading"></a></h3>
 <p>During action rewriting all Action Functions <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">$name()</span> <span class="pre">-&gt;</span> <span class="pre">$Type:</span></code> end up being replaced with the functions they declare. This includes:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">fun</span> <span class="pre">$name()</span> <span class="pre">-&gt;</span> <span class="pre">$Type:</span></code></p></li>
@@ -365,16 +333,16 @@ Since the rules are the same between the engine and python, python can connect o
 <p>After action rewrting the module contains only types and functions.</p>
 </section>
 <section id="lowering-to-llvm-ir">
-<h4>Lowering to LLVM IR<a class="headerlink" href="#lowering-to-llvm-ir" title="Link to this heading"></a></h4>
+<h3>Lowering to LLVM IR<a class="headerlink" href="#lowering-to-llvm-ir" title="Link to this heading"></a></h3>
 <p>The module is translated to LLVM IR to be optimized and compiled.</p>
 <p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--ir</span> <span class="pre">file.rl</span></code> to see the LLVM ir. You can use <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--ir</span> <span class="pre">file.rl</span> <span class="pre">-O2</span></code> if you want to see the optimized IR.</p>
 </section>
 <section id="making-ir-more-readable">
-<h4>Making IR more readable<a class="headerlink" href="#making-ir-more-readable" title="Link to this heading"></a></h4>
+<h3>Making IR more readable<a class="headerlink" href="#making-ir-more-readable" title="Link to this heading"></a></h3>
 <p>When priting the RLC IR you can pass <code class="docutils literal notranslate"><span class="pre">--hide-positions</span></code> and <code class="docutils literal notranslate"><span class="pre">--hide-dl</span></code> to omit the module data layout and the module debug positions. That makes the IR slightly more readable.</p>
 </section>
 <section id="mlir">
-<h4>MLIR<a class="headerlink" href="#mlir" title="Link to this heading"></a></h4>
+<h3>MLIR<a class="headerlink" href="#mlir" title="Link to this heading"></a></h3>
 <p>I know you are looking for a explanation of how MLIR works since MLIR documentation is arcane. Good luck!</p>
 <p>Once you figure it out: RLC uses MLIR as a mere intermediate rappresentation generator, and as a way to convert to LLVM IR. We use nothing about Dialect interoperability or tensorial stuff. Every MLIR operation we use(except when converting to LLVM IR) is custom made for RLC.</p>
 <p>In practice what we get out MLIR is:</p>
@@ -388,12 +356,11 @@ Since the rules are the same between the engine and python, python can connect o
 </ul>
 </section>
 <section id="running-single-rlc-passes">
-<h4>Running single RLC passes<a class="headerlink" href="#running-single-rlc-passes" title="Link to this heading"></a></h4>
+<h3>Running single RLC passes<a class="headerlink" href="#running-single-rlc-passes" title="Link to this heading"></a></h3>
 <p>If you want to run a RLC pass in isolation after a particular step of the rlc pipeline, say the typechecking step, you can run</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span> <span class="o">--</span><span class="nb">type</span><span class="o">-</span><span class="n">checked</span> <span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="o">-</span> <span class="o">|</span> <span class="n">rlc</span><span class="o">-</span><span class="n">opt</span> <span class="o">--</span><span class="n">PASS_NAME</span>
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 </section>

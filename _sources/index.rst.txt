@@ -6,7 +6,7 @@
 Rulebook Documentation
 ======================
 
-**Rulebook** is a *statically-checked imperative language* that turns **interactive behaviour**—reinforcement-learning, video-game logic, or in general `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_—into something you can **query, replay, fuzz, and formally verify**.
+**Rulebook** is a *statically-checked imperative language* that turns **interactive behaviour**—reinforcement-learning environments, video-games, or in general `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_—into something you can **query, replay, fuzz, and formally verify**.
 
 `4hammer (our flagship demo) <./ui_gameplay.html#4hammer>`_ shows Rulebook in action.
 
@@ -41,7 +41,7 @@ The language is **compiled and statically checked**. Its defining innovation is 
 
 Rulebook:
 
-* **aids—rather than replaces—** `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_, (just like SQL aids but replaces those languages) 
+* **aids—rather than replaces—** `C, C++, C#, Python, and Godot Script <./language_tour.html#compatibility>`_, (just like SQL aids but not replaces those languages) 
 * emits a single shared library (or WebAssembly module for web targets) with a C-compatible ABI, plus generated bindings for your host language
 
 
@@ -56,9 +56,9 @@ Rulebook:
 
 .. toctree::
    :maxdepth: 1
-   :caption: Architecture 
+   :caption: Tools
 
-   architecture.md 
+   rlc.md 
    building.md 
 
 
