@@ -8,7 +8,7 @@ Rulebook Documentation
 
 **Rulebook** is a *statically-checked imperative language* that turns **interactive behaviour**—reinforcement-learning environments, video-games, or in general `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_—into something you can **query, replay, fuzz, and formally verify**.
 
-`4hammer (our flagship demo) <./ui_gameplay.html#4hammer>`_ shows Rulebook in action.
+`4hammer (our flagship demo) <./4hammer.md>`_ shows Rulebook in action.
 
 **Why Rulebook?**
 
