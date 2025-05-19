@@ -575,3 +575,13 @@ Showing this feature in a small snippet of code is difficult, but it is implemen
 ## Tooling
 
 We have autocomplete support for vscode, and for any editor that supports a lsp. We have automatic autocomplete support for any language we are compatible with, since we emit the wrapper for that language that knows all the Rulebook types.
+
+We have gdb support altough it is a bit immature. In practice, given the power of tracing replay, fuzzing and automatic serialization, we almost never use a debugger. The 4Hammer example has been writting without every using one. If you need it, let us know and we will give priority over other features.
+
+## Performance
+
+Rulebook has almost native performances, and has been designed to ensure that. [Action Functions](#action-functions) are stack allocated, and each introduces a single integer to keep track of the next action to be resumed. Structs have the same ABI as C. Alternative types have the same ABI as C union except there is a extra integer at the end to keep track of which is the currently active value. All arguments are accepted by reference, the return argument is returned by value unless marked as `ref`. The only other source of slow down is that in places where other languages can use a pointer, Rulebook will use a integer index, to make sure the datastructure can be serialized and restored from disk, altough if you need native performances there you can manually write a pointer a specify how to serialize it and deserialize it.
+
+Notice, at feature parity, any other implementation would obtain the same slowdowns. All serializable structures must manually handle pointers or pay performances by using a index.
+
+It is not easy to provide a fair comparison between languages, we do so in the language paper comparing against cpp implementations. ToDo: put link to paper after paper get deanonymized.

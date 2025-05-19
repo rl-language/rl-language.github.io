@@ -10,9 +10,9 @@ Our flagship example is 4Hammer ([source code](https://github.com/rl-language/4H
 
 —all in both browser and desktop builds.
 
-Depending on the innate complexity of the problem 4hammer is trying to solve, 5k lines can be a lot, or not.
+Depending on the innate complexity of the problem 4hammer is trying to solve, 5k lines can be a lot, or not. It is difficult to say how many more lines of code we would expect from having written some other language, but at feature parity we belive it would have took 5 to 20 times more code, depending on the language.
 
-## The size of the problem.
+## The size of the problem
 
 4Hammer implements a digital version of [Warhammer 40,000](https://en.wikipedia.org/wiki/Warhammer_40,000), for the purpose of [validating reinforcement learning environments](https://en.wikipedia.org/wiki/Reinforcement_learning). **Warhammer 40,000** is the most played miniature board game in the world, with hundred of thousands of games being played at the tournament level each year. The community of players has interest in developing tools to understand the game better, and has done so in limited domains, such as building dice rolling applications that evaluate the probability of a cercain event happening, but the general problem is untractable.
 
@@ -795,7 +795,7 @@ This implementation generates a series of classes that are equivalent to the cpp
 
 Furthermore, the cpp code would still need glue before it can be run in a fuzzer or a machine learning infrastructure, we get it for free.
 
-Remember this is the simplest interactive sequence of the game.
+Remember this is the simplest interactive sequence of the game. Sequences such as performing a single attack resolution from one of the models explode in complexity and I don't think i would be able to write the cpp code by hand without committing multiple mistakes.
 
 
 ## Software architecture
@@ -883,5 +883,72 @@ Since the rules are the same between the engine and python, python can connect o
 
 ### Fuzzer
 The rulebook libraries have been designed to expose a [finite interactive program](./language_tour.html#finite-interactive-programs). This allows to automatically compile a [fuzzer](./language_tour.html#automatic-testing), which stresses the controller of the environment for free.
+
+
+## Self configuring UI
+
+One of the objective of the Rulebook is to be able to modify rules and have the UI automatically adapt to them. We achieve this using the language [action classes](./language_tour.md#action-statements-classes). Here is a example, the godot script that handles the [game board](https://github.com/rl-language/4Hammer/blob/master/scripts/boardl.gd#L22) so that whenever a action related to selecting the board is possible, the elegible locations glow yellow.
+
+```godot
+# triggers after every action
+func on_state_changed():
+	for quad in quads.values():
+		quad.visible = false
+    # for all actions that can be taken
+	for action in GlobalRules.valid_actions:
+		var unwrapped = action.unwrap() # the the raw valid action
+		if unwrapped.members_count() != 1: # if has not exactly one argument we don't know what the semantics are, we will ignore it.
+			continue
+		if not unwrapped.get_member(0) is RLCBoardPosition: # if the only argument is not a RLCBoardPosition we don't know the semantics
+			continue
+		var board_position = unwrapped.get_member(0) as RLCBoardPosition # otherwise it is a action that accepts a board position
+		if not board_position:
+			continue
+        # highlight that board position for the user to click
+		quads[board_position.get_x().get_value() * 100 + board_position.get_y().get_value()].visible = true
+```
+
+The UI only can introspect valid actions, make sure that they have the expected shape of only requring a single `BoardPosition` argument, and then highlight that particular board location.
+
+This meas that the rule writer can write rules such as the current implementation of moving a game piece on the board
+
+```rlc
+# core rules movement rules, including the possiblity
+# of advancing and the triggering of overwatches
+act move(ctx Board board, ctx UnitID unit, frm StatModifier additional_movement) -> Move:
+    if board[unit.get()].models.size() == 0:
+        return
+    board.current_decision_maker = board.current_player
+    act move_to(BoardPosition position) {
+        (position.as_vector() - board[unit.get()][0].position.as_vector()).length() <= float(board[unit.get()][0].profile.movement() + additional_movement.value)
+    }
+    ...
+```
+
+Without knowing anything related to the UI, the user declared a `move_to` action, never referenced by any godot specific code. Since it accepts a `BoardPosion`, it is auto detected by the UI code.
+
+Of course, this is very inefficient. In practice it does not matter since the objective of 4hammer is not to draw billions of polygons on screen, but it one wished to make it more efficient it could have enumerated all possible types of valid actions instead of introspecting actions at run time, and then checked if those particular actions where valid.
+
+A even more efficient, but less flexible implementation would have been to to directly invoke a call back from RLC code yielding the most optimal implementation, but that would require some extra trickery to make sure machine learning stuff still works.
+
+### Supported autoconfigurations
+* all actions that accepts a single BoardPosition are interpreted as the user being allowed to click on the board.
+* all actions that accept a UnitID are interpred as the user wishing to click on a unit. All valid units glow and can be clicked.
+* all actions taht accept a ModelID display the model glowing and allow the user to click on it. The rule writer must specify which unit that model belongs to, to be able to tell them apart.
+* all actions that accepts 2 UnitID are interpretd as the user wishing to make interact the first unit with the second unit. For example shooting with a unit onto another. The UI allows to drag a arrow from the start unit torward the target unit.
+* actions that accept a single bool display to the user the name of the action phraased as a question.
+* actions that accept a enum display the valid choises on screen for the player to select.
+
+## Remote execution
+Since the entirety of the game rules are writte into Rulebook action functions, we obtain for free remote execution. [Here](https://github.com/rl-language/4Hammer/blob/master/scripts/server.gd#L1) is the trivial implementation of the server component on the side of godot, that waits for connections that then issue server commands. Some special server commands are handle nativelly by godot, such as exfiltrating the current image on screen and send it over network or stopping the rendering of the screen entirelly.
+
+Every other action is simply a rulebook action implied by the rules of the game. Every time a rule programmer changes one of those rules, the remote execution mechanism updates itself automatically. Furthermore, since the network is issuing commands exactly like in process graphical elements are, the only thing that cannot be tested over network is the act on interacting on ui elements themselves.
+
+
+## Python drivers
+Since we have remote execution, and Rulebook emits wrappers for other languages, we have the ability to use python to perform typical activities that you may wish to do in reinforcement learning or game programming, beside of course all those that we get off-the-shelf with [RLC](./rlc.md).
+
+[Here](https://github.com/rl-language/4Hammer/blob/master/examples/engine_driver.py) is a possible implementation of the remote execution mechanism on the side of the client, say python, that knows the full rules too! [You can see it](https://github.com/rl-language/4Hammer/blob/master/examples/graphical_engine_driver.py) used in practice in a example that plays out at random the game over network.
+
 
 

@@ -63,6 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#compatibility">Compatibility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#remote-execution">Remote execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tooling">Tooling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance">Performance</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
@@ -72,6 +73,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="rlc.html">RLC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interoperating.html">Interoperation with engines and languages</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
 <ul>
@@ -634,6 +636,13 @@ Similarly, you can pick and choose between which features are relevant for your 
 <section id="tooling">
 <h2>Tooling<a class="headerlink" href="#tooling" title="Link to this heading"></a></h2>
 <p>We have autocomplete support for vscode, and for any editor that supports a lsp. We have automatic autocomplete support for any language we are compatible with, since we emit the wrapper for that language that knows all the Rulebook types.</p>
+<p>We have gdb support altough it is a bit immature. In practice, given the power of tracing replay, fuzzing and automatic serialization, we almost never use a debugger. The 4Hammer example has been writting without every using one. If you need it, let us know and we will give priority over other features.</p>
+</section>
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Link to this heading"></a></h2>
+<p>Rulebook has almost native performances, and has been designed to ensure that. <a class="reference internal" href="#action-functions"><span class="xref myst">Action Functions</span></a> are stack allocated, and each introduces a single integer to keep track of the next action to be resumed. Structs have the same ABI as C. Alternative types have the same ABI as C union except there is a extra integer at the end to keep track of which is the currently active value. All arguments are accepted by reference, the return argument is returned by value unless marked as <code class="docutils literal notranslate"><span class="pre">ref</span></code>. The only other source of slow down is that in places where other languages can use a pointer, Rulebook will use a integer index, to make sure the datastructure can be serialized and restored from disk, altough if you need native performances there you can manually write a pointer a specify how to serialize it and deserialize it.</p>
+<p>Notice, at feature parity, any other implementation would obtain the same slowdowns. All serializable structures must manually handle pointers or pay performances by using a index.</p>
+<p>It is not easy to provide a fair comparison between languages, we do so in the language paper comparing against cpp implementations. ToDo: put link to paper after paper get deanonymized.</p>
 </section>
 </section>
 

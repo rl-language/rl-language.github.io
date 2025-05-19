@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interoperation with engines and languages &mdash; Rulebook documentation 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial for RL people" href="tutorial.html" />
+    <link rel="prev" title="Building RLC from sources" href="building.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Rulebook documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="rlc.html">RLC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interoperation with engines and languages</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#c-interop">C Interop</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#calling-rulebook-from-c">Calling rulebook from C</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calling-c-from-rulebook">Calling C from rulebook</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interop-with-cpp">Interop with CPP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interop-with-python">Interop with Python.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-rulebook-from-python">Using Rulebook from python.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#invoking-python-from-rulebook">Invoking python from rulebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interop-with-unity-and-csharp">Interop with Unity and CSharp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interop-with-godot">Interop with godot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interop-with-unreal">Interop with unreal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cmake">CMake</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rulebook documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Interoperation with engines and languages</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/interoperating.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interoperation-with-engines-and-languages">
+<h1>Interoperation with engines and languages<a class="headerlink" href="#interoperation-with-engines-and-languages" title="Link to this heading"></a></h1>
+<p>This page describes how you can connect Rulebook to other languages. It is not particularly hard to implement a new wrapper generator for RLC, the <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/lib/conversions/src/RLCToPython.cpp">python wrapper generator</a> takes ~1000 lines of code. We could have implemented the wrappers for any language, we just picked those that seemed more relevant to us. If you do need support for a new language or some language feature, contact us.</p>
+<section id="c-interop">
+<h2>C Interop<a class="headerlink" href="#c-interop" title="Link to this heading"></a></h2>
+<p>We achieve interoperability with C almost trivially since Rulebook has the same ABI as C.</p>
+<section id="calling-rulebook-from-c">
+<h3>Calling rulebook from C<a class="headerlink" href="#calling-rulebook-from-c" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Each Rulebook class is mapped onto a C struct. Each alternative is mapped on a struct with a union and a integer inside. You have to manually invoke the init, assign and drop method whenever you allocate, copy or destroy a rlc dastructure (unless the method is not available at all, which means that the datastruture is trivially initializable, copiable or destructible).</p></li>
+<li><p>Every enum is mapped on a struct with a integer inside.</p></li>
+<li><p>Every Action Function frame is mapped on a struct with the frm variables and a integer inside.</p></li>
+<li><p>All arguments of functions are taken by pointer, the return value is passed as first argument. The return value does not need to be initialized by the caller, but it must be destroyed by the caller.</p></li>
+<li><p>Preconditions of functions are mapped onto a function with the same name, except prefixed with can.</p></li>
+</ul>
+<p>Here is a simple example</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.rl</span>
+<span class="kn">fun</span> <span class="n">to_invoke</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span> <span class="p">{</span><span class="l">true</span><span class="p">}:</span>
+  <span class="kr">return</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>You can emit the compiled library and wrapper with the following RLC commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>lib.a<span class="w"> </span>--compile<span class="w"> </span><span class="c1"># uses linux naming conventions</span>
+rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>header.h<span class="w"> </span>--header
+</pre></div>
+</div>
+<p>Then you can use the header from C by inlcuding it, with a couple of macro definitions to specify what you want in particular from the header.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// file.c</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
+<span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function delcs</span>
+<span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the types.</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rl_to_invoke__r_int64_t</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Finally you can compile with any compiler, in this example clang</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang<span class="w"> </span>file.c<span class="w"> </span>lib.a<span class="w"> </span>-o<span class="w"> </span>executable
+./executable
+</pre></div>
+</div>
+<p>Here is a example that uses the most imporant features of rlc:</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.rl</span>
+<span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
+<span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+
+<span class="kn">cls</span> <span class="nc">Context</span><span class="p">:</span>
+    <span class="nc">Int</span> <span class="n">x</span>
+    <span class="nc">Int</span> <span class="n">y</span>
+
+<span class="kn">act</span> <span class="n">sequence</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Context</span> <span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Sequence</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">accumulator</span> <span class="p">:</span> <span class="nc">Vector</span><span class="o">&lt;</span><span class="nc">Int</span><span class="o">&gt;</span>  <span class="c1"># drop this and Sequence will become trivially constructible (that is, no mallocs triggered)</span>
+    <span class="kr">while</span> <span class="l">true</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">add</span><span class="p">(</span><span class="nc">Int</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">accumulator</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">context</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">accumulator</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// file.c</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function</span>
+<span class="w">                               </span><span class="c1">// delcs</span>
+<span class="cp">#define RLC_GET_TYPE_DECLS</span>
+<span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the wrapper.</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Context</span><span class="w"> </span><span class="n">context</span><span class="p">;</span>
+<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">Sequence</span><span class="w"> </span><span class="n">sequence</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rl_sequence__Context_r_Sequence</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sequence</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">context</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">canDoIt</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rl_m_can_add__Sequence_Context_int64_t_r_bool</span><span class="p">(</span><span class="o">&amp;</span><span class="n">canDoIt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sequence</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">context</span><span class="p">,</span>
+<span class="w">                                                </span><span class="o">&amp;</span><span class="n">z</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">canDoIt</span><span class="p">)</span>
+<span class="w">    </span><span class="n">rl_m_add__Sequence_Context_int64_t</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sequence</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">z</span><span class="p">);</span>
+<span class="w">  </span><span class="n">rl_m_drop__Sequence</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sequence</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>compile with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>-o<span class="w"> </span>/tmp/header.h<span class="w"> </span>--header
+clang<span class="w"> </span>/tmp/file.c<span class="w"> </span>-o<span class="w"> </span>/tmp/lib.a<span class="w"> </span>-c
+rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>/tmp/lib.a<span class="w"> </span>-o<span class="w"> </span>/tmp/exec
+/tmp/exec<span class="w"> </span><span class="c1"># [15]</span>
+</pre></div>
+</div>
+<p>This example shows most of the functinalities you may need in C, there is only one missing thing, which is how do you call C from rulebook.</p>
+</section>
+<section id="calling-c-from-rulebook">
+<h3>Calling C from rulebook<a class="headerlink" href="#calling-c-from-rulebook" title="Link to this heading"></a></h3>
+<p>In rulebook, you can declare a function with extern to specify that it is a external function to be found at link time. Here is how you do it:</p>
+<p>Declare a function extern</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+
+<span class="n">ext</span> <span class="kn">fun</span> <span class="n">call_external</span><span class="p">(</span><span class="nc">Int</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Int</span>
+
+<span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">call_external</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <span class="kr">return</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>generate the header so you get checks that you have not messed up the signature in C.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">header</span><span class="o">.</span><span class="n">h</span> <span class="o">--</span><span class="n">header</span>
+</pre></div>
+</div>
+<p>write the c</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function</span>
+<span class="w">                               </span><span class="c1">// delcs</span>
+<span class="cp">#define RLC_GET_TYPE_DECLS</span>
+<span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the wrapper.</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">rl_call_external__int64_t_r_int64_t</span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="o">*</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="o">*</span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>compile and run</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">clang</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">lib</span><span class="o">.</span><span class="n">a</span> <span class="o">-</span><span class="n">c</span>
+<span class="n">rlc</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">exec</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">lib</span><span class="o">.</span><span class="n">a</span>
+<span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">exec</span> <span class="c1"># 100</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="interop-with-cpp">
+<h2>Interop with CPP<a class="headerlink" href="#interop-with-cpp" title="Link to this heading"></a></h2>
+<p>The interop with cpp is identical to the one with C, except the generated header detects cpp is available so it will remove the need for manual managment of constructors and destructors.</p>
+<p>Let us revisig the previous example in cpp.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.rl</span>
+<span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
+<span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+
+<span class="kn">cls</span> <span class="nc">Context</span><span class="p">:</span>
+    <span class="nc">Int</span> <span class="n">x</span>
+    <span class="nc">Int</span> <span class="n">y</span>
+
+<span class="kn">act</span> <span class="n">sequence</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Context</span> <span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Sequence</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">accumulator</span> <span class="p">:</span> <span class="nc">Vector</span><span class="o">&lt;</span><span class="nc">Int</span><span class="o">&gt;</span>  <span class="c1"># drop this and Sequence will become trivially constructible (that is, no mallocs triggered)</span>
+    <span class="kr">while</span> <span class="l">true</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">add</span><span class="p">(</span><span class="nc">Int</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">accumulator</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">context</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">accumulator</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// file.cpp</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function</span>
+<span class="w">                               </span><span class="c1">// delcs</span>
+<span class="cp">#define RLC_GET_TYPE_DECLS</span>
+<span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the wrapper.</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Context</span><span class="w"> </span><span class="n">context</span><span class="p">;</span>
+<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">  </span><span class="n">context</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">Sequence</span><span class="w"> </span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sequence</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">seq</span><span class="p">.</span><span class="n">can_add</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+<span class="w">    </span><span class="n">seq</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>compile with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>-o<span class="w"> </span>/tmp/header.h<span class="w"> </span>--header
+clang++<span class="w"> </span>/tmp/file.cpp<span class="w"> </span>-o<span class="w"> </span>/tmp/lib.a<span class="w"> </span>-c<span class="w"> </span>-fno-exceptions
+rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>/tmp/lib.a<span class="w"> </span>-o<span class="w"> </span>/tmp/exec
+/tmp/exec<span class="w"> </span><span class="c1"># [15]</span>
+</pre></div>
+</div>
+<p>This makes using interactive sequences from cpp very easy.</p>
+</section>
+<section id="interop-with-python">
+<h2>Interop with Python.<a class="headerlink" href="#interop-with-python" title="Link to this heading"></a></h2>
+<p>Since Rulebook has the same ABI as C, using Rulebook from python is similar to using C, except we provide wrappers to simplify the experience.</p>
+<section id="using-rulebook-from-python">
+<h3>Using Rulebook from python.<a class="headerlink" href="#using-rulebook-from-python" title="Link to this heading"></a></h3>
+<p>RLC can emit a ctypes based wrapper for python. Continuing with the previous example, to use Rulebook from python you can do the following.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.rl</span>
+<span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
+<span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+
+<span class="kn">cls</span> <span class="nc">Context</span><span class="p">:</span>
+    <span class="nc">Int</span> <span class="n">x</span>
+    <span class="nc">Int</span> <span class="n">y</span>
+
+<span class="kn">act</span> <span class="n">sequence</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Context</span> <span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Sequence</span><span class="p">:</span>
+    <span class="kn">frm</span> <span class="n">accumulator</span> <span class="p">:</span> <span class="nc">Vector</span><span class="o">&lt;</span><span class="nc">Int</span><span class="o">&gt;</span>  <span class="c1"># drop this and Sequence will become trivially constructible (that is, no mallocs triggered)</span>
+    <span class="kr">while</span> <span class="l">true</span><span class="p">:</span>
+        <span class="kn">act</span> <span class="n">add</span><span class="p">(</span><span class="nc">Int</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">accumulator</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">context</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">accumulator</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wrapper</span>
+<span class="n">context</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+<span class="n">context</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">context</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">sequence</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">can_add</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can execute the program with the following commands</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>rlc /tmp/file.rl --python -o /tmp/wrapper.py                                                                                   master ✭ ✱ ◼
+rlc /tmp/file.rl --shared -o /tmp/lib.so                                                                                       master ✭ ✱ ◼
+(.venv) ~/r/rlc ❯❯❯ python /tmp/file.py
+</pre></div>
+</div>
+</section>
+<section id="invoking-python-from-rulebook">
+<h3>Invoking python from rulebook<a class="headerlink" href="#invoking-python-from-rulebook" title="Link to this heading"></a></h3>
+<p>To be able to invoke python from rulebook, rulebook must link against libpython. You can do so by passing <code class="docutils literal notranslate"><span class="pre">--pylib</span></code> to the compilation commands.</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
+<span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
+<span class="kn">import</span> <span class="n">python</span>
+
+
+<span class="kn">cls</span> <span class="nc">PythonAllocatedCallBack</span><span class="p">:</span>
+    <span class="nc">PyObject</span> <span class="n">object</span>
+
+    <span class="kn">fun</span> <span class="n">pass_int_to_python</span><span class="p">(</span><span class="nc">Int</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">object</span><span class="p">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot;receive_int&quot;</span><span class="p">,</span> <span class="n">to_pyobject</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="kn">fun</span> <span class="n">send_10_to_python</span><span class="p">(</span><span class="nc">PythonAllocatedCallBack</span> <span class="n">callback</span><span class="p">):</span>
+    <span class="n">callback</span><span class="p">.</span><span class="n">pass_int_to_python</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wrapper</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PythonReceiver</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">receive_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">callback</span> <span class="o">=</span> <span class="n">wrapper</span><span class="o">.</span><span class="n">PythonAllocatedCallBack</span><span class="p">()</span>
+<span class="n">callback</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">PythonReceiver</span><span class="p">()</span>
+<span class="n">wrapper</span><span class="o">.</span><span class="n">send_10_to_python</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>--shared<span class="w"> </span>-o<span class="w"> </span>/tmp/lib.so<span class="w"> </span>--pylib
+rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>--python<span class="w"> </span>-o<span class="w"> </span>/tmp/wrapper.py
+python<span class="w"> </span>/tmp/file.py
+</pre></div>
+</div>
+</section>
+<section id="interop-with-unity-and-csharp">
+<h3>Interop with Unity and CSharp<a class="headerlink" href="#interop-with-unity-and-csharp" title="Link to this heading"></a></h3>
+<p>We have interoperability with CShpart and thus with Unity. Since unity heavily relies on reloading CSharp every time it changes to provide a scripting language like experience, we have added that ability to the wrapper exported for C# so that when Rulebook changes, the unity editor updates automatically.</p>
+<p>Unity integration requires a plugin in the editor to trigger the updates at the right times.</p>
+<p>You can checkout the Unity TicTacToe example where we have unity typesafelly accessing rulebook, and reloading rulebook at every change.
+Relevant files are:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/rl-language/rlc-unity-example/blob/master/Assets/Editor/OnRLFileChanged.cs">The editor script</a> that watches for changes in the rl files</p></li>
+<li><p><a class="reference external" href="https://github.com/rl-language/rlc-unity-example/blob/master/Assets/Scripts/Example.cs">The global script</a> that contains the game state.</p></li>
+<li><p><a class="reference external" href="https://github.com/rl-language/rlc-unity-example/blob/master/Assets/Scripts/BoardSlot.cs">The board slot</a> that knows how to trigger actions.</p></li>
+</ul>
+</section>
+<section id="interop-with-godot">
+<h3>Interop with godot<a class="headerlink" href="#interop-with-godot" title="Link to this heading"></a></h3>
+<p>Our large example <a class="reference internal" href="4hammer.html"><span class="std std-doc">4Hammer</span></a> shows interop with godot and cmake.</p>
+</section>
+<section id="interop-with-unreal">
+<h3>Interop with unreal<a class="headerlink" href="#interop-with-unreal" title="Link to this heading"></a></h3>
+<p>Unfortunatelly there is no way for a unreal engine plugin to hook inside the the build system of unreal. We have no way to package Rulebook in a way that can be hot reloaded from Unreal without the unreal programmer providing some code themselves. For unreal you have to start from the CPP interop and build from there.</p>
+</section>
+<section id="cmake">
+<h3>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h3>
+<p>We expose typical actions one my wish to perform from cmake as a cmake config file. This includes correct managment of imported files in rulebook for incremental builds, the various wrappers generators and so on. You can see examples in the <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/CMakeLists.txt">godot plugin cmake file</a> of 4hammer.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="building.html" class="btn btn-neutral float-left" title="Building RLC from sources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial for RL people" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
