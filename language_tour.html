@@ -47,21 +47,38 @@
               <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Language Tour</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#action-functions">Action functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#no-main-loop-owning">No-main loop owning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#precondition-checkable">Precondition checkable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action-functions">Action Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#no-main-loop-ownership">No-Main Loop Ownership</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#precondition-checkable">Precondition Checkable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#serializable">Serializable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspectable">Inspectable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#spin-functions-implications">SPIN functions implications</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#action-statements-classes">Action statements classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#composing-actions">Composing actions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#use-cases">Use cases</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#automatic-testing">Automatic testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#finite-interactive-programs">Finite interactive programs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#reinforcement-learning">Reinforcement Learning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#self-configuring-uis">Self configuring UIs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#compatibility">Compatibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#remote-execution">Remote execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#spin-function-implications">SPIN Function Implications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#action-statement-classes">Action Statement Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#composing-actions">Composing Actions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-testing">Automatic Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-this-matters">Why This Matters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#finite-interactive-programs">Finite Interactive Programs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-exhaustive-state-testing">Example: Exhaustive State Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reinforcement-learning">Reinforcement Learning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-catch-a-simple-rl-environment">Example: “Catch” — A Simple RL Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#self-configuring-uis">Self-Configuring UIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-ui-for-tic-tac-toe">Example: UI for Tic-Tac-Toe</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#compatibility">Compatibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-c-interop">Example: C# Interop</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#remote-execution">Remote Execution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tooling">Tooling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#performance">Performance</a></li>
 </ul>
@@ -82,7 +99,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller, and Gameplay</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
@@ -117,7 +134,7 @@
              
   <section id="language-tour">
 <h1>Language Tour<a class="headerlink" href="#language-tour" title="Link to this heading"></a></h1>
-<p>Rulebook is compiled and statically checked, the key and innovative feature of the language are action functions with SPIN properties.</p>
+<p>Rulebook is a compiled and statically checked language. Its defining innovation is the concept of <strong>action functions</strong>—a mechanism designed to handle complex interactions—enhanced with <strong>SPIN</strong> properties.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
 
 <span class="kn">cls</span> <span class="nc">SimpleRegularCode</span><span class="p">:</span>
@@ -131,16 +148,23 @@
 </pre></div>
 </div>
 <section id="action-functions">
-<h2>Action functions<a class="headerlink" href="#action-functions" title="Link to this heading"></a></h2>
-<p>Rulebook objective is to simplify <a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="std std-ref">complex interactive subsystems</span></a>, and does by providing SPIN functions.</p>
-<p>SPIN stands for <a class="reference internal" href="#serializable"><span class="xref myst">Serializable</span></a>, <a class="reference internal" href="#precondition-checkable"><span class="xref myst">Precondition checkable</span></a>, <a class="reference internal" href="#inspectable"><span class="xref myst">Inspectable</span></a>, <a class="reference internal" href="#no-main-loop-owning"><span class="xref myst">No-main loop owning</span></a>.</p>
-<p>With SPIN functions we have the ability to <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">store, load, print, replay, modify</span></a> both the program state and execution traces.</p>
+<h2>Action Functions<a class="headerlink" href="#action-functions" title="Link to this heading"></a></h2>
+<p>Rulebook is built to simplify the construction of <a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="std std-ref">complex interactive subsystems</span></a>. It achieves this through <strong>SPIN functions</strong>, which encapsulate stateful, inspectable logic without taking over control flow.</p>
+<p><strong>SPIN</strong> stands for:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#serializable"><span class="xref myst">Serializable</span></a></p></li>
+<li><p><a class="reference internal" href="#precondition-checkable"><span class="xref myst">Precondition checkable</span></a></p></li>
+<li><p><a class="reference internal" href="#inspectable"><span class="xref myst">Inspectable</span></a></p></li>
+<li><p><a class="reference internal" href="#no-main-loop-ownership"><span class="xref myst">No-main loop owning</span></a></p></li>
+</ul>
+<p>These properties allow developers to <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">store, load, print, replay, and modify</span></a> both program state and execution traces in a principled and testable way.</p>
 </section>
-<section id="no-main-loop-owning">
-<h2>No-main loop owning<a class="headerlink" href="#no-main-loop-owning" title="Link to this heading"></a></h2>
-<p>Interactive systems must wait for inputs, either from the user or the network. In such system, typically, there is some mechanism that takes over the main loop, for example a graphical engine that must render stuff on screen even while waiting for user inputs. For the reminder of the section we are going to call the component that holds the main loop the <strong>framework</strong>.</p>
-<p>Action function are coroutines and thus do not require the main loop.</p>
-<p>Here is an example, <code class="docutils literal notranslate"><span class="pre">say_hello()</span></code> starts the action function and executes it until <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">resume()</span></code>. From the main function we can resume by invoking <code class="docutils literal notranslate"><span class="pre">sayer.resume()</span></code> which will print a hello.</p>
+<hr class="docutils" />
+<section id="no-main-loop-ownership">
+<h2>No-Main Loop Ownership<a class="headerlink" href="#no-main-loop-ownership" title="Link to this heading"></a></h2>
+<p>In interactive systems, programs must often wait for input from users or networks. Typically, such systems are governed by a <strong>framework</strong> that controls the main loop—such as a GUI or game engine—rendering frames while awaiting events.</p>
+<p>Rulebook’s <strong>action functions</strong> are coroutines. They don’t need to control the main loop, making them inherently framework-agnostic.</p>
+<p>Here’s an example. The <code class="docutils literal notranslate"><span class="pre">say_hello()</span></code> function runs until it hits an <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">resume()</span></code> statement. From the main function, we resume execution using <code class="docutils literal notranslate"><span class="pre">sayer.resume()</span></code>, causing the next part of the coroutine to run:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
 
 <span class="kn">act</span> <span class="n">say_hello</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">HelloSayer</span><span class="p">:</span>
@@ -156,12 +180,12 @@
     <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>No-main loop onwership means that you can write <strong>interactive programs</strong> as if they were prompting the <strong>user</strong> themselves instead of being aware of how the <strong>framework</strong> is implemented.</p>
+<p>Thanks to this <strong>no-main loop ownership</strong>, you can write <strong>interactive programs</strong> as if they directly prompt the <strong>user</strong>, without needing to integrate deeply with or understand the details of the underlying <strong>framework</strong>.</p>
 </section>
 <section id="precondition-checkable">
-<h2>Precondition checkable<a class="headerlink" href="#precondition-checkable" title="Link to this heading"></a></h2>
-<p>Precondition checkability means that the framework owning the main loop can check if the user inputs are valid.</p>
-<p>Say you have a installer that asks the user for a valid disk on path, then asks with they want their installation to include experimental content, and if they agree, it installs some data.</p>
+<h2>Precondition Checkable<a class="headerlink" href="#precondition-checkable" title="Link to this heading"></a></h2>
+<p><strong>Precondition checkability</strong> means the framework that owns the main loop can proactively validate user inputs—without embedding logic directly into the action function.</p>
+<p>Consider this installer example: it prompts the user for a valid installation path, asks whether to include experimental content, and performs the installation based on that input.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">string</span>
 
 <span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
@@ -183,16 +207,17 @@
     <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>In rulebook action functions suspension points, called <strong>action statements</strong>, can accept arguments, furthermore actions statements can be annotated with a boolean condition that specifies if such action, which such arguments are valid. This allows, using the operator <code class="docutils literal notranslate"><span class="pre">can</span></code>, the <strong>framework</strong> owning the main loop to check if the user input is valid without requiring burdensome validation mechanisms inside the action function.</p>
+<p>In Rulebook, <strong>suspension points</strong> inside action functions are called <strong>action statements</strong>. These can take arguments and may include a <strong>boolean condition</strong> that defines when the action is valid. By using the <code class="docutils literal notranslate"><span class="pre">can</span></code> operator, the framework can check whether a given user input is valid <strong>before</strong> applying it—without complicating the action function with manual validation logic.</p>
 </section>
+<hr class="docutils" />
 <section id="serializable">
 <h2>Serializable<a class="headerlink" href="#serializable" title="Link to this heading"></a></h2>
-<p>Sometimes the <strong>framework</strong> may desire store somewhere the state of the <strong>interactive system</strong> so that it can be resumed later.</p>
-<p>Immagine that you have written a game of rock paper scizor as follow and after player1 selectes a move, and you want to try all possible moves until you find one that wins.</p>
+<p>In many interactive systems, it’s useful—or even necessary—to <strong>save and restore program state</strong>. Rulebook supports this by allowing coroutines to be <strong>serialized and copied</strong>.</p>
+<p>Let’s say you wrote a simple rock-paper-scissors game. After player 1 selects a move, you want to test every possible response from player 2 to find a winning one.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">rock</span>
     <span class="n">paper</span>
-    <span class="n">scizzor</span>
+    <span class="n">scizor</span>
 
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
     <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player1</span><span class="p">)</span>
@@ -205,24 +230,28 @@
 <span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
     <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">play</span><span class="p">()</span>
     <span class="n">state</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">)</span>
+
     <span class="kr">let</span> <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
-    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">)</span> <span class="c1"># you lose</span>
+    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">)</span>   <span class="c1"># you lose</span>
+
     <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
-    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">scizzor</span><span class="p">)</span> <span class="c1"># you lose</span>
+    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">scizor</span><span class="p">)</span> <span class="c1"># you lose</span>
+
     <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
-    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">paper</span><span class="p">)</span> <span class="c1"># you win</span>
+    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">paper</span><span class="p">)</span>  <span class="c1"># you win</span>
 </pre></div>
 </div>
-<p>Rulebook allows to serialize and copy coroutines. This property allows many usefull techniques, for example you can test a <strong>interactive program</strong> by copying it and trying all possible actions that are valid in that state.</p>
+<p>Because Rulebook supports serialization, you can <strong>copy coroutine states</strong>, explore different branches, and test all valid user interactions from any point. This makes techniques like automated testing, state-space exploration, and replay debugging straightforward and effective.</p>
 </section>
+<hr class="docutils" />
 <section id="inspectable">
 <h2>Inspectable<a class="headerlink" href="#inspectable" title="Link to this heading"></a></h2>
-<p>Sometimes you may desire to use some variable held in the coroutine frame to achieve some objective related to the <strong>framework</strong>.</p>
-<p>Suppose you have the previously mentioned implementation rock paper scizzor. Instead of trying all possible moves to see which one is the right one, you can just look inside the coroutine.</p>
+<p>Sometimes the framework needs access to internal coroutine state—such as a variable a user selected earlier—in order to render UI elements, track progress, or drive decision-making.</p>
+<p>Revisiting the rock-paper-scissors example, suppose you want to read which move player 1 selected without executing the full game logic:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">rock</span>
     <span class="n">paper</span>
-    <span class="n">scizzor</span>
+    <span class="n">scizor</span>
 
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
     <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player1</span><span class="p">)</span>
@@ -238,12 +267,13 @@
     <span class="n">print</span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">player1</span><span class="p">)</span> <span class="c1"># rock</span>
 </pre></div>
 </div>
-<p>Rulebook allows to access any variable inside the coroutine that has been marked with the keyword <code class="docutils literal notranslate"><span class="pre">frm</span></code>. This feature allows to think of a action function simply has a different way of declaring a class. Whenever a class makes more sense as a class you can write it that way. When a class is inherently more procedure like, you can write it as a coroutine.</p>
+<p>In Rulebook, any variable marked with the <code class="docutils literal notranslate"><span class="pre">frm</span></code> keyword is <strong>automatically accessible</strong> from outside the coroutine. This allows you to treat action functions as lightweight <strong>stateful objects</strong>—like classes. If a concept is naturally <strong>procedural</strong>, you can model it as a coroutine. If it’s naturally <strong>structural</strong>, you can define it as a class. Rulebook supports both approaches seamlessly.</p>
 </section>
-<section id="spin-functions-implications">
-<h2>SPIN functions implications<a class="headerlink" href="#spin-functions-implications" title="Link to this heading"></a></h2>
-<p>SPIN functions used in a interpreted language or combined with Rulebook <a class="reference internal" href="#action-statements-classes"><span class="xref myst">Action statements classes</span></a> allow for powerfull techinques in <strong>complex interactive systems</strong></p>
-<p>Beside fully separating the concerns of the UI engine from the <strong>interactive application logic</strong>, we have the ability to store, load, print, replay, modify both execution traces and the program state. Here is a example of a <strong>Interactive program</strong> that selects random actions applies them, stores them in a vector, and then reapplies them on a new state.</p>
+<section id="spin-function-implications">
+<h2>SPIN Function Implications<a class="headerlink" href="#spin-function-implications" title="Link to this heading"></a></h2>
+<p>When used in an interpreted language or in combination with Rulebook’s <a class="reference internal" href="#action-statements-classes"><span class="xref myst">action statement classes</span></a>, <strong>SPIN functions</strong> unlock advanced techniques for managing <strong>complex interactive systems</strong>.</p>
+<p>In addition to cleanly separating <strong>UI framework concerns</strong> from <strong>application logic</strong>, SPIN functions allow you to <strong>store</strong>, <strong>load</strong>, <strong>print</strong>, <strong>replay</strong>, and <strong>modify</strong> both the program’s state and its execution trace.</p>
+<p>Here’s an example: this interactive program selects random actions, applies them to a state, stores the resulting actions in a trace, and later replays that trace on a new instance of the program.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
 <span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
     <span class="n">show_path_screen_prompt</span><span class="p">()</span>
@@ -270,13 +300,23 @@
     <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>Depending on the logic if the user provided <code class="docutils literal notranslate"><span class="pre">select_random_valid_action</span></code>, <code class="docutils literal notranslate"><span class="pre">trace</span></code> will contain 2 valid actions, a possible output of printing <code class="docutils literal notranslate"><span class="pre">trace</span></code> is <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">InstallerSelectLocation{</span> <span class="pre">path:</span> <span class="pre">&quot;some_valid_path&quot;</span> <span class="pre">},</span> <span class="pre">InstallerInstallExperimentalContent{</span> <span class="pre">dot_it:</span> <span class="pre">true</span> <span class="pre">}</span> <span class="pre">}</span></code>.</p>
-<p>This techinque is key to usefull pratical activities such as <strong>fuzzing</strong>, <strong>reinforcement learning environments</strong>, and testing application logic indipendently from the application.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">select_random_valid_action</span></code> chooses valid actions, the trace might look like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{ InstallerSelectLocation{ path: &quot;some_valid_path&quot; }, InstallerInstallExperimentalContent{ do_it: true } }
+</pre></div>
+</div>
+<p>This technique is fundamental for:</p>
+<ul class="simple">
+<li><p><strong>Fuzz testing</strong></p></li>
+<li><p><strong>Reinforcement learning</strong></p></li>
+<li><p><strong>Behavioral verification</strong></p></li>
+</ul>
+<p>By recording and replaying action sequences, you can rigorously test application logic <strong>independently</strong> of the surrounding infrastructure.</p>
 </section>
-<section id="action-statements-classes">
-<h2>Action statements classes<a class="headerlink" href="#action-statements-classes" title="Link to this heading"></a></h2>
-<p>In a <strong>interactive system</strong> sometime you wish to delay the execution of a action until some future moment.</p>
-<p>Say you have a installer and for some reason you want to introduce a 10 frames delay before a user input is actually applied to the application. In rulebook you can use the <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code> attribute applied to action function to achieve this. Here is a example of a rendering loop that polls the GUI events, turns them into installer actions, puts them into a queue, and after 10 frames applies them.</p>
+<hr class="docutils" />
+<section id="action-statement-classes">
+<h2>Action Statement Classes<a class="headerlink" href="#action-statement-classes" title="Link to this heading"></a></h2>
+<p>In interactive systems, you may want to <strong>delay</strong> the execution of an action—such as processing a user click after a few frames. Rulebook makes this possible using the <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code> attribute on action functions.</p>
+<p>Here’s an example. A rendering loop polls GUI events, converts them into actions, queues them, and applies them with a delay:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
 <span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
     <span class="n">show_path_screen_prompt</span><span class="p">()</span>
@@ -295,22 +335,26 @@
     <span class="kr">while</span> <span class="l">true</span><span class="p">:</span>
         <span class="n">render_frame</span><span class="p">()</span>
         <span class="kr">let</span> <span class="n">events</span> <span class="o">=</span> <span class="n">poll_user_events</span><span class="p">()</span>
-        <span class="c1"># queue a event to be resolved later</span>
+
+        <span class="c1"># Queue an event to be processed later</span>
         <span class="kr">if</span> <span class="n">event</span><span class="p">.</span><span class="n">clicked_some_button</span><span class="p">:</span>
             <span class="kr">let</span> <span class="n">action</span> <span class="p">:</span> <span class="nc">InstallerSelectLocation</span>
             <span class="n">action</span><span class="p">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">ui</span><span class="p">.</span><span class="n">path_field</span><span class="p">.</span><span class="n">text</span>
             <span class="n">delayed_events</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-        <span class="kr">if</span> <span class="n">event</span><span class="p">.</span><span class="n">clicked_clicked_on_checkbox</span><span class="p">:</span>
-            <span class="kr">let</span> <span class="n">action</span> <span class="p">:</span>  <span class="nc">InstallerInstallExperimentalContent</span>
+
+        <span class="kr">if</span> <span class="n">event</span><span class="p">.</span><span class="n">clicked_on_checkbox</span><span class="p">:</span>
+            <span class="kr">let</span> <span class="n">action</span> <span class="p">:</span> <span class="nc">InstallerInstallExperimentalContent</span>
             <span class="n">action</span><span class="p">.</span><span class="n">do_it</span> <span class="o">=</span> <span class="n">ui</span><span class="p">.</span><span class="n">checkbox</span><span class="p">.</span><span class="n">is_set</span>
             <span class="n">delayed_events</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-        <span class="c1"># apply the events after 10 frames have happed</span>
-        <span class="kr">for</span> <span class="n">event</span> <span class="kr">in</span> <span class="n">deylayed_events</span><span class="p">.</span><span class="n">get_events_to_apply</span><span class="p">():</span>
+
+        <span class="c1"># Apply events after a delay</span>
+        <span class="kr">for</span> <span class="n">event</span> <span class="kr">in</span> <span class="n">delayed_events</span><span class="p">.</span><span class="n">get_events_to_apply</span><span class="p">():</span>
             <span class="kr">if</span> <span class="n">can</span> <span class="n">apply</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
                 <span class="n">apply</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>When <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code> is attached to a action function (<code class="docutils literal notranslate"><span class="pre">installer</span></code>) the compiler emits a class for each possible action statement (<code class="docutils literal notranslate"><span class="pre">select_location</span></code>, <code class="docutils literal notranslate"><span class="pre">install_experimental_content</span></code>). That class is populated only with the arguments of the action function, furthermore a typesafe union named <code class="docutils literal notranslate"><span class="pre">AnyInstallerAction</span></code> between the alterantive possible operations is introduced too. In this case the generated classes are equivalent to:</p>
+<p>When you annotate an action function with <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code>, Rulebook generates a <strong>class</strong> for each action statement. These classes only contain the relevant arguments. Additionally, a <strong>type-safe union</strong>—<code class="docutils literal notranslate"><span class="pre">AnyInstallerAction</span></code>—is created to represent all possible actions.</p>
+<p>In the example above, the generated classes would look like:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">cls</span> <span class="nc">InstallerSelectLocation</span><span class="p">:</span>
     <span class="nc">String</span> <span class="n">location</span>
 
@@ -320,13 +364,13 @@
 <span class="kr">using</span> <span class="nc">AnyInstallerAction</span> <span class="o">=</span> <span class="nc">InstallerSelectLocation</span> <span class="p">|</span> <span class="nc">InstallerInstallExperimentalContent</span>
 </pre></div>
 </div>
-<p>You can store, print, copy such classes and do whatever you would normally do with classes. Furthermore the language offers the <code class="docutils literal notranslate"><span class="pre">apply</span></code> function to execute the action encapsulated into the class.
-Rulebook by allowing you to schedule actions at will, prevents coupling between GUI framework code and application logic.</p>
+<p>These classes can be <strong>stored</strong>, <strong>serialized</strong>, <strong>printed</strong>, <strong>copied</strong>, and—most importantly—<strong>applied</strong> using the built-in <code class="docutils literal notranslate"><span class="pre">apply</span></code> function.</p>
+<p>By treating actions as first-class values, Rulebook allows you to <strong>schedule and manage user interactions</strong> without coupling your application logic to the GUI framework—encouraging cleaner, more modular architectures.</p>
 </section>
 <section id="composing-actions">
-<h2>Composing actions<a class="headerlink" href="#composing-actions" title="Link to this heading"></a></h2>
-<p><strong>Complex interactive subsystems</strong>, the target of Rulebook, are by definition complex. In those situations you wish to split your logic into smaller reusable chucks.</p>
-<p>Rulebook provides facilities to achieve this. Here is a example of how you can reuse and compose a <strong>interactive sequence</strong>, such as rolling multiple dice, into a action that depending on the result allows the user to reroll them.</p>
+<h2>Composing Actions<a class="headerlink" href="#composing-actions" title="Link to this heading"></a></h2>
+<p><strong>Complex interactive subsystems</strong>—the kind Rulebook is built to handle—often benefit from being broken down into <strong>smaller, reusable parts</strong>.</p>
+<p>Rulebook enables this with a mechanism for composing action functions. Here’s an example of how to structure a compound interaction like rolling two dice, with the added ability to reroll based on the outcome:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">roll_2_dice</span><span class="p">(</span><span class="nc">Int</span> <span class="n">num_faces</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">RollDice</span><span class="p">:</span>
     <span class="kn">act</span> <span class="n">roll</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">first</span><span class="p">)</span> <span class="p">{</span><span class="n">first</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">first</span> <span class="o">&lt;=</span> <span class="n">num_faces</span><span class="p">}</span>
     <span class="kn">act</span> <span class="n">roll</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">second</span><span class="p">)</span> <span class="p">{</span><span class="n">second</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">second</span> <span class="o">&lt;=</span> <span class="n">num_faces</span><span class="p">}</span>
@@ -343,22 +387,26 @@ Rulebook by allowing you to schedule actions at will, prevents coupling between 
     <span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-    <span class="n">print</span><span class="p">(</span><span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">.</span><span class="n">first</span><span class="p">)</span> <span class="c1"># 3</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">.</span><span class="n">first</span><span class="p">)</span>  <span class="c1"># 3</span>
     <span class="n">print</span><span class="p">(</span><span class="n">sequence</span><span class="p">.</span><span class="n">roll</span><span class="p">.</span><span class="n">second</span><span class="p">)</span> <span class="c1"># 4</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">subation*</span></code> allows to expose the inner action sequence to the outside until the inner action function has beenterminated. This techinque allows to split a <strong>interactive sequence</strong> into <strong>subsequences</strong> that can be tested in isolation.</p>
-<p>You can read more about it <a class="reference internal" href="language-reference.html#subaction-statements"><span class="std std-ref">here</span></a>.</p>
+<p>The keyword <code class="docutils literal notranslate"><span class="pre">subaction*</span></code> exposes the inner action function’s interface to the outside world—<strong>until it completes</strong>. This lets you structure your logic as <strong>nested interactive sequences</strong>, where each subsequence can be reused, composed, and tested in isolation.</p>
+<p>Read more about <code class="docutils literal notranslate"><span class="pre">subaction*</span></code> <a class="reference internal" href="language-reference.html#subaction-statements"><span class="std std-ref">here</span></a>.</p>
 </section>
+<hr class="docutils" />
 <section id="use-cases">
-<h2>Use cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h2>
-<p>We have seen <a class="reference internal" href="#action-functions"><span class="xref myst">action functions</span></a> and how they enable powerfull techinques, so now we can see them in practice.</p>
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h2>
+<p>Now that we’ve explored how <a class="reference internal" href="#action-functions"><span class="xref myst">action functions</span></a> work, let’s look at real-world applications.</p>
 </section>
+<hr class="docutils" />
 <section id="automatic-testing">
-<h2>Automatic testing<a class="headerlink" href="#automatic-testing" title="Link to this heading"></a></h2>
-<p>RLC comes with a off the shelf fuzzer that can be used as is, or modified for custom uses.</p>
-<p>You can read what fuzzing is <a class="reference external" href="https://en.wikipedia.org/wiki/Fuzzing">here</a>.</p>
-<p>Here is a example of a <strong>interactive sequence</strong> where the user provides its data, conditionally on its age. But we have forgot to specify that the age cannot be zero.</p>
+<h2>Automatic Testing<a class="headerlink" href="#automatic-testing" title="Link to this heading"></a></h2>
+<p>Rulebook (RLC) includes a built-in <strong>fuzzer</strong> that can generate and apply random actions to your interactive programs—out of the box or customized for your needs.</p>
+<blockquote>
+<div><p>Curious about fuzzing? <a class="reference external" href="https://en.wikipedia.org/wiki/Fuzzing">Here’s a brief intro.</a></p>
+</div></blockquote>
+<p>Below is a simple example: an interactive sequence that collects user data. However, there’s a bug—the program doesn’t guard against invalid age values (e.g. zero or negative numbers):</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">action</span>
 
 <span class="p">@</span><span class="n">classes</span>
@@ -366,7 +414,7 @@ Rulebook by allowing you to schedule actions at will, prevents coupling between 
     <span class="kn">act</span> <span class="n">insert_nationality</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">nationality_id</span><span class="p">)</span>
     <span class="kn">act</span> <span class="n">insert_age</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">age</span><span class="p">)</span>
     <span class="kr">if</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">18</span><span class="p">:</span>
-       <span class="kr">return</span> <span class="c1"># nothing else to do</span>
+        <span class="kr">return</span>  <span class="c1"># nothing else to do</span>
 
     <span class="kn">act</span> <span class="n">insert_parent_nationality</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">parent_nation_id</span><span class="p">)</span>
     <span class="kr">if</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -384,29 +432,43 @@ Rulebook by allowing you to schedule actions at will, prevents coupling between 
             <span class="n">print</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We can compile and execute this program with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># on linux</span>
+<p>You can compile and run this test like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Linux</span>
 rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>executable<span class="w"> </span>--fuzzer
-./executable<span class="w"> </span><span class="c1"># will crash and tell you which file contains the crashing trace</span>
-./exetable<span class="w"> </span>crashing_trace.txt
+./executable<span class="w">                </span><span class="c1"># Automatically crashes if invalid input is found</span>
+./executable<span class="w"> </span>crashing_trace.txt
+<span class="c1"># Output:</span>
 <span class="c1"># ./file.rl:12:9 error: age cannot be negative</span>
 </pre></div>
 </div>
-<p>With really little effort you have written a function that generates random actions and uses them to drive the <strong>interactive subsystem</strong>. In this case the proper fix is to specify that the <code class="docutils literal notranslate"><span class="pre">insert_age</span></code> action statement cannot accept a negative number. <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">insert_age(frm</span> <span class="pre">Int</span> <span class="pre">age)</span> <span class="pre">{age</span> <span class="pre">&gt;=</span> <span class="pre">0}</span></code>.</p>
-<p>Techinques such fuzzing can be used both to make sure that feature are robust, but they can be used as a replacement in rapid prototyping designs too. If you think that you are going to throw away a interactive sequence tomorrow, don’t bother testing it manually, just run the fuzzer and make sure it does not crashes for any input.</p>
-<p>While this is usefull, most of the computation is wasted rejecting invalid actions. Since in production environments we will just use <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">apply</span></code> to reject invalid actions there is no need to test those. If the problem you are trying to solve allows you to fully <a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">finite</span></a> all valid inputs, then your fuzzer can achieve significantly superior performances.
-Depending of the feature of your program, similar other optimizations may be possibile.</p>
+<p>With minimal effort, you’ve created a <strong>property-based test</strong> that finds bugs by driving your interactive sequence with random—but valid—input.</p>
+<p>In this case, the fix is simple: update the action statement with a guard condition:</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">insert_age</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Int</span> <span class="n">age</span><span class="p">)</span> <span class="p">{</span> <span class="n">age</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">}</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<section id="why-this-matters">
+<h3>Why This Matters<a class="headerlink" href="#why-this-matters" title="Link to this heading"></a></h3>
+<p>Fuzzing is useful not only for <strong>ensuring robustness</strong>, but also for <strong>rapid prototyping</strong>. If you’re iterating quickly on an interactive flow you might throw away tomorrow, don’t spend time writing manual tests—just run the fuzzer and confirm it doesn’t crash.</p>
+<p>That said, most of a fuzzer’s time is spent generating and discarding invalid inputs. In production, you’ll often filter actions using <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">apply</span></code>, so testing those rejections isn’t always necessary.</p>
+<p>If your system allows for fully <strong>enumerating all valid actions</strong>—see <a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">Finite Interactive Programs</span></a>—you can write fuzzers that are far more efficient and targeted.</p>
+<p>And depending on the design of your application, additional optimizations may be possible.</p>
+</section>
 </section>
 <section id="finite-interactive-programs">
-<h2>Finite interactive programs<a class="headerlink" href="#finite-interactive-programs" title="Link to this heading"></a></h2>
-<p>Finite interactive programs are <strong>interactive systems</strong> where there is a finite, even if large, amounts of distinct actions that the user can take.</p>
-<p>Example are:</p>
+<h2>Finite Interactive Programs<a class="headerlink" href="#finite-interactive-programs" title="Link to this heading"></a></h2>
+<p><strong>Finite interactive programs</strong> are systems in which the user can take only a <strong>limited number of distinct actions</strong>, even if the total number of possible combinations is large.</p>
+<section id="examples">
+<h3>Examples:<a class="headerlink" href="#examples" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><strong>Chess</strong> even if the game rules may allow for infinite games, in each game each player can only select one of its finite pieces and move it in one of the finite board cells.</p></li>
-<li><p><strong>A mechanical vending machine</strong> the machine accepts a finite number of type of coins and allows to select among a finite amounts of products.</p></li>
+<li><p><strong>Chess</strong>: While games can, in theory, go on indefinitely, at any given moment each player can only choose from a finite number of moves (limited by the number of pieces and legal board positions).</p></li>
+<li><p><strong>Mechanical vending machine</strong>: The user can insert a fixed set of coins and choose from a predefined set of products.</p></li>
 </ul>
-<p>Finite interactive programs allow to use many famous algorithms, for example all the variants of <a class="reference external" href="https://en.wikipedia.org/wiki/State_space_search">state space search</a>.</p>
-<p>Here is a example that uses rulebook <code class="docutils literal notranslate"><span class="pre">enumerate</span></code> to create a table of all possible distinct moves of tic tac toe, and then makes sure the program never crashes by visiting all valid states of tic tac toe.</p>
+<p>Because of their finiteness, these systems are excellent candidates for classic algorithms such as <a class="reference external" href="https://en.wikipedia.org/wiki/State_space_search">state space search</a>.</p>
+</section>
+<section id="example-exhaustive-state-testing">
+<h3>Example: Exhaustive State Testing<a class="headerlink" href="#example-exhaustive-state-testing" title="Link to this heading"></a></h3>
+<p>Here’s a Rulebook example that explores all valid states of a simple tic-tac-toe game using <code class="docutils literal notranslate"><span class="pre">enumerate</span></code>, and verifies that the program never crashes, regardless of the user’s input.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
     <span class="kn">frm</span> <span class="n">board</span> <span class="p">:</span> <span class="nc">Board</span>
@@ -436,13 +498,32 @@ Depending of the feature of your program, similar other optimizations may be pos
     <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>The key feature here is <code class="docutils literal notranslate"><span class="pre">BInt</span></code>, which specifies that only numbers between 0 and 3 (excluded) are valid. University professors don’t want you to know it, but a simple program like this is a <strong>formal proof</strong> that <code class="docutils literal notranslate"><span class="pre">play</span></code> will never crash.</p>
-<p>Of course this trick works only for small programs. Since rulebook programs are composable, you can test <strong>interactive sequences in isolation</strong>, even if not all your components be tested this way, Rulebook lets you validate pieces that can this way, and use more common techniques for harder cases.</p>
+<p>The core idea here is the use of <code class="docutils literal notranslate"><span class="pre">BInt&lt;0,</span> <span class="pre">3&gt;</span></code>, which restricts inputs to integers between 0 and 2 (inclusive of 0, exclusive of 3). This constraint ensures that all <code class="docutils literal notranslate"><span class="pre">mark</span></code> actions are within valid board coordinates. In fact, this program <strong>formally guarantees</strong> that <code class="docutils literal notranslate"><span class="pre">play()</span></code> will never crash under any valid sequence of moves.</p>
+<p>While this technique doesn’t scale to large programs due to the exponential growth of possible states, Rulebook’s <strong>composable architecture</strong> allows you to isolate and test individual interactive sequences—even if the entire system can’t be exhaustively verified.</p>
 </section>
+</section>
+<hr class="docutils" />
 <section id="reinforcement-learning">
 <h2>Reinforcement Learning<a class="headerlink" href="#reinforcement-learning" title="Link to this heading"></a></h2>
-<p>If you install RLC using the pip <code class="docutils literal notranslate"><span class="pre">rl_language</span></code>, you obtain the ability to run <a class="reference external" href="https://en.wikipedia.org/wiki/Reinforcement_learning">reinforcement learning</a>. We saw how to trivially <a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">prove</span></a> that small components will never crash. We saw how to use a <a class="reference internal" href="#automatic-testing"><span class="xref myst">fuzzer</span></a> to find crashes in larger programs. Such techniques only allow you to say if the program crashes or not. Sometimes you may be interested in knowing how does some metric of a system evolves.</p>
-<p>Here is catch, a simple game used in reinforcement learning to validate reinforcement learning algorithms. The game allows the player to move left and right and try to catch a ball falling from above. The program is longer than the previous ones, because it must specify details such as the number of players, who is the current player and how to measure the score. The score is 1 when the player catches the ball. If the program is right, the average score of the network should trend to 100%.</p>
+<p>If you install Rulebook via the Python package <code class="docutils literal notranslate"><span class="pre">rl_language</span></code>, you gain access to built-in support for <a class="reference external" href="https://en.wikipedia.org/wiki/Reinforcement_learning">reinforcement learning</a>.</p>
+<p>Previously, we saw how to:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">Prove</span></a> that certain components never crash</p></li>
+<li><p><a class="reference internal" href="#automatic-testing"><span class="xref myst">Fuzz</span></a> larger programs to uncover failures</p></li>
+</ul>
+<p>However, these methods focus on <strong>correctness</strong>—determining whether a program crashes or not. What if you’re interested in <strong>performance</strong>, or how a particular metric evolves over time?</p>
+<p>This is where <strong>reinforcement learning</strong> shines.</p>
+<hr class="docutils" />
+<section id="example-catch-a-simple-rl-environment">
+<h3>Example: “Catch” — A Simple RL Environment<a class="headerlink" href="#example-catch-a-simple-rl-environment" title="Link to this heading"></a></h3>
+<p>The following program implements <strong>Catch</strong>, a classic test environment in reinforcement learning. In this game, the player moves left or right to catch a falling ball. The score is 1 if the ball is caught; 0 otherwise.</p>
+<p>The program is more detailed than previous examples because it includes:</p>
+<ul class="simple">
+<li><p>Number of players</p></li>
+<li><p>Current player logic</p></li>
+<li><p>Game state and scoring metrics</p></li>
+</ul>
+<p>If the implementation is correct, a trained agent should eventually achieve a near-perfect average score.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
 <span class="kn">import</span> <span class="n">range</span>
 <span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
@@ -555,12 +636,35 @@ Depending of the feature of your program, similar other optimizations may be pos
 <span class="n">rlc</span><span class="o">-</span><span class="n">play</span> <span class="n">file</span><span class="o">.</span><span class="n">rk</span> <span class="n">network</span> <span class="c1"># to see a game</span>
 </pre></div>
 </div>
-<p>The user did not specified anything related to reinforcement learning about this program, it specified properties about how to play the environment, it was all automatic. The computer will learn to maximize the score, and the score can be later visualized. This is helpfull both in the case the user does wishes see what is the best score possible for a given program, or when it wants to make sure that the program is correct and variables inside the program do not assume surprising values.</p>
 </section>
+</section>
+<section id="id1">
+<h2>Reinforcement Learning<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>The user never had to specify anything related to reinforcement learning. They simply defined the environment’s rules—and everything else was inferred automatically.</p>
+<p>The system learns to maximize the score based on how the game works. That score can be visualized later, making this approach valuable in two ways:</p>
+<ul class="simple">
+<li><p>To determine the <strong>maximum achievable performance</strong> of a program.</p></li>
+<li><p>To verify that the program behaves <strong>as expected</strong>—and that internal variables don’t take on surprising or incorrect values.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
 <section id="self-configuring-uis">
-<h2>Self configuring UIs<a class="headerlink" href="#self-configuring-uis" title="Link to this heading"></a></h2>
-<p>Since in Rulebook allows you to know all types of actions that can be applied to a given action function, your UI code can inspect the state of action functions to decide what to show on screen, as well as inspecting what actions are valid.</p>
-<p>Say you want write a UI for tic tac toe. You have created 9 UI cell elements that change color depending on who marked that cell of the screen. The cell should flash when they can be clicked. The rules of tic tac toe are subject to change, so the the UI designer cannot rely on their implementation details. In Rulebook you can use actions classes to achieve this.</p>
+<h2>Self-Configuring UIs<a class="headerlink" href="#self-configuring-uis" title="Link to this heading"></a></h2>
+<p>One of Rulebook’s unique strengths is that it <strong>exposes all action types</strong> available in an action function. This allows UI code to:</p>
+<ul class="simple">
+<li><p>Inspect the current program state.</p></li>
+<li><p>Determine which actions are currently valid.</p></li>
+<li><p>Adapt dynamically to changes in application logic.</p></li>
+</ul>
+<section id="example-ui-for-tic-tac-toe">
+<h3>Example: UI for Tic-Tac-Toe<a class="headerlink" href="#example-ui-for-tic-tac-toe" title="Link to this heading"></a></h3>
+<p>Imagine you’re building a UI for a tic-tac-toe game. You’ve created 9 square components, one for each cell. Each square should:</p>
+<ul class="simple">
+<li><p>Flash when it can be clicked.</p></li>
+<li><p>Show its current content (empty, X, or O).</p></li>
+<li><p>Work correctly even if game rules change.</p></li>
+</ul>
+<p>Using action classes, you can achieve all of that with minimal coupling:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
     <span class="kn">frm</span> <span class="n">board</span> <span class="p">:</span> <span class="nc">Board</span>
@@ -585,30 +689,45 @@ Depending of the feature of your program, similar other optimizations may be pos
         <span class="n">action</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
         <span class="kr">if</span> <span class="n">can</span> <span class="n">apply</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
             <span class="n">render_quad</span><span class="p">(</span><span class="n">glow</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="kr">else</span> <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">board</span><span class="p">.</span><span class="n">slots</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="kr">else</span> <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">board</span><span class="p">.</span><span class="n">slots</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">render_quad</span><span class="p">(</span><span class="n">grey</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="kr">else</span> <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">board</span><span class="p">.</span><span class="n">slots</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="kr">else</span> <span class="kr">if</span> <span class="n">state</span><span class="p">.</span><span class="n">board</span><span class="p">.</span><span class="n">slots</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">render_quad</span><span class="p">(</span><span class="n">blue</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="kr">else</span><span class="p">:</span>
             <span class="n">render_quad</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-
 <span class="kn">fun</span> <span class="n">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Int</span><span class="p">:</span>
     <span class="kr">let</span> <span class="n">state</span> <span class="o">=</span> <span class="n">play</span><span class="p">()</span>
     <span class="kr">let</span> <span class="n">ui_quads</span> <span class="o">=</span> <span class="n">make_quads</span><span class="p">()</span>
-    <span class="kr">while</span> <span class="nc">True</span><span class="p">:</span>
+    <span class="kr">while</span> <span class="l">true</span><span class="p">:</span>
         <span class="kr">for</span> <span class="n">quad</span> <span class="kr">in</span> <span class="n">ui_quads</span><span class="p">:</span>
             <span class="n">quad</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
         <span class="n">poll_and_apply_events</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-
     <span class="kr">return</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>The snippet implements a <code class="docutils literal notranslate"><span class="pre">UISquare</span></code> in a way that only relies on actions, and that <code class="docutils literal notranslate"><span class="pre">board</span></code> is of type <code class="docutils literal notranslate"><span class="pre">Board</span></code>. Based on them, it decides which color to be rendered as. This means that as long as <code class="docutils literal notranslate"><span class="pre">play</span></code> keeps those features, it is allowed to arbitrarily change the game rules, and everything will work. Since rulebook exposes all actions as classes, and you can check if a action is valid, UI elements can expose complex auto configuration schemes that work correctly when you change the underlying application code.</p>
+<p>This UI is entirely driven by:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">board</span></code> data structure.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">mark</span></code> action and its <code class="docutils literal notranslate"><span class="pre">can</span></code> condition.</p></li>
+</ul>
+<p>As long as these remain consistent, the UI will continue to function—even if the game rules or logic change behind the scenes. This makes Rulebook a natural fit for <strong>self-configuring, resilient user interfaces</strong>.</p>
 </section>
+</section>
+<hr class="docutils" />
 <section id="compatibility">
 <h2>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading"></a></h2>
-<p>Rulebook has bidirectional compatibility with C, CPP, Python, C# and Godot.Here is a example of c# invoking Rulebook.</p>
+<p>Rulebook offers <strong>bidirectional interoperability</strong> with:</p>
+<ul class="simple">
+<li><p>C</p></li>
+<li><p>C++</p></li>
+<li><p>Python</p></li>
+<li><p>C#</p></li>
+<li><p>Godot</p></li>
+</ul>
+<section id="example-c-interop">
+<h3>Example: C# Interop<a class="headerlink" href="#example-c-interop" title="Link to this heading"></a></h3>
+<p>Here’s how a C# program might interact with a Rulebook coroutine:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
     <span class="kn">frm</span> <span class="n">local_var</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="kn">act</span> <span class="n">pick</span><span class="p">(</span><span class="nc">Int</span> <span class="n">x</span><span class="p">)</span>
@@ -624,25 +743,65 @@ Depending of the feature of your program, similar other optimizations may be pos
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>To benefit the most from Rulebook features it is suggested that inside rulebook object you only use copiable and default constructable objects. If you cannot guarantee this property, look in the references how you can use the <strong>ctx</strong> language feature to provide a context object to action functions so that those non copiable or non default constructable objects are never constructed or copied.</p>
-<p>All features you saw in this document are <strong>opt-in</strong>, and if you don’t use them, you pay no cost for them. For example, if you have a UI that has some components that are <a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">finite interactive programs</span></a> but whole system is not, you can use functions such as <code class="docutils literal notranslate"><span class="pre">enumerate</span></code> to validate the UI components only, while suffering no cost on the larger architecture.
-Similarly, you can pick and choose between which features are relevant for your problem. Maybe your program contains time dependant logic, such as videogames, that make replaying trace useless since timing will change on user machines, but maybe on the same program you wish to run a reinforcement learning algorithms to maximize some metric of interest.</p>
+<p>To take full advantage of Rulebook’s features, it’s recommended to use only <strong>copyable and default-constructible types</strong> inside Rulebook programs. If that’s not possible, you can use the <code class="docutils literal notranslate"><span class="pre">ctx</span></code> feature to inject context objects for handling non-copyable types outside the coroutine.</p>
+<p>All advanced features in Rulebook are <strong>opt-in</strong>. If you don’t use them, you pay <strong>no performance or complexity cost</strong>. For example:</p>
+<ul class="simple">
+<li><p>You can apply <a class="reference internal" href="#finite-interactive-programs"><span class="xref myst">enumerate</span></a> only to testable UI components, even if the full system is not finite.</p></li>
+<li><p>You can use reinforcement learning selectively, or avoid it altogether.</p></li>
+<li><p>You can rely on trace replay only in subsystems where time-invariance holds.</p></li>
+</ul>
+<p>Rulebook is designed to <strong>scale gracefully</strong> based on the features you choose to use.</p>
 </section>
+</section>
+<hr class="docutils" />
 <section id="remote-execution">
-<h2>Remote execution<a class="headerlink" href="#remote-execution" title="Link to this heading"></a></h2>
-<p>Since Rulebook is compatible with multiple languages, if the remote execution you want to can be expressed at the level of the action trace, you can automatically perform remote execution by keeping two copies of the program into two processes, and whenever one executes a action, it is sent to the other one, even if they run on different languages.</p>
-<p>Showing this feature in a small snippet of code is difficult, but it is implemented in the <a class="reference external" href="https://github.com/rl-language/4Hammer">4hammer</a> example, and it is a obvious consequence of <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">SPIN functions</span></a> since SPIN functions can be serialized, sent over network and restored.</p>
+<h2>Remote Execution<a class="headerlink" href="#remote-execution" title="Link to this heading"></a></h2>
+<p>Since Rulebook supports serialization and is compatible across multiple languages, <strong>remote execution</strong> can be implemented at the <strong>action trace level</strong>.</p>
+<p>That means:</p>
+<ul class="simple">
+<li><p>You can run identical programs in two separate processes (even across languages).</p></li>
+<li><p>As one instance executes actions, the trace can be sent to and replayed by the other.</p></li>
+</ul>
+<p>This enables powerful distributed testing and simulation scenarios, and it’s already used in the <a class="reference external" href="https://github.com/rl-language/4Hammer">4Hammer project</a>. It’s a natural extension of Rulebook’s <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">SPIN function</span></a> architecture.</p>
 </section>
+<hr class="docutils" />
 <section id="tooling">
 <h2>Tooling<a class="headerlink" href="#tooling" title="Link to this heading"></a></h2>
-<p>We have autocomplete support for vscode, and for any editor that supports a lsp. We have automatic autocomplete support for any language we are compatible with, since we emit the wrapper for that language that knows all the Rulebook types.</p>
-<p>We have gdb support altough it is a bit immature. In practice, given the power of tracing replay, fuzzing and automatic serialization, we almost never use a debugger. The 4Hammer example has been writting without every using one. If you need it, let us know and we will give priority over other features.</p>
+<p>Rulebook includes a growing suite of development tools:</p>
+<ul class="simple">
+<li><p><strong>Autocomplete</strong> for Visual Studio Code and any editor with LSP (Language Server Protocol) support.</p></li>
+<li><p><strong>Language bindings</strong> with autocomplete for each supported language (e.g., C#, Python).</p></li>
+<li><p><strong>Basic GDB support</strong>, though debugging is rarely needed due to the power of:</p>
+<ul>
+<li><p>Trace replay</p></li>
+<li><p>Fuzz testing</p></li>
+<li><p>Serialization</p></li>
+</ul>
+</li>
+</ul>
+<p>The <a class="reference external" href="https://github.com/rl-language/4Hammer">4Hammer</a> example was written <strong>without a debugger</strong>, relying solely on Rulebook’s core tooling. That said, if debugging support is important to you, let the team know—it’s an area they’re actively improving.</p>
 </section>
+<hr class="docutils" />
 <section id="performance">
 <h2>Performance<a class="headerlink" href="#performance" title="Link to this heading"></a></h2>
-<p>Rulebook has almost native performances, and has been designed to ensure that. <a class="reference internal" href="#action-functions"><span class="xref myst">Action Functions</span></a> are stack allocated, and each introduces a single integer to keep track of the next action to be resumed. Structs have the same ABI as C. Alternative types have the same ABI as C union except there is a extra integer at the end to keep track of which is the currently active value. All arguments are accepted by reference, the return argument is returned by value unless marked as <code class="docutils literal notranslate"><span class="pre">ref</span></code>. The only other source of slow down is that in places where other languages can use a pointer, Rulebook will use a integer index, to make sure the datastructure can be serialized and restored from disk, altough if you need native performances there you can manually write a pointer a specify how to serialize it and deserialize it.</p>
-<p>Notice, at feature parity, any other implementation would obtain the same slowdowns. All serializable structures must manually handle pointers or pay performances by using a index.</p>
-<p>It is not easy to provide a fair comparison between languages, we do so in the language paper comparing against cpp implementations. ToDo: put link to paper after paper get deanonymized.</p>
+<p>Rulebook is designed for <strong>near-native performance</strong>, without sacrificing flexibility:</p>
+<ul class="simple">
+<li><p><strong>Action functions</strong> are stack-allocated coroutines.</p></li>
+<li><p>Each one uses a single integer to track its resume point.</p></li>
+<li><p><strong>Structs</strong> match the C ABI exactly.</p></li>
+<li><p><strong>Unions</strong> are like C unions, with one added integer to indicate the active variant.</p></li>
+<li><p><strong>All arguments are passed by reference</strong>, and return values are by value (unless marked <code class="docutils literal notranslate"><span class="pre">ref</span></code>).</p></li>
+</ul>
+<p>The only performance trade-off comes from serialization:</p>
+<ul class="simple">
+<li><p>Rulebook uses <strong>integer indices</strong> instead of raw pointers, so all structures can be stored and restored safely.</p></li>
+<li><p>If absolute speed is needed, you can manually manage pointers and specify how they’re serialized/deserialized.</p></li>
+</ul>
+<p>Importantly, <strong>any other language offering equivalent serialization guarantees would face similar trade-offs</strong>. Rulebook just makes the implications explicit.</p>
+<p>We benchmark performance against C++ in the official language paper.</p>
+<blockquote>
+<div><p><em>ToDo: Add link to the paper after de-anonymization.</em></p>
+</div></blockquote>
 </section>
 </section>
 

@@ -68,6 +68,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#interop-with-godot">Interop with godot</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#interop-with-unreal">Interop with unreal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#cmake">CMake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cross-compiling">Cross compiling</a></li>
 </ul>
 </li>
 </ul>
@@ -80,7 +81,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller, and Gameplay</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
@@ -405,6 +406,10 @@ Relevant files are:</p>
 <section id="cmake">
 <h3>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h3>
 <p>We expose typical actions one my wish to perform from cmake as a cmake config file. This includes correct managment of imported files in rulebook for incremental builds, the various wrappers generators and so on. You can see examples in the <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/CMakeLists.txt">godot plugin cmake file</a> of 4hammer.</p>
+</section>
+<section id="cross-compiling">
+<h3>Cross compiling<a class="headerlink" href="#cross-compiling" title="Link to this heading"></a></h3>
+<p>Cross compiling is possible but requires the user to compile the native standard library of the language for every target platform. This is trivial because the entirety of the native standard library is 200 lines long and relies on a couple of libc functions only. The source file of standard library is shipped with the headers of the compiler too, so you can just include it in another cpp library of your tool and you are done. RLC accepts the triple of the target platform.</p>
 </section>
 </section>
 </section>

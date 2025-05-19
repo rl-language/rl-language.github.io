@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UI, Controller and Gameplay &mdash; Rulebook documentation 0.3.0 documentation</title>
+  <title>UI, Controller, and Gameplay &mdash; Rulebook documentation 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -63,25 +63,36 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">UI, Controller and Gameplay</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#mvc">MVC</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">UI, Controller, and Gameplay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mvc">MVC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mvc-model-view-controller">MVC: Model, View, Controller</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#view">View</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#controller">Controller</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#view-rulebook-pattern">VIEW-Rulebook pattern</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#efficient-view-rulebook-pattern">Efficient VIEW-Rulebook pattern</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#view-rulebook-model-pattern">View-Rulebook-Model Pattern</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-textual-and-binary-serialization-of-the-model">automatic textual and binary serialization of the model.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-tracing-and-textual-and-binary-serialization-for-the-tracing-o-f-the-controller">automatic tracing, and textual and binary serialization for the tracing o f the controller.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-testing-with-fuzzers-machine-learning-and-proofs">automatic testing with fuzzers, machine learning and proofs.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-bindings-to-execute-the-view-indipendently-from-rulebook">automatic bindings to execute the view indipendently from rulebook.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-bindings-to-write-the-view-in-multiple-languages">automatic bindings to write the view in multiple languages.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-viewrulebook-pattern">The View–Rulebook Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#efficient-viewrulebook-pattern">Efficient VIEW–Rulebook Pattern</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#event-based-optimization">Event-Based Optimization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#example-optimizing-chess-rendering">Example: Optimizing Chess Rendering</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#view-multi-rulebook-controller-pattern">View-Multi Rulebook Controller pattern</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#multilayer-rulebook-controllers">Multilayer Rulebook Controllers.</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#viewrulebookmodel-pattern">View–Rulebook–Model Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#in-these-cases-you-can-connect-rulebook-to-the-external-model-using-the-same-language-interoperability-techniques-described-here">In these cases, you can connect Rulebook to the external model using the same language-interoperability techniques described <span class="xref myst">here</span>.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-textual-and-binary-serialization-of-the-model">Automatic textual and binary serialization of the model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-tracing-and-textual-and-binary-serialization-of-the-controller">Automatic tracing, and textual and binary serialization of the controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-testing-with-fuzzers-machine-learning-and-proofs">Automatic testing with fuzzers, machine learning, and proofs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-bindings-to-execute-the-view-independently-from-rulebook">Automatic bindings to execute the view independently from Rulebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-bindings-to-write-the-view-in-multiple-languages">Automatic bindings to write the view in multiple languages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#viewmulti-rulebook-controller-pattern">View–Multi Rulebook Controller Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multilayer-rulebook-controllers">Multilayer Rulebook Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-design">Example Design</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a></li>
@@ -106,7 +117,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">UI, Controller and Gameplay</li>
+      <li class="breadcrumb-item active">UI, Controller, and Gameplay</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/ui_gameplay.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -117,135 +128,225 @@
            <div itemprop="articleBody">
              
   <section id="ui-controller-and-gameplay">
-<h1>UI, Controller and Gameplay<a class="headerlink" href="#ui-controller-and-gameplay" title="Link to this heading"></a></h1>
-<p>This page describes the inteded development cycle of a <a class="reference internal" href="#./the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="xref myst">complex interactive program</span></a>. It does so by showing where Rulebook code would fit into into a <a class="reference external" href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">model view controller scheme</a> (MVC). Notice: Rulebook is not specific to a MVC scheme. We just use MVC because that is what many people are familliar with and we cannot describe how Rulebook would fit in every software architecture in existance.</p>
+<h1>UI, Controller, and Gameplay<a class="headerlink" href="#ui-controller-and-gameplay" title="Link to this heading"></a></h1>
+<p>This page outlines the intended development workflow for a <a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="std std-ref">complex interactive program</span></a>. It illustrates how Rulebook code fits into a <a class="reference external" href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">Model–View–Controller (MVC)</a> architecture.</p>
+<blockquote>
+<div><p><strong>Note</strong>: Rulebook is not tied to MVC specifically. We use MVC here simply because it’s a familiar pattern to many developers—but Rulebook can integrate into virtually any software architecture.</p>
+</div></blockquote>
+<hr class="docutils" />
 <section id="mvc">
 <h2>MVC<a class="headerlink" href="#mvc" title="Link to this heading"></a></h2>
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-b82542d7540dc8733b2aca4c351180498f85ee4d.png" alt="Figure made with TikZ" /></p>
-</div><p>Different people assign to MVC components different meanings. We are going to provide a definition for them that we will use for the rest of this document.</p>
+</div></section>
+<section id="mvc-model-view-controller">
+<h2>MVC: Model, View, Controller<a class="headerlink" href="#mvc-model-view-controller" title="Link to this heading"></a></h2>
+<p>Different people assign different meanings to the components of MVC. In this document, we’ll provide clear definitions of <strong>Model</strong>, <strong>View</strong>, and <strong>Controller</strong> as we will use them throughout.</p>
+<hr class="docutils" />
 <section id="model">
 <h3>Model<a class="headerlink" href="#model" title="Link to this heading"></a></h3>
-<p>The model is the collection of data required to perform the business objective of the software. The model can be internal to the process or can be remote. It can be persistent or bound to the lifetime of the program only. It can be serializable or not.</p>
-<p>Examples of models are:</p>
+<p>The <strong>Model</strong> is the collection of data required to achieve the business objectives of the software. It may reside locally or remotely. It can be persistent (stored on disk) or ephemeral (limited to the lifetime of the program). It may or may not be serializable.</p>
+<p><strong>Examples of models:</strong></p>
 <ul class="simple">
-<li><p>the content of a word document in microsoft word.</p></li>
-<li><p>the in memory state of a video game, including the part that gets stored in a safe file, and the parts that are short lived but important for the rules of the game.</p></li>
+<li><p>The contents of a Word document in Microsoft Word.</p></li>
+<li><p>The in-memory state of a video game, including both data saved to a file and temporary game logic (e.g. animation state, cooldowns, etc.).</p></li>
 </ul>
 </section>
+<hr class="docutils" />
 <section id="view">
 <h3>View<a class="headerlink" href="#view" title="Link to this heading"></a></h3>
-<p>The view is the component that knows how to display to the user (or to another program), the relevant parts of the model so that the user can execute decisions. The view responds to user actions (such as button presses) by issuing commands to the controller. The view get updated by the controller whenever the controller deems relevant to do so. This could be every frame like in videogames, or after every modification of the underlying model, such as in CRUD applications. Views are usually short lived and not stored on disk. Views can be local or remote.</p>
-<p>Examples of views are:</p>
+<p>The <strong>View</strong> is the part of the program that presents relevant information from the model to the user (or another system), enabling them to make decisions. The view handles user interactions—such as button clicks—by sending commands to the controller.</p>
+<p>The view is updated by the controller when necessary. In games, this could happen every frame; in CRUD applications, only when data changes. Views are usually temporary (not saved to disk) and can be local or remote.</p>
+<p><strong>Examples of views:</strong></p>
 <ul class="simple">
-<li><p>the entire graphical stack in a video game, which at each frame takes part or all of the state of the game (the model) and spits out a image rappresenting it.</p></li>
-<li><p>a web-ui for some checkout procedure in a web shop, where the user provides data, click ok, and then is brought to a new screen until the purchage is compleated.</p></li>
+<li><p>The entire graphical stack in a video game, which renders part or all of the game state as images, frame by frame.</p></li>
+<li><p>A web UI for a checkout process in an online store, where the user provides input, clicks confirm, and proceeds step-by-step until the purchase is complete.</p></li>
 </ul>
 </section>
+<hr class="docutils" />
 <section id="controller">
 <h3>Controller<a class="headerlink" href="#controller" title="Link to this heading"></a></h3>
-<p>The controller is the part of the program that knows the business logic of the program. It knows how to read at modify the model to carry out the program objective. Controllers are usually short lived and not stored on disk, except for some user configuration, for example the language of the user, or the dark/light theme preference of the user.
-The controller can observe the model data to get notifications about when some of that data changes, so that additional logic can be triggered.</p>
-<p>The controller knows how to update the view in response to changes in the model, and the controller knows how to reject invalid actions issues by the view.</p>
-<p>Examples of controllers are:</p>
+<p>The <strong>Controller</strong> contains the program’s business logic. It knows how to read from and modify the model to achieve the program’s goals.</p>
+<p>Controllers are typically short-lived and not persisted to disk, though some user preferences (like language or theme) may be saved. The controller may observe the model to trigger logic when certain values change.</p>
+<p>It is responsible for:</p>
 <ul class="simple">
-<li><p>the section of the program in a meteo related tool that forecasts the weather, and when it is done doing so saves the prediction in the model, and shows it on screen.</p></li>
-<li><p>the logic that drives the rules of chess indipendantly from the content of the screen.</p></li>
+<li><p>Validating and processing user actions from the view.</p></li>
+<li><p>Updating the view in response to changes in the model.</p></li>
+</ul>
+<p><strong>Examples of controllers:</strong></p>
+<ul class="simple">
+<li><p>A forecasting module in a weather application that calculates predictions, stores the result in the model, and updates the view.</p></li>
+<li><p>The logic engine that enforces the rules of chess, regardless of how the board is visually represented.</p></li>
 </ul>
 </section>
 </section>
-<section id="view-rulebook-pattern">
-<h2>VIEW-Rulebook pattern<a class="headerlink" href="#view-rulebook-pattern" title="Link to this heading"></a></h2>
-<p>The simplest, but powerfull way of combining Rulebook with MVC is to subsume the Model and the Controller in RLC. Variables inside Rulebook action functions become the model, the action function itself becomes the controller.</p>
-<p>The view sends actions to the action function, and since the action function knows all valid actions, it rejects those that are not. After each action, or series of batched actions, the view updates itself from scratch.</p>
+<hr class="docutils" />
+<section id="the-viewrulebook-pattern">
+<h2>The View–Rulebook Pattern<a class="headerlink" href="#the-viewrulebook-pattern" title="Link to this heading"></a></h2>
+<p>A simple yet powerful way to integrate <strong>Rulebook</strong> into an MVC-like architecture is by allowing Rulebook to take over both the <strong>Model</strong> and <strong>Controller</strong> roles.</p>
+<p>In this pattern:</p>
+<ul class="simple">
+<li><p><strong>Variables</strong> inside Rulebook <strong>action functions</strong> serve as the <strong>Model</strong>.</p></li>
+<li><p>The <strong>action function itself</strong> acts as the <strong>Controller</strong>.</p></li>
+</ul>
+<p>The <strong>View</strong> sends user actions to the Rulebook action function. Since the function encodes the full set of valid transitions, it can <strong>automatically reject invalid actions</strong>.</p>
+<p>After each action—or batch of actions—the view re-renders itself based on the current state of the action function. This model ensures clear separation of concerns while simplifying validation, state management, and UI updates.</p>
+<hr class="docutils" />
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-39d1724f2711465e26f5873d9d306a99d3583b59.png" alt="Figure made with TikZ" /></p>
-</div><p>Altough slow since the view is recalculated entirelly, this pattern provides off-the-shelf.</p>
+</div><p>Although the <strong>VIEW–Rulebook</strong> pattern is slower—since the view is fully recomputed after each user input—it provides <strong>out-of-the-box support</strong> for many powerful capabilities:</p>
 <ul class="simple">
-<li><p>automatic textual and binary serialization of the model.</p></li>
-<li><p>automatic tracing, and textual and binary serialization for the tracing o f the controller.</p></li>
-<li><p>automatic testing with fuzzers, machine learning and proofs.</p></li>
-<li><p>automatic bindings to execute the view indipendently from rulebook.</p></li>
-<li><p>automatic bindings to write the view in multiple languages.</p></li>
+<li><p>✅ Automatic textual and binary serialization of the <strong>model</strong>.</p></li>
+<li><p>✅ Automatic tracing and serialization (textual and binary) of the <strong>controller’s execution</strong>.</p></li>
+<li><p>✅ Automatic testing using <strong>fuzzers</strong>, <strong>machine learning</strong>, or <strong>formal proofs</strong>.</p></li>
+<li><p>✅ Automatic language bindings, allowing the <strong>view</strong> to run independently from Rulebook.</p></li>
+<li><p>✅ Cross-language support to write views in <strong>multiple languages</strong> (e.g., C#, Python, Godot).</p></li>
 </ul>
 </section>
-<section id="efficient-view-rulebook-pattern">
-<h2>Efficient VIEW-Rulebook pattern<a class="headerlink" href="#efficient-view-rulebook-pattern" title="Link to this heading"></a></h2>
-<p>This is the pattern implemented by our example <a class="reference internal" href="4hammer.html#software-architecture"><span class="std std-ref">4Hammer</span></a>.
-As we said the VIEW-Rulebook pattern suffers because it updates the view at every user input, leading to bad performances in complex views.</p>
-<p>We offer two ways of mending the problem. The first solution retains the entirety of the benefits of the VIEW-Rulebook pattern, and consists in emitting events to which the view can subscribe too and process at their own will.</p>
-<p>For example, if you need a more performant implementation of chess for some reason, the Rulebook components can mantain along side the game a queue of events, such as “piece moved”, “piece removed”. After every action the view consumes these events and updates itself. So a graphical element showcasing a rook can simply subscribe to the “piece moved” event and update itself it the piece that was moved was indeed its own.</p>
+<hr class="docutils" />
+<section id="efficient-viewrulebook-pattern">
+<h2>Efficient VIEW–Rulebook Pattern<a class="headerlink" href="#efficient-viewrulebook-pattern" title="Link to this heading"></a></h2>
+<p>This is the approach used in our <a class="reference internal" href="4hammer.html#software-architecture"><span class="std std-ref">4Hammer example</span></a>.</p>
+<p>As mentioned earlier, the standard VIEW–Rulebook pattern can become <strong>inefficient</strong> for complex applications because the entire view is refreshed after <strong>every single action</strong>.</p>
+<p>To address this, Rulebook supports two optimization strategies. The <strong>first and most compatible</strong> method preserves all the benefits of the pattern by introducing <strong>event emission</strong>.</p>
+<section id="event-based-optimization">
+<h3>Event-Based Optimization<a class="headerlink" href="#event-based-optimization" title="Link to this heading"></a></h3>
+<p>Action functions can emit <strong>events</strong>, which the view can <strong>subscribe to</strong> and process selectively.</p>
+<section id="example-optimizing-chess-rendering">
+<h4>Example: Optimizing Chess Rendering<a class="headerlink" href="#example-optimizing-chess-rendering" title="Link to this heading"></a></h4>
+<p>Suppose you’re building a more performance-sensitive chess application. Instead of redrawing the whole board after every move, the Rulebook action function can maintain a <strong>queue of events</strong> like:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;piece_moved&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;piece_removed&quot;</span></code></p></li>
+</ul>
+<p>After each action:</p>
+<ul class="simple">
+<li><p>The view reads the event queue.</p></li>
+<li><p>Each UI component decides whether to update based on those events.</p></li>
+</ul>
+<p>For example:</p>
+<ul class="simple">
+<li><p>A graphical element displaying a rook only listens to <code class="docutils literal notranslate"><span class="pre">&quot;piece_moved&quot;</span></code> events.</p></li>
+<li><p>If the event references <strong>its own rook</strong>, it updates itself—otherwise, it does nothing.</p></li>
+</ul>
+<p>This <strong>event-driven rendering</strong> dramatically reduces unnecessary UI updates while still benefiting from Rulebook’s safety, serialization, and testability.</p>
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-f4bb32c3c3e416fa3c65139ecf599594f71e2acc.png" alt="Figure made with TikZ" /></p>
-</div><p>The second more performant implementation allows the Rulebook code to direclty call the code that updates the view, without any kind of indirection. That pattern breaks many of automatic tools offered by rulebook, but they can mostly be mended.</p>
+</div><p>The second, more performant implementation allows Rulebook code to <strong>directly call</strong> functions that update the view, without any kind of indirection.
+This pattern <strong>breaks</strong> many of the automatic tools provided by Rulebook—but most of them can be <strong>partially or fully recovered</strong>.</p>
 <ul class="simple">
-<li><p>automatic tracing, and textual and binary serialization for the tracing of the controller.</p></li>
+<li><p><strong>Automatic tracing, and textual and binary serialization of the controller’s execution</strong>
+✅ <strong>Unchanged</strong></p></li>
+<li><p><strong>Automatic bindings to write the view in multiple languages</strong></p></li>
+<li><p><strong>Automatic bindings to execute the view independently from Rulebook</strong>
+❌ <strong>Not meaningful</strong> — This design intentionally blurs the line between view and controller.
+If you need multiple interchangeable views (e.g., a web UI and a native UI), you can use the same techniques described for machine learning to isolate them.</p></li>
+<li><p><strong>Automatic testing with fuzzers, machine learning, and proofs</strong>
+⚠️ <strong>Preserved with conditional compilation</strong> —
+The compiler can be configured to exclude view-specific code when building Rulebook components for fuzzing, learning, or formal verification.
+If you want to use machine learning in a release build that includes the view, you can instruct the system to ignore view-related memory (like pointers to UI components) during training or tracing.</p></li>
+<li><p><strong>Automatic textual and binary serialization of the model</strong>
+⚠️ <strong>Requires annotation of view data structures</strong> —
+Any view-related fields inside the model must be marked to be excluded from serialization.
+After loading the model from disk, the view is responsible for <strong>reinitializing those fields</strong> as needed.</p></li>
 </ul>
-<p><strong>unchanged</strong></p>
-<ul class="simple">
-<li><p>automatic bindings to write the view in multiple languages.</p></li>
-<li><p>automatic bindings to execute the view indipendently from rulebook.</p></li>
-</ul>
-<p><strong>meaningless</strong>, the code was designed to have no real separation between view and controller. If the tool requires multiple views, for example a web view and a integrated view, then the same techinques described for machine learning can be used.</p>
-<ul class="simple">
-<li><p>automatic testing with fuzzers, machine learning and proofs.</p></li>
-</ul>
-<p><strong>preserved with conditional compilation</strong>: The compiler can be configured to not emit the code specific to the view when building the Rulebook components for fuzzers, machine learning and proofs. If the machine learning tools are to be used on a released build with the engine enabled, it is possible to specify that view related memory objects, such as pointers to the view components to update after a model change, are to be ignored by the machine learning.</p>
-<ul class="simple">
-<li><p>automatic textual and binary serialization of the model.</p></li>
-</ul>
-<p><strong>requires to specify which are view datastructures</strong>: eventual view related datastructure inside the model can be marked as to be ignored during serialization and deserialization. After they are loaded from disk, the view must somehow repopulate them correctly.</p>
 </section>
-<section id="view-rulebook-model-pattern">
-<h2>View-Rulebook-Model Pattern<a class="headerlink" href="#view-rulebook-model-pattern" title="Link to this heading"></a></h2>
-<p>All discussion about the view expressed in the previous sections are still valid for this section, which instead focuses on the indipendent problem of mixing Rulebook with custom models.</p>
-<p>The requirement for a custom model usually happen when you want partially or totally:</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="viewrulebookmodel-pattern">
+<h2>View–Rulebook–Model Pattern<a class="headerlink" href="#viewrulebookmodel-pattern" title="Link to this heading"></a></h2>
+<p>Everything previously discussed about views remains valid here. This section focuses on a <strong>separate concern</strong>: how to mix Rulebook with <strong>custom models</strong>.</p>
+<p>Using a custom model becomes necessary when you want to:</p>
 <ul class="simple">
-<li><p>reuse previously existing code to implement the model.</p></li>
-<li><p>move the model into another process, for example because it is actually held in a remote database.</p></li>
-<li><p>write the model in some other language because of performance or some other requirement (CUDA, SQL…).</p></li>
+<li><p>Partially or fully <strong>reuse existing code</strong> to implement the model.</p></li>
+<li><p><strong>Run the model in another process</strong>, such as on a backend server or a remote database.</p></li>
+<li><p><strong>Write the model in another language</strong>, e.g. for performance (CUDA) or integration (SQL).</p></li>
 </ul>
-<p>In this situations you can treat problem of connecting Rulebook to a external language, as explained [here][ToDo].</p>
+</section>
+<section id="in-these-cases-you-can-connect-rulebook-to-the-external-model-using-the-same-language-interoperability-techniques-described-here">
+<h2>In these cases, you can connect Rulebook to the external model using the same language-interoperability techniques described <a class="reference internal" href="interoperating.html"><span class="std std-doc">here</span></a>.<a class="headerlink" href="#in-these-cases-you-can-connect-rulebook-to-the-external-model-using-the-same-language-interoperability-techniques-described-here" title="Link to this heading"></a></h2>
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-aa37087a2be001dc050b6768e1bce72b9244e169.png" alt="Figure made with TikZ" /></p>
-</div><p>Just like when violating the separation of view and controller, writing parts of the model outside of rulebook makes it hard to use off-the-shelf rulebook tools.</p>
+</div><p>Just like when violating the separation between <strong>view and controller</strong>, writing parts of the <strong>model outside of Rulebook</strong> makes it harder to use Rulebook’s off-the-shelf tools. The tools don’t stop working entirely—but they may require additional effort or custom implementation.</p>
 <section id="automatic-textual-and-binary-serialization-of-the-model">
-<h3>automatic textual and binary serialization of the model.<a class="headerlink" href="#automatic-textual-and-binary-serialization-of-the-model" title="Link to this heading"></a></h3>
-<p>Relies on having implemented the method to print, parse, binary print and binary parse the model. If you can provide those in the original language in every class that you use in Rulebook from another language, then you will get this functionality to work.</p>
+<h3>Automatic textual and binary serialization of the model<a class="headerlink" href="#automatic-textual-and-binary-serialization-of-the-model" title="Link to this heading"></a></h3>
+<p>Serialization relies on Rulebook being able to <strong>print</strong>, <strong>parse</strong>, <strong>binary print</strong>, and <strong>binary parse</strong> the model.
+If you’re using model classes written in another language, you’ll need to implement those methods yourself, <strong>in the original language</strong>, for every class used in Rulebook. If you do, serialization will work as expected.</p>
 </section>
-<section id="automatic-tracing-and-textual-and-binary-serialization-for-the-tracing-o-f-the-controller">
-<h3>automatic tracing, and textual and binary serialization for the tracing o f the controller.<a class="headerlink" href="#automatic-tracing-and-textual-and-binary-serialization-for-the-tracing-o-f-the-controller" title="Link to this heading"></a></h3>
-<p>As long as you don’t use classes defined in some other language within action statments arguments, this will work. If you do use them there, then the same consideration for the previous point apply.</p>
+<hr class="docutils" />
+<section id="automatic-tracing-and-textual-and-binary-serialization-of-the-controller">
+<h3>Automatic tracing, and textual and binary serialization of the controller<a class="headerlink" href="#automatic-tracing-and-textual-and-binary-serialization-of-the-controller" title="Link to this heading"></a></h3>
+<p>This works <strong>as long as you don’t use foreign classes (from another language) as arguments in action statements</strong>.
+If you do, then the same rules from the model serialization section above apply: you’ll need to manually provide serialization logic.</p>
 </section>
+<hr class="docutils" />
 <section id="automatic-testing-with-fuzzers-machine-learning-and-proofs">
-<h3>automatic testing with fuzzers, machine learning and proofs.<a class="headerlink" href="#automatic-testing-with-fuzzers-machine-learning-and-proofs" title="Link to this heading"></a></h3>
-<p>Fuzzers work as the previous point. On top of that:</p>
+<h3>Automatic testing with fuzzers, machine learning, and proofs<a class="headerlink" href="#automatic-testing-with-fuzzers-machine-learning-and-proofs" title="Link to this heading"></a></h3>
+<p>Fuzzing behaves like tracing—if the controller or model depends on external types, you’ll need serialization support.</p>
+<p>In addition:</p>
 <ul class="simple">
-<li><p>Model checking proofs require that model classes written in another are copiable.</p></li>
-<li><p>Machine learning requires that your model classes written in another language implement the serialization to tensor traits.</p></li>
+<li><p>✅ <strong>Model checking</strong> requires that foreign model classes be <strong>copiable</strong>.</p></li>
+<li><p>✅ <strong>Machine learning</strong> requires those classes to implement <strong>serialization-to-tensor traits</strong>.</p></li>
 </ul>
 </section>
-<section id="automatic-bindings-to-execute-the-view-indipendently-from-rulebook">
-<h3>automatic bindings to execute the view indipendently from rulebook.<a class="headerlink" href="#automatic-bindings-to-execute-the-view-indipendently-from-rulebook" title="Link to this heading"></a></h3>
-<p>Unafected.</p>
+<hr class="docutils" />
+<section id="automatic-bindings-to-execute-the-view-independently-from-rulebook">
+<h3>Automatic bindings to execute the view independently from Rulebook<a class="headerlink" href="#automatic-bindings-to-execute-the-view-independently-from-rulebook" title="Link to this heading"></a></h3>
+<p>✅ <strong>Unaffected</strong></p>
 </section>
+<hr class="docutils" />
 <section id="automatic-bindings-to-write-the-view-in-multiple-languages">
-<h3>automatic bindings to write the view in multiple languages.<a class="headerlink" href="#automatic-bindings-to-write-the-view-in-multiple-languages" title="Link to this heading"></a></h3>
-<p>Unafected.</p>
+<h3>Automatic bindings to write the view in multiple languages<a class="headerlink" href="#automatic-bindings-to-write-the-view-in-multiple-languages" title="Link to this heading"></a></h3>
+<p>✅ <strong>Unaffected</strong></p>
 </section>
 </section>
-<section id="view-multi-rulebook-controller-pattern">
-<h2>View-Multi Rulebook Controller pattern<a class="headerlink" href="#view-multi-rulebook-controller-pattern" title="Link to this heading"></a></h2>
-<p>While some programs may make sense to think in terms of a single gigantic interactive sequence from start to finish, this is usually not the case for most programs. Interactive programs usually have many small interactive sequences that the user can perform.
-For example, a typical videogame may have a interactive sequence describing in which order powerups can be unlocked by a player, and another interactive sequence is the way a non player character behaves in respose to the player interacting with that character.
-You could stick them all into a single enormous interactive sequence that allows to perform any action from any of al sub interactive sequences at the same time, or, instead you just consider them different controllers of different parts of the model.</p>
-<p>In this situation, all considerations previously mentioned in this article still apply. The only difference is that many Rulebook controllers are placed inside a “controller aggregator” written in some other language (or even rulebook itself).</p>
+<hr class="docutils" />
+<section id="viewmulti-rulebook-controller-pattern">
+<h2>View–Multi Rulebook Controller Pattern<a class="headerlink" href="#viewmulti-rulebook-controller-pattern" title="Link to this heading"></a></h2>
+<p>While it’s sometimes tempting to design an application as one giant interactive sequence from start to finish, that’s rarely ideal. Most interactive programs are made up of <strong>many small, independent interactive sequences</strong>.</p>
+<p>For example:</p>
+<ul class="simple">
+<li><p>A video game might include one sequence for how <strong>powerups are unlocked</strong>, and another for how a <strong>non-player character reacts</strong> to the player.</p></li>
+<li><p>You could technically combine all these into one massive coroutine—but it’s usually better to treat them as <strong>separate Rulebook controllers</strong> operating on different parts of the model.</p></li>
+</ul>
+<p>In this scenario, everything previously discussed in this document still applies.
+The only difference is that <strong>multiple Rulebook controllers</strong> are embedded inside a <strong>controller aggregator</strong>, which may be written in another language—or even in Rulebook itself.</p>
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-b182b33612176473f0b27aa0f5605eca91c3139a.png" alt="Figure made with TikZ" /></p>
-</div><p>The shown controller describes a interactive game where one rulebook controller controls how the player can act in the world, one controller handles a complex non linear story progression, and a indipendant world controller handles non player characters.</p>
-<p>Of course the astute reader will notice that this design describe a poor game where the player story is totally disconnected from the world controller, and this does not seem realistic. That brings us to the last MVC style design</p>
+</div><p>The controller described above outlines an interactive game where:</p>
+<ul class="simple">
+<li><p>One <strong>Rulebook controller</strong> governs how the <strong>player</strong> can act in the world.</p></li>
+<li><p>Another controller manages a <strong>complex, non-linear story progression</strong>.</p></li>
+<li><p>A third, <strong>independent world controller</strong> handles the behavior of <strong>non-player characters (NPCs)</strong>.</p></li>
+</ul>
+<p>Of course, the astute reader will recognize a flaw in this setup: the player’s story appears <strong>completely disconnected</strong> from the world controller. This isn’t very realistic—story events should affect the world and its characters. This leads us to the final architectural pattern:</p>
 </section>
+<hr class="docutils" />
 <section id="multilayer-rulebook-controllers">
-<h2>Multilayer Rulebook Controllers.<a class="headerlink" href="#multilayer-rulebook-controllers" title="Link to this heading"></a></h2>
-<p>Sometimes you have multiple interactive sequences that insist on the same model, and/or some those sequences may be allowed to create/cancel/modify another interactive sequence. For example, think of a video game where there is a interactive sequence which is the story, and another interactive sequence for each non player character on screen that handles the behaviour of that character. Say that when the user triggers a particular story event, all non player characters are to be destroyed, and the state of their interactive sequence, discarded.</p>
-<p>You can achieve this by organizing your interactive sequences hierarchically. The following image displays a setup where there exists a single model (implemented in rulebook or not), shared between all controllers. The non player characters controller is the least important one, that drives the behaviour of characters when the player is near. Then there is the story controller which is allowed create, modify and destroy enemies, and therefore has access to the non player characters controller. Finally there is the player controller that handles the user inputs and depending on the player action can trigger a new event of the story.</p>
+<h2>Multilayer Rulebook Controllers<a class="headerlink" href="#multilayer-rulebook-controllers" title="Link to this heading"></a></h2>
+<p>In some cases, you have <strong>multiple interactive sequences</strong> that operate on the <strong>same shared model</strong>. These sequences may also be allowed to <strong>create, modify, or terminate</strong> one another.</p>
+<p>For example, imagine a video game with:</p>
+<ul class="simple">
+<li><p>A main <strong>story sequence</strong> that drives narrative progression.</p></li>
+<li><p>Separate sequences for <strong>each NPC on screen</strong>, handling their individual behaviors.</p></li>
+</ul>
+<p>Now say a certain story event causes <strong>all NPCs to vanish</strong>—you would need to discard their interactive sequences and remove them from the game. To do this cleanly, Rulebook lets you <strong>organize interactive sequences hierarchically</strong>.</p>
+<hr class="docutils" />
+<section id="example-design">
+<h3>Example Design<a class="headerlink" href="#example-design" title="Link to this heading"></a></h3>
+<p>Here’s how such a setup might look conceptually:</p>
+<ul class="simple">
+<li><p>A <strong>single model</strong>, possibly written in Rulebook or another language, is <strong>shared</strong> between all controllers.</p></li>
+<li><p>The <strong>NPC controller</strong> is the lowest layer—it controls character behavior when the player is nearby.</p></li>
+<li><p>Above it, the <strong>story controller</strong> has authority to <strong>create, modify, or destroy</strong> NPCs by managing their associated controllers.</p></li>
+<li><p>At the top, the <strong>player controller</strong> listens to user inputs and, based on player actions, triggers <strong>story events</strong>, which in turn cascade downward.</p></li>
+</ul>
+<p>This kind of layered architecture lets each controller focus on its domain, while still interacting in a coordinated way.</p>
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-60e1d6397ca0b007f021a7d0d111b52ad6ee9379.png" alt="Figure made with TikZ" /></p>
-</div><p>While this pattern is more complex to write, it allows to create interactive sequences where sequences are allowed to modify each other, and it retains all the capabilities described in the <a class="reference internal" href="#view-rulebook-pattern"><span class="xref myst">View-Rulebook pattern</span></a>. As well as all considerations about dividing the controller from the model described earlier.</p>
+</div><p>While this pattern is more complex to implement, it allows you to build <strong>interactive sequences that can dynamically create, modify, or terminate other sequences</strong>. Despite the added complexity, it <strong>retains all the benefits</strong> described in the <a class="reference internal" href="#view-rulebook-pattern"><span class="xref myst">View–Rulebook pattern</span></a>, including:</p>
+<ul class="simple">
+<li><p>Automatic validation of user actions</p></li>
+<li><p>Reusability and testability of controllers</p></li>
+<li><p>Clear separation of concerns</p></li>
+</ul>
+<p>It also remains fully compatible with all previous considerations about <strong>separating the controller from the model</strong>.</p>
+</section>
 </section>
 </section>
 

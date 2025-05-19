@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Rulebook Language" href="language-reference.html" />
-    <link rel="prev" title="UI, Controller and Gameplay" href="ui_gameplay.html" /> 
+    <link rel="prev" title="UI, Controller, and Gameplay" href="ui_gameplay.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -63,11 +63,17 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller, and Gameplay</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4Hammer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#the-size-of-the-problem">The size of the problem</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-size-of-the-problem">The Size of the Problem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#scope">Scope</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#rolling-a-dice">Rolling a dice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizing-the-games-complexity">Visualizing the Game’s Complexity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rolling-a-die">Rolling a Die</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core-rules">Core Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#variants-of-rerolling">Variants of Rerolling</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-requirements-from-4hammer">Additional Requirements from 4Hammer</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#software-architecture">Software architecture</a><ul>
@@ -117,32 +123,58 @@
              
   <section id="hammer">
 <h1>4Hammer<a class="headerlink" href="#hammer" title="Link to this heading"></a></h1>
-<p>Our flagship example is 4Hammer (<a class="reference external" href="https://github.com/rl-language/4Hammer">source code</a>), a reinforcement-learning environment with extreamly complex interactive sequences into ~5 k lines of code (graphics included). Thanks to Rulebook, 4Hammer automatically gains:</p>
+<p>Our flagship example is <strong>4Hammer</strong> (<a class="reference external" href="https://github.com/rl-language/4Hammer">source code</a>), a reinforcement learning environment that encodes <strong>extremely complex interactive sequences</strong> in just ~5,000 lines of code—including the graphics.</p>
+<p>Thanks to Rulebook, 4Hammer automatically gains:</p>
 <ul class="simple">
-<li><p>reinforcement-learning support</p></li>
-<li><p>fuzzer-based testing</p></li>
-<li><p>textual state encoding</p></li>
-<li><p>trace replay</p></li>
-<li><p>remote execution</p></li>
-<li><p>self-configuring UIs</p></li>
+<li><p>Reinforcement learning support</p></li>
+<li><p>Fuzzer-based testing</p></li>
+<li><p>Textual state encoding</p></li>
+<li><p>Trace replay</p></li>
+<li><p>Remote execution</p></li>
+<li><p>Self-configuring UIs</p></li>
 </ul>
-<p>—all in both browser and desktop builds.</p>
-<p>Depending on the innate complexity of the problem 4hammer is trying to solve, 5k lines can be a lot, or not. It is difficult to say how many more lines of code we would expect from having written some other language, but at feature parity we belive it would have took 5 to 20 times more code, depending on the language.</p>
+<p>—all available in both <strong>browser</strong> and <strong>desktop</strong> builds.</p>
+<p>Depending on the complexity of the problem 4Hammer is addressing, 5,000 lines of code might seem like a lot—or not. It’s difficult to make a direct comparison, but at feature parity, we believe that using another language would have required <strong>5 to 20 times more code</strong>, depending on the language and tooling.</p>
+<hr class="docutils" />
 <section id="the-size-of-the-problem">
-<h2>The size of the problem<a class="headerlink" href="#the-size-of-the-problem" title="Link to this heading"></a></h2>
-<p>4Hammer implements a digital version of <a class="reference external" href="https://en.wikipedia.org/wiki/Warhammer_40,000">Warhammer 40,000</a>, for the purpose of <a class="reference external" href="https://en.wikipedia.org/wiki/Reinforcement_learning">validating reinforcement learning environments</a>. <strong>Warhammer 40,000</strong> is the most played miniature board game in the world, with hundred of thousands of games being played at the tournament level each year. The community of players has interest in developing tools to understand the game better, and has done so in limited domains, such as building dice rolling applications that evaluate the probability of a cercain event happening, but the general problem is untractable.</p>
+<h2>The Size of the Problem<a class="headerlink" href="#the-size-of-the-problem" title="Link to this heading"></a></h2>
+<p>4Hammer implements a digital version of <a class="reference external" href="https://en.wikipedia.org/wiki/Warhammer_40,000">Warhammer 40,000</a>, designed specifically for <strong>validating reinforcement learning environments</strong>.</p>
+<p>Warhammer 40,000 is the most-played miniature board game in the world, with <strong>hundreds of thousands of games</strong> played at a competitive level each year. The community is deeply invested in understanding the game better and has already built tools in narrow domains (like dice probability calculators). But <strong>general simulation of the full game is currently intractable</strong>.</p>
+<p>Challenges include:</p>
 <ul class="simple">
-<li><p>The game includes hundreds of slightly different game pieces, all with their own quirks.</p></li>
-<li><p>The game includes components that would require a physic engine to evaluate.</p></li>
-<li><p>The game game has very convoluted interactive sequences, where small difference in game state can lead to compleatly different interactive sequences. (example, attacching the special rules <strong>Torrent</strong> and <strong>Devastating wounds</strong> to a game pieces almost entirelly modifies how that model behaves in the <strong>Single Attack</strong> game sequence).</p></li>
-<li><p>The rules of the game are updated by the parent company at high speed, making the job of mantaining a digital implementation unsustainable.</p></li>
+<li><p>Hundreds of unique game units, each with slight rule variations and quirks.</p></li>
+<li><p>Rule interactions that require <strong>physics simulation</strong> to resolve spatial mechanics.</p></li>
+<li><p>Highly <strong>non-linear interactive sequences</strong>, where small state differences can completely change the legal set of actions.
+<em>(Example: applying the special rules <strong>Torrent</strong> and <strong>Devastating Wounds</strong> to a unit fundamentally alters its behavior during the <strong>Single Attack</strong> sequence.)</em></p></li>
+<li><p>Frequent updates from the publisher, making full digital replication difficult to maintain.</p></li>
 </ul>
+<hr class="docutils" />
 <section id="scope">
 <h3>Scope<a class="headerlink" href="#scope" title="Link to this heading"></a></h3>
-<p>4Hammer does not implement every single profile of every unit, which are hundreds and not particularly interesting unless one wants a perfect digital twin to sell. Similarly it does not implement the physic system required to fully simulate the game.</p>
-<p>Instead we focus on implenting all rules needed to play 6 factions of the 35 factions available in <strong>combact patrol mode</strong> so that we can validate neural networks by seeing how well they can play with convoluted game mechanics.</p>
-<p>This design decisions are acceptable because what we have implemented allows the network to play out the strategic level, where network decide where to allocate their game resources while playing, and this is still an unsolved problem. When this will be solved we can start implementing all the minute physical rules that affect game tactics instead of game strategy, so that we can obtain networks that are superhuman at playing the full rules or warhammer 40,000.</p>
-<p>The following image contains are all possible interactive actions the player game execute in the 4Hammer implementation. Edges means that RLC thinks a the target of the arrow can sometimes(or always) be executed after the previous action. Diamonds rappresent choise points, where the player can decide among the successors of the diamon to select which action they want to perform. Solid boxes are atomic choises, such as deciding to use a optional rule or not. Dashes boxes are the invocation of a sub interactive sequence.</p>
+<p>4Hammer does <strong>not</strong> aim to fully implement:</p>
+<ul class="simple">
+<li><p>Every single unit profile (there are hundreds).</p></li>
+<li><p>A full physics simulation of the game.</p></li>
+</ul>
+<p>These features aren’t necessary unless you’re building a <strong>perfect digital twin</strong> for resale or official use.</p>
+<p>Instead, 4Hammer focuses on:</p>
+<ul class="simple">
+<li><p>Implementing all core rules required to play <strong>6 out of the 35</strong> factions.</p></li>
+<li><p>Using <strong>Combat Patrol mode</strong> as the scenario baseline.</p></li>
+<li><p>Enabling <strong>neural networks</strong> to interact with complex strategic mechanics.</p></li>
+</ul>
+<p>This scope is sufficient for training and validating learning agents at the <strong>strategic level</strong>—deciding how to allocate resources and respond to game events. Once this is solved, we can begin layering in more detailed tactical rules (e.g. unit placement, collisions, line of sight) and move toward <strong>superhuman play</strong> under the full rule set of Warhammer 40,000.</p>
+</section>
+<hr class="docutils" />
+<section id="visualizing-the-games-complexity">
+<h3>Visualizing the Game’s Complexity<a class="headerlink" href="#visualizing-the-games-complexity" title="Link to this heading"></a></h3>
+<p>The image below shows <strong>all possible interactive actions</strong> available to the player in the 4Hammer implementation.</p>
+<ul class="simple">
+<li><p><strong>Edges</strong> indicate that RLC believes the action at the target of the arrow can sometimes—or always—follow the source action.</p></li>
+<li><p><strong>Diamonds</strong> represent <strong>decision points</strong>, where the player must choose between multiple next actions.</p></li>
+<li><p><strong>Solid boxes</strong> represent <strong>atomic choices</strong>, such as deciding whether to use an optional rule.</p></li>
+<li><p><strong>Dashed boxes</strong> denote the <strong>invocation of a sub-interactive sequence</strong>.</p></li>
+</ul>
 <div class="graphviz"><img src="_images/graphviz-f49241d0bd97f61f147e51f135597cdd3079e45f.png" alt="digraph g {
 &quot;0x615cd69d1760&quot;[shape=ellipse, label=&quot;evaluate_random_stat&quot;, style=solid]
 &quot;0x615cd69d1760&quot; -&gt; &quot;0x615cd69d17f0&quot;
@@ -686,32 +718,55 @@
 &quot;0x615cd697f9f0&quot; -&gt; &quot;0x615cd6979fa0&quot;
  }" class="graphviz" /></div>
 </section>
-<section id="rolling-a-dice">
-<h3>Rolling a dice<a class="headerlink" href="#rolling-a-dice" title="Link to this heading"></a></h3>
-<p>So that we can understand the complexity of the issue ad hand, let us focus on the simplest <strong>Warhammer 40,000</strong> interactive sequence: Rolling a dice. Here are the rules</p>
+<section id="rolling-a-die">
+<h3>Rolling a Die<a class="headerlink" href="#rolling-a-die" title="Link to this heading"></a></h3>
+<p>To better understand the complexity of interactive sequences in <strong>Warhammer 40,000</strong>, let’s focus on the <strong>simplest</strong> one: <strong>rolling a die</strong>. Even this basic action involves a surprising amount of logic and variability.</p>
+<section id="core-rules">
+<h4>Core Rules<a class="headerlink" href="#core-rules" title="Link to this heading"></a></h4>
 <ul class="simple">
-<li><p>Dice have a number of faces, typically 3 or 6.</p></li>
-<li><p>Non-rerollable rolls are atomic, a random number between 1 and the number  of faces of the dice is extracted, then game sequence invoking the non-rerollable dice resumes.</p></li>
-<li><p>Rerollable dices trigger a non-rerollable roll, then depending on the state of the game, may offer to the player that rolled the dice the decision of rerolling it. The second result must be kept. (making it distict from rules that say “roll 2 dices and pick the best”).</p>
+<li><p>Dice typically have <strong>3 or 6 faces</strong>.</p></li>
+<li><p>A <strong>non-rerollable roll</strong> is atomic:
+A random number between <code class="docutils literal notranslate"><span class="pre">1</span></code> and the number of faces is generated, and the game sequence that triggered the roll resumes.</p></li>
+<li><p>A <strong>rerollable die</strong> involves additional logic:</p>
 <ul>
-<li><p>sometimes the dice can be rerolled for free</p></li>
-<li><p>sometimes the player can reroll for free, but only if the roll resulted int a 1.</p></li>
-<li><p>sometimes the player can reroll the dice, but only by paying a command point (a resource of the game).</p></li>
-<li><p>if the player has already used a command point to reroll a dice, theyn cannot do so for the rest of the phase.</p></li>
-<li><p>the player knows the the result of the dice before deciding if they wish to reroll or not, so that information must be exposed to the user.</p></li>
-<li><p>the player knows if rerolling the dice costs command points or not, so that information must be exposed to the user.</p></li>
+<li><p>It begins with a non-rerollable roll.</p></li>
+<li><p>Depending on the current game state, the player may be <strong>offered the option</strong> to reroll.</p></li>
+<li><p>If rerolled, the <strong>second result must be kept</strong>.
+(This distinguishes it from rules like “roll two dice and pick the best.”)</p></li>
 </ul>
 </li>
 </ul>
-<p>Furthermore we have the following requirements imposed by the objective of 4Hammer.</p>
+</section>
+<section id="variants-of-rerolling">
+<h4>Variants of Rerolling<a class="headerlink" href="#variants-of-rerolling" title="Link to this heading"></a></h4>
 <ul class="simple">
-<li><p>Rolling a dice must be suspendable to wait for user input.</p></li>
-<li><p>Rolling a dice must ensure not wrong arguments are received.</p></li>
-<li><p>Rolling a dice must be convertible to RL encoding for training.</p></li>
-<li><p>Rolling a dice must convertible to a textual rappresentation.</p></li>
-<li><p>Rolling a dice must contain the value of the rolled dice in a way that can be accessed by the graphical engine.</p></li>
+<li><p>Sometimes the die may be <strong>rerolled for free</strong>.</p></li>
+<li><p>Sometimes the player may reroll <strong>for free</strong>, but <strong>only if the result is a 1</strong>.</p></li>
+<li><p>Sometimes the player may reroll <strong>by spending a command point</strong> (a limited in-game resource).</p></li>
+<li><p><strong>Only one command-point-based reroll</strong> is allowed per phase—after it’s used, no more rerolls of that type are allowed.</p></li>
+<li><p>The player must know:</p>
+<ul>
+<li><p>The <strong>result of the initial roll</strong> before deciding to reroll.</p></li>
+<li><p>Whether the <strong>reroll costs a command point</strong>.</p></li>
+<li><p>Whether the <strong>command point has already been spent</strong>.</p></li>
 </ul>
-<p>Here is the graph showing all possible ways of navigating the roll dice sequence.</p>
+</li>
+</ul>
+<p>This information must be <strong>visible to the user</strong> during interaction.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="additional-requirements-from-4hammer">
+<h3>Additional Requirements from 4Hammer<a class="headerlink" href="#additional-requirements-from-4hammer" title="Link to this heading"></a></h3>
+<p>Because of 4Hammer’s goals, the dice roll sequence must satisfy additional constraints:</p>
+<ul class="simple">
+<li><p>✅ <strong>Suspendable</strong>: Can wait for user input (e.g., for reroll decisions).</p></li>
+<li><p>✅ <strong>Validated</strong>: Rejects invalid arguments at runtime.</p></li>
+<li><p>✅ <strong>Reinforcement Learning-Compatible</strong>: Must be convertible to a format suitable for RL training.</p></li>
+<li><p>✅ <strong>Text-Encodable</strong>: Can be converted to a readable textual representation.</p></li>
+<li><p>✅ <strong>Inspectable</strong>: The final result of the roll must be stored and accessible (e.g., for UI rendering).</p></li>
+</ul>
+<p>The following graph shows the how the control flow may evolve when rolling a die.</p>
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-7f11237fc67d8cdea7e2a54a51757771e0f00e2a.png" alt="Figure made with TikZ" /></p>
 </div><p>This is the simplest interactive sequence of the game, which is then reused in multiple points across the program.</p>
 <p>If you are new to Rulebook, stop for a second thinking how you would implement a program that meets all requirements.</p>
@@ -964,7 +1019,7 @@ func on_state_changed():
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ui_gameplay.html" class="btn btn-neutral float-left" title="UI, Controller and Gameplay" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ui_gameplay.html" class="btn btn-neutral float-left" title="UI, Controller, and Gameplay" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="language-reference.html" class="btn btn-neutral float-right" title="Rulebook Language" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

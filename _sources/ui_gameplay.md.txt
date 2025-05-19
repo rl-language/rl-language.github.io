@@ -1,7 +1,10 @@
-# UI, Controller and Gameplay
+# UI, Controller, and Gameplay
 
-This page describes the inteded development cycle of a [complex interactive program](./the_inversion_of_control_problem.html#complex-interactive-subsystems). It does so by showing where Rulebook code would fit into into a [model view controller scheme](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) (MVC). Notice: Rulebook is not specific to a MVC scheme. We just use MVC because that is what many people are familliar with and we cannot describe how Rulebook would fit in every software architecture in existance.
+This page outlines the intended development workflow for a [complex interactive program](./the_inversion_of_control_problem.md#complex-interactive-subsystems). It illustrates how Rulebook code fits into a [Model–View–Controller (MVC)](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) architecture.
 
+> **Note**: Rulebook is not tied to MVC specifically. We use MVC here simply because it's a familiar pattern to many developers—but Rulebook can integrate into virtually any software architecture.
+
+---
 
 ## MVC
 
@@ -50,42 +53,69 @@ This page describes the inteded development cycle of a [complex interactive prog
 \end{tikzpicture}
 
 ```
-Different people assign to MVC components different meanings. We are going to provide a definition for them that we will use for the rest of this document.
+
+## MVC: Model, View, Controller
+
+Different people assign different meanings to the components of MVC. In this document, we’ll provide clear definitions of **Model**, **View**, and **Controller** as we will use them throughout.
+
+---
 
 ### Model
 
-The model is the collection of data required to perform the business objective of the software. The model can be internal to the process or can be remote. It can be persistent or bound to the lifetime of the program only. It can be serializable or not.
+The **Model** is the collection of data required to achieve the business objectives of the software. It may reside locally or remotely. It can be persistent (stored on disk) or ephemeral (limited to the lifetime of the program). It may or may not be serializable.
 
-Examples of models are:
-* the content of a word document in microsoft word.
-* the in memory state of a video game, including the part that gets stored in a safe file, and the parts that are short lived but important for the rules of the game.
+**Examples of models:**
+
+* The contents of a Word document in Microsoft Word.
+* The in-memory state of a video game, including both data saved to a file and temporary game logic (e.g. animation state, cooldowns, etc.).
+
+---
 
 ### View
 
-The view is the component that knows how to display to the user (or to another program), the relevant parts of the model so that the user can execute decisions. The view responds to user actions (such as button presses) by issuing commands to the controller. The view get updated by the controller whenever the controller deems relevant to do so. This could be every frame like in videogames, or after every modification of the underlying model, such as in CRUD applications. Views are usually short lived and not stored on disk. Views can be local or remote.
+The **View** is the part of the program that presents relevant information from the model to the user (or another system), enabling them to make decisions. The view handles user interactions—such as button clicks—by sending commands to the controller.
 
-Examples of views are:
-* the entire graphical stack in a video game, which at each frame takes part or all of the state of the game (the model) and spits out a image rappresenting it.
-* a web-ui for some checkout procedure in a web shop, where the user provides data, click ok, and then is brought to a new screen until the purchage is compleated.
+The view is updated by the controller when necessary. In games, this could happen every frame; in CRUD applications, only when data changes. Views are usually temporary (not saved to disk) and can be local or remote.
 
+**Examples of views:**
+
+* The entire graphical stack in a video game, which renders part or all of the game state as images, frame by frame.
+* A web UI for a checkout process in an online store, where the user provides input, clicks confirm, and proceeds step-by-step until the purchase is complete.
+
+---
 
 ### Controller
 
-The controller is the part of the program that knows the business logic of the program. It knows how to read at modify the model to carry out the program objective. Controllers are usually short lived and not stored on disk, except for some user configuration, for example the language of the user, or the dark/light theme preference of the user.
-The controller can observe the model data to get notifications about when some of that data changes, so that additional logic can be triggered.
+The **Controller** contains the program’s business logic. It knows how to read from and modify the model to achieve the program's goals.
 
-The controller knows how to update the view in response to changes in the model, and the controller knows how to reject invalid actions issues by the view.
+Controllers are typically short-lived and not persisted to disk, though some user preferences (like language or theme) may be saved. The controller may observe the model to trigger logic when certain values change.
 
-Examples of controllers are:
-* the section of the program in a meteo related tool that forecasts the weather, and when it is done doing so saves the prediction in the model, and shows it on screen.
-* the logic that drives the rules of chess indipendantly from the content of the screen.
+It is responsible for:
 
+* Validating and processing user actions from the view.
+* Updating the view in response to changes in the model.
 
-## VIEW-Rulebook pattern
+**Examples of controllers:**
 
-The simplest, but powerfull way of combining Rulebook with MVC is to subsume the Model and the Controller in RLC. Variables inside Rulebook action functions become the model, the action function itself becomes the controller.
+* A forecasting module in a weather application that calculates predictions, stores the result in the model, and updates the view.
+* The logic engine that enforces the rules of chess, regardless of how the board is visually represented.
 
-The view sends actions to the action function, and since the action function knows all valid actions, it rejects those that are not. After each action, or series of batched actions, the view updates itself from scratch.
+---
+
+## The View–Rulebook Pattern
+
+A simple yet powerful way to integrate **Rulebook** into an MVC-like architecture is by allowing Rulebook to take over both the **Model** and **Controller** roles.
+
+In this pattern:
+
+* **Variables** inside Rulebook **action functions** serve as the **Model**.
+* The **action function itself** acts as the **Controller**.
+
+The **View** sends user actions to the Rulebook action function. Since the function encodes the full set of valid transitions, it can **automatically reject invalid actions**.
+
+After each action—or batch of actions—the view re-renders itself based on the current state of the action function. This model ensures clear separation of concerns while simplifying validation, state management, and UI updates.
+
+---
 
 
 ```{tikz}
@@ -126,24 +156,49 @@ The view sends actions to the action function, and since the action function kno
 \end{tikzpicture}
 ```
 
-Altough slow since the view is recalculated entirelly, this pattern provides off-the-shelf.
-
-* automatic textual and binary serialization of the model.
-* automatic tracing, and textual and binary serialization for the tracing o f the controller.
-* automatic testing with fuzzers, machine learning and proofs.
-* automatic bindings to execute the view indipendently from rulebook.
-* automatic bindings to write the view in multiple languages.
 
 
-## Efficient VIEW-Rulebook pattern
+Although the **VIEW–Rulebook** pattern is slower—since the view is fully recomputed after each user input—it provides **out-of-the-box support** for many powerful capabilities:
 
-This is the pattern implemented by our example [4Hammer](./4hammer.md#software-architecture).
-As we said the VIEW-Rulebook pattern suffers because it updates the view at every user input, leading to bad performances in complex views.
+* ✅ Automatic textual and binary serialization of the **model**.
+* ✅ Automatic tracing and serialization (textual and binary) of the **controller’s execution**.
+* ✅ Automatic testing using **fuzzers**, **machine learning**, or **formal proofs**.
+* ✅ Automatic language bindings, allowing the **view** to run independently from Rulebook.
+* ✅ Cross-language support to write views in **multiple languages** (e.g., C#, Python, Godot).
 
-We offer two ways of mending the problem. The first solution retains the entirety of the benefits of the VIEW-Rulebook pattern, and consists in emitting events to which the view can subscribe too and process at their own will.
+---
 
+## Efficient VIEW–Rulebook Pattern
 
-For example, if you need a more performant implementation of chess for some reason, the Rulebook components can mantain along side the game a queue of events, such as "piece moved", "piece removed". After every action the view consumes these events and updates itself. So a graphical element showcasing a rook can simply subscribe to the "piece moved" event and update itself it the piece that was moved was indeed its own.
+This is the approach used in our [4Hammer example](./4hammer.md#software-architecture).
+
+As mentioned earlier, the standard VIEW–Rulebook pattern can become **inefficient** for complex applications because the entire view is refreshed after **every single action**.
+
+To address this, Rulebook supports two optimization strategies. The **first and most compatible** method preserves all the benefits of the pattern by introducing **event emission**.
+
+### Event-Based Optimization
+
+Action functions can emit **events**, which the view can **subscribe to** and process selectively.
+
+#### Example: Optimizing Chess Rendering
+
+Suppose you're building a more performance-sensitive chess application. Instead of redrawing the whole board after every move, the Rulebook action function can maintain a **queue of events** like:
+
+* `"piece_moved"`
+* `"piece_removed"`
+
+After each action:
+
+* The view reads the event queue.
+* Each UI component decides whether to update based on those events.
+
+For example:
+
+* A graphical element displaying a rook only listens to `"piece_moved"` events.
+* If the event references **its own rook**, it updates itself—otherwise, it does nothing.
+
+This **event-driven rendering** dramatically reduces unnecessary UI updates while still benefiting from Rulebook’s safety, serialization, and testability.
+
 
 ```{tikz}
 :libs: arrows.meta,calc,positioning
@@ -183,35 +238,45 @@ For example, if you need a more performant implementation of chess for some reas
 \end{tikzpicture}
 ```
 
-The second more performant implementation allows the Rulebook code to direclty call the code that updates the view, without any kind of indirection. That pattern breaks many of automatic tools offered by rulebook, but they can mostly be mended.
 
-* automatic tracing, and textual and binary serialization for the tracing of the controller.
+The second, more performant implementation allows Rulebook code to **directly call** functions that update the view, without any kind of indirection.
+This pattern **breaks** many of the automatic tools provided by Rulebook—but most of them can be **partially or fully recovered**.
 
-**unchanged**
+* **Automatic tracing, and textual and binary serialization of the controller's execution**
+  ✅ **Unchanged**
 
-* automatic bindings to write the view in multiple languages.
-* automatic bindings to execute the view indipendently from rulebook.
+* **Automatic bindings to write the view in multiple languages**
 
-**meaningless**, the code was designed to have no real separation between view and controller. If the tool requires multiple views, for example a web view and a integrated view, then the same techinques described for machine learning can be used.
+* **Automatic bindings to execute the view independently from Rulebook**
+  ❌ **Not meaningful** — This design intentionally blurs the line between view and controller.
+  If you need multiple interchangeable views (e.g., a web UI and a native UI), you can use the same techniques described for machine learning to isolate them.
 
-* automatic testing with fuzzers, machine learning and proofs.
+* **Automatic testing with fuzzers, machine learning, and proofs**
+  ⚠️ **Preserved with conditional compilation** —
+  The compiler can be configured to exclude view-specific code when building Rulebook components for fuzzing, learning, or formal verification.
+  If you want to use machine learning in a release build that includes the view, you can instruct the system to ignore view-related memory (like pointers to UI components) during training or tracing.
 
-**preserved with conditional compilation**: The compiler can be configured to not emit the code specific to the view when building the Rulebook components for fuzzers, machine learning and proofs. If the machine learning tools are to be used on a released build with the engine enabled, it is possible to specify that view related memory objects, such as pointers to the view components to update after a model change, are to be ignored by the machine learning.
+* **Automatic textual and binary serialization of the model**
+  ⚠️ **Requires annotation of view data structures** —
+  Any view-related fields inside the model must be marked to be excluded from serialization.
+  After loading the model from disk, the view is responsible for **reinitializing those fields** as needed.
 
-* automatic textual and binary serialization of the model.
+---
 
-**requires to specify which are view datastructures**: eventual view related datastructure inside the model can be marked as to be ignored during serialization and deserialization. After they are loaded from disk, the view must somehow repopulate them correctly.
+## View–Rulebook–Model Pattern
 
-## View-Rulebook-Model Pattern
+Everything previously discussed about views remains valid here. This section focuses on a **separate concern**: how to mix Rulebook with **custom models**.
 
-All discussion about the view expressed in the previous sections are still valid for this section, which instead focuses on the indipendent problem of mixing Rulebook with custom models.
+Using a custom model becomes necessary when you want to:
 
-The requirement for a custom model usually happen when you want partially or totally:
-* reuse previously existing code to implement the model.
-* move the model into another process, for example because it is actually held in a remote database.
-* write the model in some other language because of performance or some other requirement (CUDA, SQL...).
+* Partially or fully **reuse existing code** to implement the model.
+* **Run the model in another process**, such as on a backend server or a remote database.
+* **Write the model in another language**, e.g. for performance (CUDA) or integration (SQL).
 
-In this situations you can treat problem of connecting Rulebook to a external language, as explained [here][ToDo].
+In these cases, you can connect Rulebook to the external model using the same language-interoperability techniques described [here](./interoperating.md).
+---
+
+
 
 ```{tikz}
 :libs: arrows.meta,calc,positioning
@@ -259,35 +324,58 @@ In this situations you can treat problem of connecting Rulebook to a external la
 
 ```
 
-Just like when violating the separation of view and controller, writing parts of the model outside of rulebook makes it hard to use off-the-shelf rulebook tools.
 
-### automatic textual and binary serialization of the model.
-Relies on having implemented the method to print, parse, binary print and binary parse the model. If you can provide those in the original language in every class that you use in Rulebook from another language, then you will get this functionality to work.
+Just like when violating the separation between **view and controller**, writing parts of the **model outside of Rulebook** makes it harder to use Rulebook’s off-the-shelf tools. The tools don’t stop working entirely—but they may require additional effort or custom implementation.
 
+### Automatic textual and binary serialization of the model
 
-### automatic tracing, and textual and binary serialization for the tracing o f the controller.
-As long as you don't use classes defined in some other language within action statments arguments, this will work. If you do use them there, then the same consideration for the previous point apply.
+Serialization relies on Rulebook being able to **print**, **parse**, **binary print**, and **binary parse** the model.
+If you're using model classes written in another language, you’ll need to implement those methods yourself, **in the original language**, for every class used in Rulebook. If you do, serialization will work as expected.
 
-### automatic testing with fuzzers, machine learning and proofs.
-Fuzzers work as the previous point. On top of that:
+---
 
-* Model checking proofs require that model classes written in another are copiable.
-* Machine learning requires that your model classes written in another language implement the serialization to tensor traits.
+### Automatic tracing, and textual and binary serialization of the controller
 
-### automatic bindings to execute the view indipendently from rulebook.
-Unafected.
+This works **as long as you don't use foreign classes (from another language) as arguments in action statements**.
+If you do, then the same rules from the model serialization section above apply: you’ll need to manually provide serialization logic.
 
-###  automatic bindings to write the view in multiple languages.
-Unafected.
+---
 
+### Automatic testing with fuzzers, machine learning, and proofs
 
-## View-Multi Rulebook Controller pattern
+Fuzzing behaves like tracing—if the controller or model depends on external types, you'll need serialization support.
 
-While some programs may make sense to think in terms of a single gigantic interactive sequence from start to finish, this is usually not the case for most programs. Interactive programs usually have many small interactive sequences that the user can perform.
-For example, a typical videogame may have a interactive sequence describing in which order powerups can be unlocked by a player, and another interactive sequence is the way a non player character behaves in respose to the player interacting with that character.
-You could stick them all into a single enormous interactive sequence that allows to perform any action from any of al sub interactive sequences at the same time, or, instead you just consider them different controllers of different parts of the model.
+In addition:
 
-In this situation, all considerations previously mentioned in this article still apply. The only difference is that many Rulebook controllers are placed inside a "controller aggregator" written in some other language (or even rulebook itself).
+* ✅ **Model checking** requires that foreign model classes be **copiable**.
+* ✅ **Machine learning** requires those classes to implement **serialization-to-tensor traits**.
+
+---
+
+### Automatic bindings to execute the view independently from Rulebook
+
+✅ **Unaffected**
+
+---
+
+### Automatic bindings to write the view in multiple languages
+
+✅ **Unaffected**
+
+---
+
+## View–Multi Rulebook Controller Pattern
+
+While it’s sometimes tempting to design an application as one giant interactive sequence from start to finish, that’s rarely ideal. Most interactive programs are made up of **many small, independent interactive sequences**.
+
+For example:
+
+* A video game might include one sequence for how **powerups are unlocked**, and another for how a **non-player character reacts** to the player.
+* You could technically combine all these into one massive coroutine—but it's usually better to treat them as **separate Rulebook controllers** operating on different parts of the model.
+
+In this scenario, everything previously discussed in this document still applies.
+The only difference is that **multiple Rulebook controllers** are embedded inside a **controller aggregator**, which may be written in another language—or even in Rulebook itself.
+
 
 ```{tikz}
 :libs: arrows.meta,calc,positioning,fit,backgrounds
@@ -343,15 +431,41 @@ In this situation, all considerations previously mentioned in this article still
 \end{tikzpicture}
 ```
 
-The shown controller describes a interactive game where one rulebook controller controls how the player can act in the world, one controller handles a complex non linear story progression, and a indipendant world controller handles non player characters.
 
-Of course the astute reader will notice that this design describe a poor game where the player story is totally disconnected from the world controller, and this does not seem realistic. That brings us to the last MVC style design
+The controller described above outlines an interactive game where:
 
-## Multilayer Rulebook Controllers.
+* One **Rulebook controller** governs how the **player** can act in the world.
+* Another controller manages a **complex, non-linear story progression**.
+* A third, **independent world controller** handles the behavior of **non-player characters (NPCs)**.
 
-Sometimes you have multiple interactive sequences that insist on the same model, and/or some those sequences may be allowed to create/cancel/modify another interactive sequence. For example, think of a video game where there is a interactive sequence which is the story, and another interactive sequence for each non player character on screen that handles the behaviour of that character. Say that when the user triggers a particular story event, all non player characters are to be destroyed, and the state of their interactive sequence, discarded.
+Of course, the astute reader will recognize a flaw in this setup: the player’s story appears **completely disconnected** from the world controller. This isn’t very realistic—story events should affect the world and its characters. This leads us to the final architectural pattern:
 
-You can achieve this by organizing your interactive sequences hierarchically. The following image displays a setup where there exists a single model (implemented in rulebook or not), shared between all controllers. The non player characters controller is the least important one, that drives the behaviour of characters when the player is near. Then there is the story controller which is allowed create, modify and destroy enemies, and therefore has access to the non player characters controller. Finally there is the player controller that handles the user inputs and depending on the player action can trigger a new event of the story.
+---
+
+## Multilayer Rulebook Controllers
+
+In some cases, you have **multiple interactive sequences** that operate on the **same shared model**. These sequences may also be allowed to **create, modify, or terminate** one another.
+
+For example, imagine a video game with:
+
+* A main **story sequence** that drives narrative progression.
+* Separate sequences for **each NPC on screen**, handling their individual behaviors.
+
+Now say a certain story event causes **all NPCs to vanish**—you would need to discard their interactive sequences and remove them from the game. To do this cleanly, Rulebook lets you **organize interactive sequences hierarchically**.
+
+---
+
+### Example Design
+
+Here’s how such a setup might look conceptually:
+
+* A **single model**, possibly written in Rulebook or another language, is **shared** between all controllers.
+* The **NPC controller** is the lowest layer—it controls character behavior when the player is nearby.
+* Above it, the **story controller** has authority to **create, modify, or destroy** NPCs by managing their associated controllers.
+* At the top, the **player controller** listens to user inputs and, based on player actions, triggers **story events**, which in turn cascade downward.
+
+This kind of layered architecture lets each controller focus on its domain, while still interacting in a coordinated way.
+
 
 
 ```{tikz}
@@ -414,4 +528,10 @@ You can achieve this by organizing your interactive sequences hierarchically. Th
 
 ```
 
-While this pattern is more complex to write, it allows to create interactive sequences where sequences are allowed to modify each other, and it retains all the capabilities described in the [View-Rulebook pattern](#view-rulebook-pattern). As well as all considerations about dividing the controller from the model described earlier.
+While this pattern is more complex to implement, it allows you to build **interactive sequences that can dynamically create, modify, or terminate other sequences**. Despite the added complexity, it **retains all the benefits** described in the [View–Rulebook pattern](#view-rulebook-pattern), including:
+
+* Automatic validation of user actions
+* Reusability and testability of controllers
+* Clear separation of concerns
+
+It also remains fully compatible with all previous considerations about **separating the controller from the model**.

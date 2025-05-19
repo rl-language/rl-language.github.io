@@ -11,10 +11,10 @@ The X axis is the average competence at 26 atari games achieved by various algor
 
 ![Reinforcement learnign game progress](./imgs/rl_game_progress.webp)
 
-Training a network to play an Atarii game takes (or will soon take) less than 32 A100 GPU hours. As of 2023, an A100 GPU hour costs between 1 and 5 dollars.  https://gpus.llm-utils.org/a100-gpu-cloud-availability-and-pricing/
+Training a network to play an Atarii game takes (or will soon take) less than [32 A100 GPU hours](https://gpus.llm-utils.org/a100-gpu-cloud-availability-and-pricing/). As of 2023, an A100 GPU hour costs between 1 and 5 dollars.
 
 So, as of the moment of writing, a training run for an Atarii game costs in the ballpark of 30-150 dollars. If humanity can achieve a further 100x cost reduction, it will become possible for game designers train a super human playing agent agent that will help them to validate the quality of their designs for a very low price.
-Thankfully, it seems that we will not have to wait that long to obtain that cost reduction. https://www.redsharknews.com/nvidia-wants-to-increase-computing-power-by-a-factor-of-1-million
+Thankfully, it seems that we will not have to wait that long to obtain that [cost reduction](https://www.redsharknews.com/nvidia-wants-to-increase-computing-power-by-a-factor-of-1-million).
 
 Still, 150 dollars seems a low enough cost that we would expect game companies to start adopting machine-learning techniques to at least validate their design before release.
 
@@ -82,4 +82,4 @@ To meet those requirements we have designed RL with the following characteristic
 * **Imperative language**: Game rules are conceptualized by designers as procedures players must follow. Since we are trying to produce a simple language, we should strive to keep the difference between how one thinks of games and how one implements them. Thus, RL must be an imperative language.
 
 Finally, the most important feature is
-**Engine independence**: which we explain how to achieve [here](./rationale.md).
+**Engine independence**: which we explain how to achieve [here](./language_tour.md).

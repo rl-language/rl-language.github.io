@@ -315,3 +315,7 @@ Unfortunatelly there is no way for a unreal engine plugin to hook inside the the
 ### CMake
 
 We expose typical actions one my wish to perform from cmake as a cmake config file. This includes correct managment of imported files in rulebook for incremental builds, the various wrappers generators and so on. You can see examples in the [godot plugin cmake file](https://github.com/rl-language/4Hammer/blob/master/CMakeLists.txt) of 4hammer.
+
+### Cross compiling
+
+Cross compiling is possible but requires the user to compile the native standard library of the language for every target platform. This is trivial because the entirety of the native standard library is 200 lines long and relies on a couple of libc functions only. The source file of standard library is shipped with the headers of the compiler too, so you can just include it in another cpp library of your tool and you are done. RLC accepts the triple of the target platform.
