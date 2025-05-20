@@ -1,6 +1,6 @@
 # Language Tour
 
-Rulebook is a compiled and statically checked language.
+[Rulebook](https://github.com/rl-language/rlc) is a compiled and statically checked language.
 
 ```rlc
 # rlc hellow world
@@ -213,7 +213,7 @@ By recording and replaying action sequences, you can rigorously test application
 
 ## Action Statement Classes
 
-In interactive systems, you may want to **delay** the execution of an action—such as processing a user click after a few frames. Rulebook makes this possible using the `@classes` attribute on action functions.
+In interactive systems, you may want to **delay** the execution of an action—such as processing a user click after a few frames. Rulebook makes this possible using the `@classes` attribute on [action functions](#action-functions).
 
 Here’s an example. A rendering loop polls GUI events, converts them into actions, queues them, and applies them with a delay:
 
@@ -584,7 +584,7 @@ The system learns to maximize the score based on how the game works. That score 
 
 ## Self-Configuring UIs
 
-One of Rulebook’s unique strengths is that it **exposes all action types** available in an action function. This allows UI code to:
+One of Rulebook’s unique strengths is that it **exposes all [action types](#action-statement-classes)** available in an [action function](#action-functions). This allows UI code to:
 
 * Inspect the current program state.
 * Determine which actions are currently valid.

@@ -133,7 +133,7 @@
              
   <section id="language-tour">
 <h1>Language Tour<a class="headerlink" href="#language-tour" title="Link to this heading"></a></h1>
-<p>Rulebook is a compiled and statically checked language.</p>
+<p><a class="reference external" href="https://github.com/rl-language/rlc">Rulebook</a> is a compiled and statically checked language.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># rlc hellow world</span>
 <span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
 
@@ -316,7 +316,7 @@
 <hr class="docutils" />
 <section id="action-statement-classes">
 <h2>Action Statement Classes<a class="headerlink" href="#action-statement-classes" title="Link to this heading"></a></h2>
-<p>In interactive systems, you may want to <strong>delay</strong> the execution of an action—such as processing a user click after a few frames. Rulebook makes this possible using the <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code> attribute on action functions.</p>
+<p>In interactive systems, you may want to <strong>delay</strong> the execution of an action—such as processing a user click after a few frames. Rulebook makes this possible using the <code class="docutils literal notranslate"><span class="pre">&#64;classes</span></code> attribute on <a class="reference internal" href="#action-functions"><span class="xref myst">action functions</span></a>.</p>
 <p>Here’s an example. A rendering loop polls GUI events, converts them into actions, queues them, and applies them with a delay:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="p">@</span><span class="n">classes</span>
 <span class="kn">act</span> <span class="n">installer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Installer</span><span class="p">:</span>
@@ -648,7 +648,7 @@ rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </s
 <hr class="docutils" />
 <section id="self-configuring-uis">
 <h2>Self-Configuring UIs<a class="headerlink" href="#self-configuring-uis" title="Link to this heading"></a></h2>
-<p>One of Rulebook’s unique strengths is that it <strong>exposes all action types</strong> available in an action function. This allows UI code to:</p>
+<p>One of Rulebook’s unique strengths is that it <strong>exposes all <a class="reference internal" href="#action-statement-classes"><span class="xref myst">action types</span></a></strong> available in an <a class="reference internal" href="#action-functions"><span class="xref myst">action function</span></a>. This allows UI code to:</p>
 <ul class="simple">
 <li><p>Inspect the current program state.</p></li>
 <li><p>Determine which actions are currently valid.</p></li>
