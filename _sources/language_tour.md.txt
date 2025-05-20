@@ -26,7 +26,7 @@ Rulebook is built to simplify the construction of [complex interactive subsystem
 * [Inspectable](#inspectable)
 * [No-main loop owning](#no-main-loop-ownership)
 
-These properties allow developers to [store, load, print, replay, and modify](#spin-functions-implications) both program state and execution traces in a principled and testable way.
+These properties allow developers to [store, load, print, replay, and modify](#spin-function-implications) both program state and execution traces in a principled and testable way.
 
 ---
 
@@ -570,8 +570,6 @@ rlc-learn file.rl -o network #ctrl+c to stop it after a while
 rlc-play file.rk network # to see a game
 ```
 
-## Reinforcement Learning
-
 The user never had to specify anything related to reinforcement learning. They simply defined the environment's rules—and everything else was inferred automatically.
 
 The system learns to maximize the score based on how the game works. That score can be visualized later, making this approach valuable in two ways:
@@ -691,18 +689,20 @@ All advanced features in Rulebook are **opt-in**. If you don’t use them, you p
 
 Rulebook is designed to **scale gracefully** based on the features you choose to use.
 
+More on interoperability [here](./interoperating.md).
+
 ---
 
 ## Remote Execution
 
-Since Rulebook supports serialization and is compatible across multiple languages, **remote execution** can be implemented at the **action trace level**.
+Since Rulebook supports [serialization](#serializable) for [action statement classes](#action-statement-classes) and is [interoperable](compatibility) across multiple languages, **remote execution** can be implemented at the **action trace level**.
 
 That means:
 
 * You can run identical programs in two separate processes (even across languages).
 * As one instance executes actions, the trace can be sent to and replayed by the other.
 
-This enables powerful distributed testing and simulation scenarios, and it's already used in the [4Hammer project](https://github.com/rl-language/4Hammer). It’s a natural extension of Rulebook’s [SPIN function](#spin-functions-implications) architecture.
+This enables powerful distributed testing and simulation scenarios, and it's already used in the [4Hammer project](https://github.com/rl-language/4Hammer). It’s a natural extension of Rulebook’s [SPIN function](#spin-function-implications) architecture.
 
 ---
 

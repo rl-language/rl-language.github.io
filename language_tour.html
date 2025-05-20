@@ -69,7 +69,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#example-catch-a-simple-rl-environment">Example: “Catch” — A Simple RL Environment</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">Reinforcement Learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#self-configuring-uis">Self-Configuring UIs</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#example-ui-for-tic-tac-toe">Example: UI for Tic-Tac-Toe</a></li>
 </ul>
@@ -157,7 +156,7 @@
 <li><p><a class="reference internal" href="#inspectable"><span class="xref myst">Inspectable</span></a></p></li>
 <li><p><a class="reference internal" href="#no-main-loop-ownership"><span class="xref myst">No-main loop owning</span></a></p></li>
 </ul>
-<p>These properties allow developers to <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">store, load, print, replay, and modify</span></a> both program state and execution traces in a principled and testable way.</p>
+<p>These properties allow developers to <a class="reference internal" href="#spin-function-implications"><span class="xref myst">store, load, print, replay, and modify</span></a> both program state and execution traces in a principled and testable way.</p>
 </section>
 <hr class="docutils" />
 <section id="no-main-loop-ownership">
@@ -636,16 +635,13 @@ rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </s
 <span class="n">rlc</span><span class="o">-</span><span class="n">play</span> <span class="n">file</span><span class="o">.</span><span class="n">rk</span> <span class="n">network</span> <span class="c1"># to see a game</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="id1">
-<h2>Reinforcement Learning<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>The user never had to specify anything related to reinforcement learning. They simply defined the environment’s rules—and everything else was inferred automatically.</p>
 <p>The system learns to maximize the score based on how the game works. That score can be visualized later, making this approach valuable in two ways:</p>
 <ul class="simple">
 <li><p>To determine the <strong>maximum achievable performance</strong> of a program.</p></li>
 <li><p>To verify that the program behaves <strong>as expected</strong>—and that internal variables don’t take on surprising or incorrect values.</p></li>
 </ul>
+</section>
 </section>
 <hr class="docutils" />
 <section id="self-configuring-uis">
@@ -751,18 +747,19 @@ rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </s
 <li><p>You can rely on trace replay only in subsystems where time-invariance holds.</p></li>
 </ul>
 <p>Rulebook is designed to <strong>scale gracefully</strong> based on the features you choose to use.</p>
+<p>More on interoperability <a class="reference internal" href="interoperating.html"><span class="std std-doc">here</span></a>.</p>
 </section>
 </section>
 <hr class="docutils" />
 <section id="remote-execution">
 <h2>Remote Execution<a class="headerlink" href="#remote-execution" title="Link to this heading"></a></h2>
-<p>Since Rulebook supports serialization and is compatible across multiple languages, <strong>remote execution</strong> can be implemented at the <strong>action trace level</strong>.</p>
+<p>Since Rulebook supports <a class="reference internal" href="#serializable"><span class="xref myst">serialization</span></a> for <a class="reference internal" href="#action-statement-classes"><span class="xref myst">action statement classes</span></a> and is <a class="reference internal" href="#compatibility"><span class="xref myst">interoperable</span></a> across multiple languages, <strong>remote execution</strong> can be implemented at the <strong>action trace level</strong>.</p>
 <p>That means:</p>
 <ul class="simple">
 <li><p>You can run identical programs in two separate processes (even across languages).</p></li>
 <li><p>As one instance executes actions, the trace can be sent to and replayed by the other.</p></li>
 </ul>
-<p>This enables powerful distributed testing and simulation scenarios, and it’s already used in the <a class="reference external" href="https://github.com/rl-language/4Hammer">4Hammer project</a>. It’s a natural extension of Rulebook’s <a class="reference internal" href="#spin-functions-implications"><span class="xref myst">SPIN function</span></a> architecture.</p>
+<p>This enables powerful distributed testing and simulation scenarios, and it’s already used in the <a class="reference external" href="https://github.com/rl-language/4Hammer">4Hammer project</a>. It’s a natural extension of Rulebook’s <a class="reference internal" href="#spin-function-implications"><span class="xref myst">SPIN function</span></a> architecture.</p>
 </section>
 <hr class="docutils" />
 <section id="tooling">
