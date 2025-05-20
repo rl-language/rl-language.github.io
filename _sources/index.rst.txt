@@ -13,7 +13,7 @@ Rulebook Documentation
 **Why Rulebook?**
 
 
-* `Self-configuring UIs <./language_tour.html#self-configuring-uis>`_ – the UI introspects your program graph and adapts its controls on the fly.
+* `Write self-configuring UIs <./language_tour.html#self-configuring-uis>`_ – the UI introspects your program graph and adapts its controls on the fly.
 * Solve the `interactive inversion-of-control problem <./the_inversion_of_control_problem.html>`_ at the language level—no more interactive spaghetti.
 * `Capture every run <./language_tour.html#spin-function-implications>`_ – automatically store, load, print, replay, and mutate both state *and* execution traces.
 * **Push-button testing** – drop in standard `fuzzers <./language_tour.html#automatic-testing>`_, formal `proofs <./language_tour.html#finite-interactive-programs>`_, or `reinforcement-learning agents <./language_tour.html#reinforcement-learning>`_.
