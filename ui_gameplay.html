@@ -80,14 +80,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#viewrulebookmodel-pattern">View–Rulebook–Model Pattern</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#in-these-cases-you-can-connect-rulebook-to-the-external-model-using-the-same-language-interoperability-techniques-described-here">In these cases, you can connect Rulebook to the external model using the same language-interoperability techniques described <span class="xref myst">here</span>.</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-textual-and-binary-serialization-of-the-model">Automatic textual and binary serialization of the model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-tracing-and-textual-and-binary-serialization-of-the-controller">Automatic tracing, and textual and binary serialization of the controller</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-testing-with-fuzzers-machine-learning-and-proofs">Automatic testing with fuzzers, machine learning, and proofs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-bindings-to-execute-the-view-independently-from-rulebook">Automatic bindings to execute the view independently from Rulebook</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automatic-bindings-to-write-the-view-in-multiple-languages">Automatic bindings to write the view in multiple languages</a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="#viewmulti-rulebook-controller-pattern">View–Multi Rulebook Controller Pattern</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#multilayer-rulebook-controllers">Multilayer Rulebook Controllers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#example-design">Example Design</a></li>
@@ -232,18 +224,16 @@
 </div><p>The second, more performant implementation allows Rulebook code to <strong>directly call</strong> functions that update the view, without any kind of indirection.
 This pattern <strong>breaks</strong> many of the automatic tools provided by Rulebook—but most of them can be <strong>partially or fully recovered</strong>.</p>
 <ul class="simple">
-<li><p><strong>Automatic tracing, and textual and binary serialization of the controller’s execution</strong>
-✅ <strong>Unchanged</strong></p></li>
-<li><p><strong>Automatic bindings to write the view in multiple languages</strong></p></li>
-<li><p><strong>Automatic bindings to execute the view independently from Rulebook</strong>
-❌ <strong>Not meaningful</strong> — This design intentionally blurs the line between view and controller.
-If you need multiple interchangeable views (e.g., a web UI and a native UI), you can use the same techniques described for machine learning to isolate them.</p></li>
-<li><p><strong>Automatic testing with fuzzers, machine learning, and proofs</strong>
-⚠️ <strong>Preserved with conditional compilation</strong> —
+<li><p>✅ <strong>Automatic tracing, and textual and binary serialization of the controller’s execution</strong>
+<strong>Unchanged</strong></p></li>
+<li><p>❌ <strong>Automatic bindings to write the view in multiple languages, or to execute the view independently from Rulebook</strong>
+<strong>Not meaningful</strong> — This design intentionally blurs the line between view and controller, there is no real distinction between view and controller. If this happens in isolated places, you can use conditional compilation to segretate UI elements from che controller.</p></li>
+<li><p>⚠️ <strong>Automatic testing with fuzzers, machine learning, and proofs</strong>
+<strong>Preserved with conditional compilation</strong> —
 The compiler can be configured to exclude view-specific code when building Rulebook components for fuzzing, learning, or formal verification.
 If you want to use machine learning in a release build that includes the view, you can instruct the system to ignore view-related memory (like pointers to UI components) during training or tracing.</p></li>
-<li><p><strong>Automatic textual and binary serialization of the model</strong>
-⚠️ <strong>Requires annotation of view data structures</strong> —
+<li><p>⚠️ <strong>Automatic textual and binary serialization of the model</strong>
+<strong>Requires annotation of view data structures</strong> —
 Any view-related fields inside the model must be marked to be excluded from serialization.
 After loading the model from disk, the view is responsible for <strong>reinitializing those fields</strong> as needed.</p></li>
 </ul>
@@ -260,42 +250,41 @@ After loading the model from disk, the view is responsible for <strong>reinitial
 <li><p><strong>Run the model in another process</strong>, such as on a backend server or a remote database.</p></li>
 <li><p><strong>Write the model in another language</strong>, e.g. for performance (CUDA) or integration (SQL).</p></li>
 </ul>
-</section>
-<section id="in-these-cases-you-can-connect-rulebook-to-the-external-model-using-the-same-language-interoperability-techniques-described-here">
-<h2>In these cases, you can connect Rulebook to the external model using the same language-interoperability techniques described <a class="reference internal" href="interoperating.html"><span class="std std-doc">here</span></a>.<a class="headerlink" href="#in-these-cases-you-can-connect-rulebook-to-the-external-model-using-the-same-language-interoperability-techniques-described-here" title="Link to this heading"></a></h2>
+<p>In these cases, you can connect Rulebook to the external model using the same language-interoperability techniques described <a class="reference internal" href="interoperating.html"><span class="std std-doc">here</span></a>.</p>
+<hr class="docutils" />
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-aa37087a2be001dc050b6768e1bce72b9244e169.png" alt="Figure made with TikZ" /></p>
 </div><p>Just like when violating the separation between <strong>view and controller</strong>, writing parts of the <strong>model outside of Rulebook</strong> makes it harder to use Rulebook’s off-the-shelf tools. The tools don’t stop working entirely—but they may require additional effort or custom implementation.</p>
-<section id="automatic-textual-and-binary-serialization-of-the-model">
-<h3>Automatic textual and binary serialization of the model<a class="headerlink" href="#automatic-textual-and-binary-serialization-of-the-model" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Automatic textual and binary serialization of the model</strong></p></li>
+</ul>
 <p>Serialization relies on Rulebook being able to <strong>print</strong>, <strong>parse</strong>, <strong>binary print</strong>, and <strong>binary parse</strong> the model.
 If you’re using model classes written in another language, you’ll need to implement those methods yourself, <strong>in the original language</strong>, for every class used in Rulebook. If you do, serialization will work as expected.</p>
-</section>
 <hr class="docutils" />
-<section id="automatic-tracing-and-textual-and-binary-serialization-of-the-controller">
-<h3>Automatic tracing, and textual and binary serialization of the controller<a class="headerlink" href="#automatic-tracing-and-textual-and-binary-serialization-of-the-controller" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Automatic tracing, and textual and binary serialization of the controller</strong></p></li>
+</ul>
 <p>This works <strong>as long as you don’t use foreign classes (from another language) as arguments in action statements</strong>.
 If you do, then the same rules from the model serialization section above apply: you’ll need to manually provide serialization logic.</p>
-</section>
 <hr class="docutils" />
-<section id="automatic-testing-with-fuzzers-machine-learning-and-proofs">
-<h3>Automatic testing with fuzzers, machine learning, and proofs<a class="headerlink" href="#automatic-testing-with-fuzzers-machine-learning-and-proofs" title="Link to this heading"></a></h3>
-<p>Fuzzing behaves like tracing—if the controller or model depends on external types, you’ll need serialization support.</p>
+<ul class="simple">
+<li><p><strong>Automatic testing with fuzzers, machine learning, and proofs</strong></p></li>
+</ul>
+<p>Fuzzing behaves like tracing—tracing depends on external types, you’ll need serialization support.</p>
 <p>In addition:</p>
 <ul class="simple">
-<li><p>✅ <strong>Model checking</strong> requires that foreign model classes be <strong>copiable</strong>.</p></li>
-<li><p>✅ <strong>Machine learning</strong> requires those classes to implement <strong>serialization-to-tensor traits</strong>.</p></li>
+<li><p><strong>Model checking</strong> requires that foreign model classes be <strong>copiable</strong>.</p></li>
+<li><p><strong>Machine learning</strong> requires those classes to implement <strong>serialization-to-tensor traits</strong>.</p></li>
 </ul>
-</section>
 <hr class="docutils" />
-<section id="automatic-bindings-to-execute-the-view-independently-from-rulebook">
-<h3>Automatic bindings to execute the view independently from Rulebook<a class="headerlink" href="#automatic-bindings-to-execute-the-view-independently-from-rulebook" title="Link to this heading"></a></h3>
-<p>✅ <strong>Unaffected</strong></p>
-</section>
+<ul class="simple">
+<li><p><strong>Automatic bindings to execute the view independently from Rulebook</strong></p></li>
+</ul>
+<p><strong>Unaffected</strong></p>
 <hr class="docutils" />
-<section id="automatic-bindings-to-write-the-view-in-multiple-languages">
-<h3>Automatic bindings to write the view in multiple languages<a class="headerlink" href="#automatic-bindings-to-write-the-view-in-multiple-languages" title="Link to this heading"></a></h3>
-<p>✅ <strong>Unaffected</strong></p>
-</section>
+<ul class="simple">
+<li><p><strong>Automatic bindings to write the view in multiple languages</strong></p></li>
+</ul>
+<p><strong>Unaffected</strong></p>
 </section>
 <hr class="docutils" />
 <section id="viewmulti-rulebook-controller-pattern">

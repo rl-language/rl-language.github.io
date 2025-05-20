@@ -242,22 +242,19 @@ This **event-driven rendering** dramatically reduces unnecessary UI updates whil
 The second, more performant implementation allows Rulebook code to **directly call** functions that update the view, without any kind of indirection.
 This pattern **breaks** many of the automatic tools provided by Rulebook—but most of them can be **partially or fully recovered**.
 
-* **Automatic tracing, and textual and binary serialization of the controller's execution**
-  ✅ **Unchanged**
+* ✅ **Automatic tracing, and textual and binary serialization of the controller's execution**
+  **Unchanged**
 
-* **Automatic bindings to write the view in multiple languages**
+* ❌ **Automatic bindings to write the view in multiple languages, or to execute the view independently from Rulebook**
+  **Not meaningful** — This design intentionally blurs the line between view and controller, there is no real distinction between view and controller. If this happens in isolated places, you can use conditional compilation to segretate UI elements from che controller.
 
-* **Automatic bindings to execute the view independently from Rulebook**
-  ❌ **Not meaningful** — This design intentionally blurs the line between view and controller.
-  If you need multiple interchangeable views (e.g., a web UI and a native UI), you can use the same techniques described for machine learning to isolate them.
-
-* **Automatic testing with fuzzers, machine learning, and proofs**
-  ⚠️ **Preserved with conditional compilation** —
+* ⚠️ **Automatic testing with fuzzers, machine learning, and proofs**
+   **Preserved with conditional compilation** —
   The compiler can be configured to exclude view-specific code when building Rulebook components for fuzzing, learning, or formal verification.
   If you want to use machine learning in a release build that includes the view, you can instruct the system to ignore view-related memory (like pointers to UI components) during training or tracing.
 
-* **Automatic textual and binary serialization of the model**
-  ⚠️ **Requires annotation of view data structures** —
+* ⚠️ **Automatic textual and binary serialization of the model**
+   **Requires annotation of view data structures** —
   Any view-related fields inside the model must be marked to be excluded from serialization.
   After loading the model from disk, the view is responsible for **reinitializing those fields** as needed.
 
@@ -274,6 +271,7 @@ Using a custom model becomes necessary when you want to:
 * **Write the model in another language**, e.g. for performance (CUDA) or integration (SQL).
 
 In these cases, you can connect Rulebook to the external model using the same language-interoperability techniques described [here](./interoperating.md).
+
 ---
 
 
@@ -327,40 +325,40 @@ In these cases, you can connect Rulebook to the external model using the same la
 
 Just like when violating the separation between **view and controller**, writing parts of the **model outside of Rulebook** makes it harder to use Rulebook’s off-the-shelf tools. The tools don’t stop working entirely—but they may require additional effort or custom implementation.
 
-### Automatic textual and binary serialization of the model
+* **Automatic textual and binary serialization of the model**
 
 Serialization relies on Rulebook being able to **print**, **parse**, **binary print**, and **binary parse** the model.
 If you're using model classes written in another language, you’ll need to implement those methods yourself, **in the original language**, for every class used in Rulebook. If you do, serialization will work as expected.
 
 ---
 
-### Automatic tracing, and textual and binary serialization of the controller
+* **Automatic tracing, and textual and binary serialization of the controller**
 
 This works **as long as you don't use foreign classes (from another language) as arguments in action statements**.
 If you do, then the same rules from the model serialization section above apply: you’ll need to manually provide serialization logic.
 
 ---
 
-### Automatic testing with fuzzers, machine learning, and proofs
+* **Automatic testing with fuzzers, machine learning, and proofs**
 
-Fuzzing behaves like tracing—if the controller or model depends on external types, you'll need serialization support.
+Fuzzing behaves like tracing—tracing depends on external types, you'll need serialization support.
 
 In addition:
 
-* ✅ **Model checking** requires that foreign model classes be **copiable**.
-* ✅ **Machine learning** requires those classes to implement **serialization-to-tensor traits**.
+* **Model checking** requires that foreign model classes be **copiable**.
+* **Machine learning** requires those classes to implement **serialization-to-tensor traits**.
 
 ---
 
-### Automatic bindings to execute the view independently from Rulebook
+* **Automatic bindings to execute the view independently from Rulebook**
 
-✅ **Unaffected**
+ **Unaffected**
 
 ---
 
-### Automatic bindings to write the view in multiple languages
+* **Automatic bindings to write the view in multiple languages**
 
-✅ **Unaffected**
+ **Unaffected**
 
 ---
 

@@ -1,5 +1,6 @@
 # RLC and GYM
 
+[Paper on RLC and GYM](https://arxiv.org/abs/2504.19625)
 
 This document assumes the reader is already familiar with reinforcement learning and [GYM-style environments](https://gymnasium.farama.org). It is intended as a reference for those who wish to wrap their own Rulebook environments in a GYM-style wrapper to ensure interoperability with existing reinforcement learning algorithms.
 
