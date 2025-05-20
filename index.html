@@ -97,7 +97,7 @@
              
   <section id="rulebook-documentation">
 <h1>Rulebook Documentation<a class="headerlink" href="#rulebook-documentation" title="Link to this heading"></a></h1>
-<p><strong>Rulebook</strong> (<a class="reference external" href="https://github.com/rl-language/rlc/">repository</a>) is a <em>statically-checked imperative language</em> that turns <strong>interactive behaviour</strong>—reinforcement-learning environments, video-games, or in general <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive subsystems</a>—into something you can <strong>query, replay, fuzz, and formally verify</strong>.</p>
+<p><strong>Rulebook</strong> is a language for crafting <a class="reference external" href="./the_inversion_of_control_problem.html#complex-interactive-subsystems">complex interactive systems</a>, including reinforcement-learning environments, video games, sophisticated UIs, and more.</p>
 <p><a class="reference external" href="./4hammer.html">4hammer (our flagship demo)</a> shows Rulebook in action.</p>
 <p><strong>Why Rulebook?</strong></p>
 <ul class="simple">
@@ -108,7 +108,7 @@
 <li><p>Solve the <a class="reference external" href="./the_inversion_of_control_problem.html">interactive inversion-of-control problem</a> at the language level—no more interactive spaghetti.</p></li>
 </ul>
 <p><strong>Under the hood</strong></p>
-<p>Rulebook’s defining idea is the notion of <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a>, which make all of the above possible.</p>
+<p>Rulebook’s defining idea is the notion of <a class="reference external" href="./language_tour.html#action-functions">Action functions with SPIN properties</a>, a unique blend of uncommon and new language features that allow all of the above features.</p>
 <p><strong>Integration</strong></p>
 <p>Rulebook compiles to <strong>one shared library (or WebAssembly module)</strong> with a C-compatible ABI and generated bindings for <a class="reference external" href="./language_tour.html#compatibility">C, C++, C#, Python, and Godot Script</a>. Use it the way SQL complements those languages—drop it in wherever <strong>interactive logic</strong> is the hard part.</p>
 <p><a class="reference external" href="./language_tour.html#performance">Zero mallocs</a> unless explicitly requested by the user.</p>

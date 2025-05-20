@@ -6,7 +6,7 @@
 Rulebook Documentation
 ======================
 
-**Rulebook** (`repository <https://github.com/rl-language/rlc/>`_) is a *statically-checked imperative language* that turns **interactive behaviour**—reinforcement-learning environments, video-games, or in general `complex interactive subsystems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_—into something you can **query, replay, fuzz, and formally verify**.
+**Rulebook** is a language for crafting `complex interactive systems <./the_inversion_of_control_problem.html#complex-interactive-subsystems>`_, including reinforcement-learning environments, video games, sophisticated UIs, and more. 
 
 `4hammer (our flagship demo) <./4hammer.html>`_ shows Rulebook in action.
 
@@ -20,7 +20,7 @@ Rulebook Documentation
 
 **Under the hood**
 
-Rulebook’s defining idea is the notion of `Action functions with SPIN properties <./language_tour.html#action-functions>`_, which make all of the above possible.
+Rulebook’s defining idea is the notion of `Action functions with SPIN properties <./language_tour.html#action-functions>`_, a unique blend of uncommon and new language features that allow all of the above features. 
 
 **Integration**
 

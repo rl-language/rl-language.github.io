@@ -1,8 +1,9 @@
 # Language Tour
 
-Rulebook is a compiled and statically checked language. Its defining innovation is the concept of **action functions**—a mechanism designed to handle complex interactions—enhanced with **SPIN** properties.
+Rulebook is a compiled and statically checked language.
 
 ```rlc
+# rlc hellow world
 import serialization.print
 
 cls SimpleRegularCode:
@@ -14,6 +15,8 @@ fun main() -> Int:
     print(pair) # {x: 0, y: false}
     return 0
 ```
+
+Its defining innovation is the concept of **action functions**—a mechanism designed to handle complex interactions—enhanced with **SPIN** properties. Rulebook carefully combines multiple uncommon languages features in a imperative language that is more than the sum of the parts.
 
 ## Action Functions
 
