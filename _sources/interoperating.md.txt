@@ -290,7 +290,7 @@ rlc /tmp/file.rl --python -o /tmp/wrapper.py
 python /tmp/file.py
 ```
 
-### Interop with Unity and CSharp
+## Interop with Unity and CSharp
 
 We have interoperability with CShpart and thus with Unity. Since unity heavily relies on reloading CSharp every time it changes to provide a scripting language like experience, we have added that ability to the wrapper exported for C# so that when Rulebook changes, the unity editor updates automatically.
 
@@ -303,19 +303,19 @@ Relevant files are:
 * [The board slot](https://github.com/rl-language/rlc-unity-example/blob/master/Assets/Scripts/BoardSlot.cs) that knows how to trigger actions.
 
 
-### Interop with godot
+## Interop with godot
 
 Our large example [4Hammer](./4hammer.md) shows interop with godot and cmake.
 
 
-### Interop with unreal
+## Interop with unreal
 
 Unfortunatelly there is no way for a unreal engine plugin to hook inside the the build system of unreal. We have no way to package Rulebook in a way that can be hot reloaded from Unreal without the unreal programmer providing some code themselves. For unreal you have to start from the CPP interop and build from there.
 
-### CMake
+## CMake
 
 We expose typical actions one my wish to perform from cmake as a cmake config file. This includes correct managment of imported files in rulebook for incremental builds, the various wrappers generators and so on. You can see examples in the [godot plugin cmake file](https://github.com/rl-language/4Hammer/blob/master/CMakeLists.txt) of 4hammer.
 
-### Cross compiling
+## Cross compiling
 
 Cross compiling is possible but requires the user to compile the native standard library of the language for every target platform. This is trivial because the entirety of the native standard library is 200 lines long and relies on a couple of libc functions only. The source file of standard library is shipped with the headers of the compiler too, so you can just include it in another cpp library of your tool and you are done. RLC accepts the triple of the target platform.

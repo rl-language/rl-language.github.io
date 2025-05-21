@@ -64,13 +64,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#interop-with-python">Interop with Python.</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#using-rulebook-from-python">Using Rulebook from python.</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#invoking-python-from-rulebook">Invoking python from rulebook</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#interop-with-unity-and-csharp">Interop with Unity and CSharp</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#interop-with-godot">Interop with godot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#interop-with-unreal">Interop with unreal</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#cmake">CMake</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#cross-compiling">Cross compiling</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#interop-with-unity-and-csharp">Interop with Unity and CSharp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interop-with-godot">Interop with godot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interop-with-unreal">Interop with unreal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cmake">CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-compiling">Cross compiling</a></li>
 </ul>
 </li>
 </ul>
@@ -383,8 +383,9 @@ python<span class="w"> </span>/tmp/file.py
 </pre></div>
 </div>
 </section>
+</section>
 <section id="interop-with-unity-and-csharp">
-<h3>Interop with Unity and CSharp<a class="headerlink" href="#interop-with-unity-and-csharp" title="Link to this heading"></a></h3>
+<h2>Interop with Unity and CSharp<a class="headerlink" href="#interop-with-unity-and-csharp" title="Link to this heading"></a></h2>
 <p>We have interoperability with CShpart and thus with Unity. Since unity heavily relies on reloading CSharp every time it changes to provide a scripting language like experience, we have added that ability to the wrapper exported for C# so that when Rulebook changes, the unity editor updates automatically.</p>
 <p>Unity integration requires a plugin in the editor to trigger the updates at the right times.</p>
 <p>You can checkout the Unity TicTacToe example where we have unity typesafelly accessing rulebook, and reloading rulebook at every change.
@@ -396,21 +397,20 @@ Relevant files are:</p>
 </ul>
 </section>
 <section id="interop-with-godot">
-<h3>Interop with godot<a class="headerlink" href="#interop-with-godot" title="Link to this heading"></a></h3>
+<h2>Interop with godot<a class="headerlink" href="#interop-with-godot" title="Link to this heading"></a></h2>
 <p>Our large example <a class="reference internal" href="4hammer.html"><span class="std std-doc">4Hammer</span></a> shows interop with godot and cmake.</p>
 </section>
 <section id="interop-with-unreal">
-<h3>Interop with unreal<a class="headerlink" href="#interop-with-unreal" title="Link to this heading"></a></h3>
+<h2>Interop with unreal<a class="headerlink" href="#interop-with-unreal" title="Link to this heading"></a></h2>
 <p>Unfortunatelly there is no way for a unreal engine plugin to hook inside the the build system of unreal. We have no way to package Rulebook in a way that can be hot reloaded from Unreal without the unreal programmer providing some code themselves. For unreal you have to start from the CPP interop and build from there.</p>
 </section>
 <section id="cmake">
-<h3>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h3>
+<h2>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h2>
 <p>We expose typical actions one my wish to perform from cmake as a cmake config file. This includes correct managment of imported files in rulebook for incremental builds, the various wrappers generators and so on. You can see examples in the <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/CMakeLists.txt">godot plugin cmake file</a> of 4hammer.</p>
 </section>
 <section id="cross-compiling">
-<h3>Cross compiling<a class="headerlink" href="#cross-compiling" title="Link to this heading"></a></h3>
+<h2>Cross compiling<a class="headerlink" href="#cross-compiling" title="Link to this heading"></a></h2>
 <p>Cross compiling is possible but requires the user to compile the native standard library of the language for every target platform. This is trivial because the entirety of the native standard library is 200 lines long and relies on a couple of libc functions only. The source file of standard library is shipped with the headers of the compiler too, so you can just include it in another cpp library of your tool and you are done. RLC accepts the triple of the target platform.</p>
-</section>
 </section>
 </section>
 

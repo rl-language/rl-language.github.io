@@ -15,6 +15,8 @@ Thanks to Rulebook, 4Hammer automatically gains:
 
 Depending on the complexity of the problem 4Hammer is addressing, 5,000 lines of code might seem like a lot—or not. It’s difficult to make a direct comparison, but at feature parity, we believe that using another language would have required **5 to 20 times more code**, depending on the language and tooling.
 
+The project rationale is explained in detail in the related [paper](https://arxiv.org/abs/2505.13638)
+
 ---
 
 ## The Size of the Problem
