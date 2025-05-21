@@ -692,9 +692,9 @@ If you are new to Rulebook, stop for a second thinking how you would implement a
 
 #### CPP Implementation
 
-The follwoing code is the cpp implementation that achieves all requirements stated in the previous secitons.
+The following code is the cpp implementation that achieves all requirements stated in the previous [section](#rolling-a-die).
 
-To make the comparison more fair we have omitted all serialization methods that would require to be hand written in cpp, which could be generated in other languages such as python. Similarly we have removed all empty lines and put comments next to each line of code, so that we don't get accused of trying to inflate the code size. The code has been written in a style similar to [automata base programming](https://en.wikipedia.org/wiki/Automata-based_programming) which is a well know way of writing state machines in c and cpp.
+To make the comparison more fair we have omitted all serialization methods that would require to be hand written in cpp, which could be generated in other languages such as python. Similarly we have removed all empty lines and put comments next to each line of code, so that we don't get accused of trying to inflate the code size. The code has been written in a style similar to [automata base programming](https://en.wikipedia.org/wiki/Automata-based_programming) which is a well know way of writing state machines in c and cpp. The implementation is mandatory, you cannot use CPP20 coroutines because they have no mechanism for precondition checking, or state inspection.
 
 
 ```cpp
@@ -756,7 +756,6 @@ class RerrolableRoll {
         void apply(RerollableDiceRoll rollBeingResolved, GameState& state) {
            rollBeingResolved.roll(state, roll);
         }
-
         bool can_apply(RerollableDiceRoll rollBeingResolved, GameState& state) {
            return rollBeingResolved.can_roll(state, roll);
         }
@@ -778,7 +777,6 @@ class RerrolableRoll {
         return std::apply([&](auto& activeAlternative){ activeAlternative.can_apply(rollBeingResolved, state); }, self);
     }
 };
-
 ```
 The code stores all the variables required to suspend the execution in the class body, then exposes 2 function for each action that can be performed. One to check if the action is valid, one to execute it. The functions that performs the actions contain a handrolled state machine. Finally, to be able to delay execution of actions, they are wrapped as well into a class. Even without all the serialization functions that have been omitted and can sometimes be generated in other languages, there is strong coupling between various components of the system, and modifying this implementation without breaking it is hard. Languages like python may save you the union at the cost of runtime performance, but most of the code just shown is mandatory in almost every imperative language. There is a logical error in the code. Did you spot it?
 
