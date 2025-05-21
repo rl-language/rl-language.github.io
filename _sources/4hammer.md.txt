@@ -640,9 +640,7 @@ To better understand the complexity of interactive sequences in **Warhammer 40,0
 
 This information must be **visible to the user** during interaction.
 
----
-
-### Additional Requirements from 4Hammer
+#### Additional Requirements from 4Hammer
 
 Because of 4Hammer’s goals, the dice roll sequence must satisfy additional constraints:
 
@@ -653,7 +651,6 @@ Because of 4Hammer’s goals, the dice roll sequence must satisfy additional con
 * ✅ **Inspectable**: The final result of the roll must be stored and accessible (e.g., for UI rendering).
 
 The following graph shows the how the control flow may evolve when rolling a die.
-
 
 
 ```{tikz}
@@ -693,7 +690,10 @@ This is the simplest interactive sequence of the game, which is then reused in m
 
 If you are new to Rulebook, stop for a second thinking how you would implement a program that meets all requirements.
 
+#### CPP Implementation
+
 We have omitted all serialization methods that would require to be hand written in cpp, but the cpp encoding that achieves all requirements is:
+
 ```cpp
 class RerrolableRoll {
     // data to require to serialize and restore the state
@@ -827,6 +827,8 @@ class RerrolableRoll {
 The code stores all the variables required to suspend the execution in the class body, then exposes 2 function for each action that can be performed. One to check if the action is valid, one to execute it. The functions that performs the actions contain a handrolled state machine. Finally, to be able to delay execution of actions, they are wrapped as well into a class. Even without all the serialization functions that have been omitted and can sometimes be generated in other languages, there is strong coupling between various components of the system, and modifying this implementation without breaking it is hard. Languages like python may save you the union at the cost of runtime performance, but most of the code just shown is mandatory in almost every imperative language.
 
 Here is the implementation in Rulebook instead
+
+#### Rulebook Implementation
 
 ```rlc
 act rerollable_dice_roll(ctx Board board,

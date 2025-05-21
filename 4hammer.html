@@ -71,9 +71,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#rolling-a-die">Rolling a Die</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#core-rules">Core Rules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#variants-of-rerolling">Variants of Rerolling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#additional-requirements-from-4hammer">Additional Requirements from 4Hammer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpp-implementation">CPP Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulebook-implementation">Rulebook Implementation</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#additional-requirements-from-4hammer">Additional Requirements from 4Hammer</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#software-architecture">Software architecture</a><ul>
@@ -755,10 +757,8 @@ A random number between <code class="docutils literal notranslate"><span class="
 </ul>
 <p>This information must be <strong>visible to the user</strong> during interaction.</p>
 </section>
-</section>
-<hr class="docutils" />
 <section id="additional-requirements-from-4hammer">
-<h3>Additional Requirements from 4Hammer<a class="headerlink" href="#additional-requirements-from-4hammer" title="Link to this heading"></a></h3>
+<h4>Additional Requirements from 4Hammer<a class="headerlink" href="#additional-requirements-from-4hammer" title="Link to this heading"></a></h4>
 <p>Because of 4Hammer’s goals, the dice roll sequence must satisfy additional constraints:</p>
 <ul class="simple">
 <li><p>✅ <strong>Suspendable</strong>: Can wait for user input (e.g., for reroll decisions).</p></li>
@@ -771,6 +771,9 @@ A random number between <code class="docutils literal notranslate"><span class="
 <div class="figure" style="text-align: center"><p><img  src="_images/tikz-7f11237fc67d8cdea7e2a54a51757771e0f00e2a.png" alt="Figure made with TikZ" /></p>
 </div><p>This is the simplest interactive sequence of the game, which is then reused in multiple points across the program.</p>
 <p>If you are new to Rulebook, stop for a second thinking how you would implement a program that meets all requirements.</p>
+</section>
+<section id="cpp-implementation">
+<h4>CPP Implementation<a class="headerlink" href="#cpp-implementation" title="Link to this heading"></a></h4>
 <p>We have omitted all serialization methods that would require to be hand written in cpp, but the cpp encoding that achieves all requirements is:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RerrolableRoll</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// data to require to serialize and restore the state</span>
@@ -903,6 +906,9 @@ A random number between <code class="docutils literal notranslate"><span class="
 </div>
 <p>The code stores all the variables required to suspend the execution in the class body, then exposes 2 function for each action that can be performed. One to check if the action is valid, one to execute it. The functions that performs the actions contain a handrolled state machine. Finally, to be able to delay execution of actions, they are wrapped as well into a class. Even without all the serialization functions that have been omitted and can sometimes be generated in other languages, there is strong coupling between various components of the system, and modifying this implementation without breaking it is hard. Languages like python may save you the union at the cost of runtime performance, but most of the code just shown is mandatory in almost every imperative language.</p>
 <p>Here is the implementation in Rulebook instead</p>
+</section>
+<section id="rulebook-implementation">
+<h4>Rulebook Implementation<a class="headerlink" href="#rulebook-implementation" title="Link to this heading"></a></h4>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">act</span> <span class="n">rerollable_dice_roll</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Board</span> <span class="n">board</span><span class="p">,</span>
                          <span class="kn">frm</span> <span class="nc">Bool</span> <span class="n">reroll</span><span class="p">,</span>
                          <span class="kn">frm</span> <span class="nc">Bool</span> <span class="n">reroll_1s</span><span class="p">,</span>
@@ -927,6 +933,7 @@ A random number between <code class="docutils literal notranslate"><span class="
 <p>This implementation generates a series of classes that are equivalent to the cpp ones, including all serializers that have been omitted before. You can notice there is no coupling between any part of the system, and modifying the code to add another action or another condition would only require local changes.</p>
 <p>Furthermore, the cpp code would still need glue before it can be run in a fuzzer or a machine learning infrastructure, we get it for free.</p>
 <p>Remember this is the simplest interactive sequence of the game. Sequences such as performing a single attack resolution from one of the models explode in complexity and I don’t think i would be able to write the cpp code by hand without committing multiple mistakes.</p>
+</section>
 </section>
 </section>
 <section id="software-architecture">
