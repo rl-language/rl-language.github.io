@@ -774,11 +774,10 @@ A random number between <code class="docutils literal notranslate"><span class="
 </section>
 <section id="cpp-implementation">
 <h4>CPP Implementation<a class="headerlink" href="#cpp-implementation" title="Link to this heading"></a></h4>
-<p>We have omitted all serialization methods that would require to be hand written in cpp, but the cpp encoding that achieves all requirements is:</p>
+<p>The follwoing code is the cpp implementation that achieves all requirements stated in the previous secitons.</p>
+<p>To make the comparison more fair we have omitted all serialization methods that would require to be hand written in cpp, which could be generated in other languages such as python. Similarly we have removed all empty lines and put comments next to each line of code, so that we don’t get accused of trying to inflate the code size. The code has been written in a style similar to <a class="reference external" href="https://en.wikipedia.org/wiki/Automata-based_programming">automata base programming</a> which is a well know way of writing state machines in c and cpp.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RerrolableRoll</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// data to require to serialize and restore the state</span>
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
+<span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"> </span><span class="c1">// data to require to serialize and restore the state</span>
 <span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">suspensionPoint</span><span class="p">;</span><span class="w"> </span><span class="c1">// keeps track of what is the current point of the sequence</span>
 <span class="w">    </span><span class="n">Dice</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"> </span><span class="c1">// the final result of the roll</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_reroll</span><span class="p">;</span><span class="w"> </span><span class="c1">// can reroll for free</span>
@@ -786,9 +785,7 @@ A random number between <code class="docutils literal notranslate"><span class="
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_cp_reroll</span><span class="p">;</span><span class="w"> </span><span class="c1">// can reroll by paying a command point</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_non_cp_rerollable</span><span class="p">;</span><span class="w"> </span><span class="c1">//it is rerollable in a way that does not cost a cp</span>
 <span class="w">    </span><span class="n">Bool</span><span class="w"> </span><span class="n">current_player</span><span class="p">;</span><span class="w"> </span><span class="c1">// the player that is performing the roll, bool is fine since it is a two player game</span>
-
-<span class="w">    </span><span class="c1">// constructor that starts the sequence</span>
-<span class="w">    </span><span class="n">RerollebleRoll</span><span class="p">(</span>
+<span class="w">    </span><span class="n">RerollebleRoll</span><span class="p">(</span><span class="w"> </span><span class="c1">// constructor that starts the sequence</span>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_reroll</span><span class="p">,</span>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_reroll_1s</span><span class="p">,</span>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_cp_reroll</span><span class="p">,</span>
@@ -801,41 +798,27 @@ A random number between <code class="docutils literal notranslate"><span class="
 <span class="w">        </span><span class="n">can_cp_reroll</span><span class="p">(</span><span class="n">can_cp_reroll</span><span class="p">),</span>
 <span class="w">        </span><span class="n">is_non_cp_rerollable</span><span class="p">(</span><span class="n">is_non_cp_rerollable</span><span class="p">),</span>
 <span class="w">        </span><span class="n">current_player</span><span class="p">(</span><span class="n">current_player</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
-
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">roll</span><span class="p">(</span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">Dice</span><span class="w"> </span><span class="n">dice</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">assert</span><span class="p">(</span><span class="n">can_roll</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="n">assert</span><span class="p">(</span><span class="n">can_roll</span><span class="p">(</span><span class="n">state</span><span class="p">),</span><span class="w"> </span><span class="n">sate</span><span class="p">);</span>
 <span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dice</span><span class="p">;</span>
-
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span><span class="w"> </span><span class="c1">// if this is the first time we roll the dice</span>
-<span class="w">            </span><span class="c1">// figure out if we can reroll for free</span>
-<span class="w">            </span><span class="n">is_non_cp_rerollable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_reroll</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="n">can_reroll_1s</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
-<span class="w">            </span><span class="c1">// figure out if the player has already rerolled a dice this phase</span>
-<span class="w">            </span><span class="n">is_cp_rerollable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cp_rerollable</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">board</span><span class="p">.</span><span class="n">can_use_strat</span><span class="p">(</span><span class="n">current_player</span><span class="p">,</span><span class="w"> </span><span class="n">Stratagem</span><span class="o">::</span><span class="n">reroll</span><span class="p">)</span>
-
-
+<span class="w">            </span><span class="n">is_non_cp_rerollable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_reroll</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="n">can_reroll_1s</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="c1">// figure out if we can reroll for free</span>
+<span class="w">            </span><span class="n">is_cp_rerollable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cp_rerollable</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">board</span><span class="p">.</span><span class="n">can_use_strat</span><span class="p">(</span><span class="n">current_player</span><span class="p">,</span><span class="w"> </span><span class="n">Stratagem</span><span class="o">::</span><span class="n">reroll</span><span class="p">)</span><span class="w"> </span><span class="c1">// figure out if the player has already rerolled a dice this phase</span>
 <span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_non_cp_rerollable</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">is_cp_rerollable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if we can reroll in any way</span>
-<span class="w">                </span><span class="c1">// the next state is waiting for the user decision</span>
-<span class="w">                </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// the next state is waiting for the user decision</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"> </span><span class="c1">// otherwise we are done</span>
 <span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="c1">// otherwise we are done</span>
-<span class="w">                </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-
 <span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if it is the second roll</span>
-<span class="w">            </span><span class="c1">// if the roll was not free</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">is_non_cp_rerollable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">is_non_cp_rerollable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if the roll was not free</span>
 <span class="w">                </span><span class="n">board</span><span class="p">.</span><span class="n">consume_command_point</span><span class="p">();</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dice</span><span class="p">;</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_roll</span><span class="p">(</span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">Dice</span><span class="w"> </span><span class="n">dice</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// actions have no precondition, so we just need to check</span>
-<span class="w">        </span><span class="c1">// if the resume index is the associated to the first or second roll</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="c1">// actions have no precondition, so we just need to check if the resume index is the associated to the first or second roll</span>
 <span class="w">    </span><span class="p">}</span>
-
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">keep_it</span><span class="p">(</span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">Bool</span><span class="w"> </span><span class="n">do_it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">assert</span><span class="p">(</span><span class="n">can_keep_it</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">dice</span><span class="p">));</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">do_it</span><span class="p">)</span>
@@ -843,15 +826,11 @@ A random number between <code class="docutils literal notranslate"><span class="
 <span class="w">        </span><span class="k">else</span>
 <span class="w">            </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"> </span><span class="c1">// goes to the end</span>
 <span class="w">    </span><span class="p">}</span>
-
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_keep_it</span><span class="p">(</span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">Bool</span><span class="w"> </span><span class="n">do_it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="c1">// a class that rappresents a action, in a way that can be stored and executed later</span>
-<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ActionRoll</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ActionRoll</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// a class that rappresents a action, in a way that can be stored and executed later</span>
 <span class="w">        </span><span class="n">Dice</span><span class="w"> </span><span class="n">roll</span><span class="p">;</span>
-
 <span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">RerollableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">           </span><span class="n">rollBeingResolved</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">roll</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
@@ -859,52 +838,27 @@ A random number between <code class="docutils literal notranslate"><span class="
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="nf">can_apply</span><span class="p">(</span><span class="n">RerollableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">           </span><span class="k">return</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">.</span><span class="n">can_roll</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">roll</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
-
 <span class="w">    </span><span class="p">};</span>
-
 <span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ActionKeepIt</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">do_it</span><span class="p">;</span>
-
 <span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">RerollableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">           </span><span class="n">rollBeingResolved</span><span class="p">.</span><span class="n">keep_it</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">do_it</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
-
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="nf">can_apply</span><span class="p">(</span><span class="n">RerollableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">           </span><span class="k">return</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">.</span><span class="n">do_it</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">do_it</span><span class="p">);</span>
 <span class="w">       </span><span class="p">}</span>
-
 <span class="w">    </span><span class="p">};</span>
-
-<span class="w">    </span><span class="c1">// a union between all possible actions so that they stored in a single cpp vector without inheritance</span>
-<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">AnyRerollableDiceRollAction</span><span class="w">  </span><span class="p">{</span>
-<span class="w">        </span><span class="k">union</span><span class="w"> </span><span class="nc">PayLoad</span><span class="p">{</span>
-<span class="w">            </span><span class="n">ActionRoll</span><span class="w"> </span><span class="n">first</span><span class="p">;</span>
-<span class="w">            </span><span class="n">ActionKeepIt</span><span class="w"> </span><span class="n">second</span><span class="p">;</span>
-<span class="w">        </span><span class="p">};</span>
-<span class="w">        </span><span class="n">PayLoad</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
-<span class="w">        </span><span class="n">Int</span><span class="w"> </span><span class="n">currentActiveIndex</span><span class="p">;</span>
-
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">ReroolableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">staet</span><span class="p">){</span>
-<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentActiveIndex</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">content</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">apply</span><span class="p">(</span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
-<span class="w">          </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">content</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">apply</span><span class="p">(</span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
-<span class="w">          </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">can_apply</span><span class="p">(</span><span class="n">ReroolableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">staet</span><span class="p">){</span>
-<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentActiveIndex</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">can_apply</span><span class="p">(</span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
-<span class="w">          </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">can_apply</span><span class="p">(</span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
-<span class="w">          </span><span class="p">}</span>
-<span class="w">        </span><span class="p">};</span>
-<span class="w">    </span><span class="p">};</span>
-
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">AnyRerollableDiceRollAction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">ActionRoll</span><span class="p">,</span><span class="w"> </span><span class="n">ActionKeepIt</span><span class="o">&gt;</span><span class="w"> </span><span class="c1">// a union between all possible actions so that they stored in a single cpp vector without inheritance</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">apply</span><span class="p">(</span><span class="n">AnyRerollableDiceRollAction</span><span class="o">&amp;</span><span class="w"> </span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">RerollableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">){</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">activeAlternative</span><span class="p">){</span><span class="w"> </span><span class="n">activeAlternative</span><span class="p">.</span><span class="n">apply</span><span class="p">(</span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">);</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">self</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_apply</span><span class="p">(</span><span class="n">AnyRerollableDiceRollAction</span><span class="o">&amp;</span><span class="w"> </span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">RerollableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">){</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">apply</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">activeAlternative</span><span class="p">){</span><span class="w"> </span><span class="n">activeAlternative</span><span class="p">.</span><span class="n">can_apply</span><span class="p">(</span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">);</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">self</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>The code stores all the variables required to suspend the execution in the class body, then exposes 2 function for each action that can be performed. One to check if the action is valid, one to execute it. The functions that performs the actions contain a handrolled state machine. Finally, to be able to delay execution of actions, they are wrapped as well into a class. Even without all the serialization functions that have been omitted and can sometimes be generated in other languages, there is strong coupling between various components of the system, and modifying this implementation without breaking it is hard. Languages like python may save you the union at the cost of runtime performance, but most of the code just shown is mandatory in almost every imperative language.</p>
+<p>The code stores all the variables required to suspend the execution in the class body, then exposes 2 function for each action that can be performed. One to check if the action is valid, one to execute it. The functions that performs the actions contain a handrolled state machine. Finally, to be able to delay execution of actions, they are wrapped as well into a class. Even without all the serialization functions that have been omitted and can sometimes be generated in other languages, there is strong coupling between various components of the system, and modifying this implementation without breaking it is hard. Languages like python may save you the union at the cost of runtime performance, but most of the code just shown is mandatory in almost every imperative language. There is a logical error in the code. Did you spot it?</p>
 <p>Here is the implementation in Rulebook instead</p>
 </section>
 <section id="rulebook-implementation">
@@ -918,16 +872,17 @@ A random number between <code class="docutils literal notranslate"><span class="
     <span class="kn">act</span> <span class="n">roll</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Dice</span> <span class="n">result</span><span class="p">)</span>
     <span class="kn">frm</span> <span class="n">is_non_cp_rerollable</span> <span class="o">=</span> <span class="n">reroll</span> <span class="o">or</span> <span class="p">(</span><span class="n">reroll_1s</span> <span class="o">and</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
     <span class="kr">let</span> <span class="n">is_cp_rerollable</span> <span class="o">=</span> <span class="n">cp_rerollable</span> <span class="o">and</span> <span class="n">board</span><span class="p">.</span><span class="n">can_use_strat</span><span class="p">(</span><span class="n">current_player</span><span class="p">,</span> <span class="nc">Stratagem</span><span class="p">::</span><span class="n">reroll</span><span class="p">)</span>
-    <span class="kr">if</span> <span class="n">is_non_cp_rerollable</span> <span class="o">or</span> <span class="n">is_cp_rerollable</span><span class="p">:</span>
-        <span class="c1"># reject the possibility of rerolling the dice and keep the current result</span>
-        <span class="kn">act</span> <span class="n">keep_it</span><span class="p">(</span><span class="nc">Bool</span> <span class="n">do_it</span><span class="p">)</span>
-        <span class="kr">if</span> <span class="n">do_it</span><span class="p">:</span>
-            <span class="kr">return</span>
-        <span class="c1"># resets the rolled value</span>
-        <span class="kn">act</span> <span class="n">reroll</span><span class="p">(</span><span class="nc">Dice</span> <span class="n">new_value</span><span class="p">)</span>
-        <span class="kr">if</span> <span class="o">!</span><span class="n">is_non_cp_rerollable</span><span class="p">:</span>
-            <span class="n">board</span><span class="p">.</span><span class="n">spend_command_point</span><span class="p">()</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">new_value</span>
+    <span class="kr">if</span> <span class="o">!</span><span class="n">is_non_cp_rerollable</span> <span class="o">and</span> <span class="o">!</span><span class="n">is_cp_rerollable</span><span class="p">:</span>
+        <span class="kr">return</span>
+    <span class="c1"># reject the possibility of rerolling the dice and keep the current result</span>
+    <span class="kn">act</span> <span class="n">keep_it</span><span class="p">(</span><span class="nc">Bool</span> <span class="n">do_it</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">do_it</span><span class="p">:</span>
+        <span class="kr">return</span>
+    <span class="c1"># resets the rolled value</span>
+    <span class="kn">act</span> <span class="n">reroll</span><span class="p">(</span><span class="nc">Dice</span> <span class="n">new_value</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="o">!</span><span class="n">is_non_cp_rerollable</span><span class="p">:</span>
+        <span class="n">board</span><span class="p">.</span><span class="n">spend_command_point</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">new_value</span>
 </pre></div>
 </div>
 <p>This implementation generates a series of classes that are equivalent to the cpp ones, including all serializers that have been omitted before. You can notice there is no coupling between any part of the system, and modifying the code to add another action or another condition would only require local changes.</p>
