@@ -209,6 +209,12 @@
 </pre></div>
 </div>
 <p>In Rulebook, <strong>suspension points</strong> inside action functions are called <strong>action statements</strong>. These can take arguments and may include a <strong>boolean condition</strong> that defines when the action is valid. By using the <code class="docutils literal notranslate"><span class="pre">can</span></code> operator, the framework can check whether a given user input is valid <strong>before</strong> applying it—without complicating the action function with manual validation logic.</p>
+<p>Beside <code class="docutils literal notranslate"><span class="pre">can</span></code> operator invocations, the spirit of Rulebook is to be used by other languages, so depending on your use case you configure how rulebook behaves when a precondition is not met but a function is called anyway.</p>
+<ul class="simple">
+<li><p>By default rulebook emits checks that invoke <code class="docutils literal notranslate"><span class="pre">rlc_abort</span></code>, a function that can be customized. The customization allows us for example to print a python stack trace when rulebook is used with full python interoperability. In our <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/src/gdexample.cpp#L30">4Hammer example</a> we customize for linux only the stack printing mechanism so we can see what is going on inside godot.</p></li>
+<li><p>If you need maximum speed, or you know that the caller will never invoke wrong actions by construction (for example,the c# wrapper checks for preconditions too and emits a exception if they are not met), you can disable checks from within rulebook code.</p></li>
+</ul>
+<p>This makes precondition checkability a zero cost abstraction that you pay for only when you use it.</p>
 </section>
 <hr class="docutils" />
 <section id="serializable">
