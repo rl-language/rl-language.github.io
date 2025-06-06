@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Board games &mdash; Rulebook documentation 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e259d695"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Rulebook Language" href="language-reference.html" />
+    <link rel="prev" title="4Hammer" href="4hammer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Rulebook documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Concepts:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language_tour.html">Language Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="the_inversion_of_control_problem.html">Interactive Inversion of control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project_rationale.html">Graphic engines and machine learning</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rlc.html">RLC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building.html">Building RLC from sources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interoperating.html">Interoperation with engines and languages</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning Docs:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial for RL people</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gym_tutorial.html">RLC and GYM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">UIs, Controllers, Gameplay:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller, and Gameplay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Board games</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-history-of-board-game-programming">The history of board game programming.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#board-games-and-board-games-implementations">Board games and Board games implementations.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-pressure-on-game-sequences">The pressure on Game Sequences.</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="language-reference.html">Rulebook Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stdlib/index.html">stdlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Rulebook documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Board games</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/board_games.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="board-games">
+<h1>Board games<a class="headerlink" href="#board-games" title="Link to this heading"></a></h1>
+<p>This page describes how one can write and test board games. Using <strong>rulebook</strong>, one can decrease by at least a order of magnitude the code complexity of writing digital implementations of board game.
+This page assumes that the reader is familiar with the typical characteristics of board games, and enough knowledge of programming to be able to implement a game of the complexity of <strong>Risk</strong>.</p>
+<hr class="docutils" />
+<section id="the-history-of-board-game-programming">
+<h2>The history of board game programming.<a class="headerlink" href="#the-history-of-board-game-programming" title="Link to this heading"></a></h2>
+<p>Board games have been for a long time both of interest and of disinterest for the field of programming.</p>
+<ul class="simple">
+<li><p><strong>Abstract board games</strong> have been deeply analyzed for the purpose of developing traditional AI systems<a class="reference external" href="https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)">[1]</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/AlphaGo">[2]</a>. Abstract board games typically include a low number of distict game rules that yield complex emergent dynamics.</p></li>
+<li><p><strong>Commercial board games</strong> instead have been of little interest for the field of artificial intelligence, as well as have been of low interest for the field of video game programming. <strong>Commercial board games</strong> often have large amounts of rules written on game components, such as <strong>Magic: The gathering</strong> cards, that offer to the players complex sequences of actions, while the total amount of information a game state presents is usually low, because the user must be able to keep track of it in their minds. Instead, Video games often offer large amounts information, offered to the player whenever the information is needed, while single game sequences are simpler. For example, in many games you can press any button of any interface in any order. While there exists various digital implementations of board games, for example <a class="reference external" href="https://en.boardgamearena.com">board game arena</a>, in practice the larger video game programming ecosystem is not tuned for the development of digital board games.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="board-games-and-board-games-implementations">
+<h2>Board games and Board games implementations.<a class="headerlink" href="#board-games-and-board-games-implementations" title="Link to this heading"></a></h2>
+<p>When a board game is played its rules are <strong>interpreted</strong> by the human players as if the players were computers themselves. Whenever the game requires some input from the players, the players decide how the game should continue, and then the players resume <strong>interpreting</strong> the rules.</p>
+<p>When board games are designed, there is no concern in how game rules impact the complexity of writing code that implements the same rules. This leads to very complex game rules that are hard to write. For this reason, board games are the supreme <a class="reference internal" href="the_inversion_of_control_problem.html#complex-interactive-subsystems"><span class="std std-ref">complex interactive programs</span></a>.</p>
+<p>The following is control flow diagram of the game <strong>hanabi</strong>, showing the only game sequence of the game.</p>
+<div class="graphviz"><img src="_images/graphviz-05aeac0b0e9ec603bbc9b4a2060186c863e964fb.png" alt="digraph Hanabi_Control_Flow {
+    rankdir=TB;                             // vertical (Top → Bottom)
+    fontname=&quot;Helvetica&quot;;
+
+    /* ---------- node &amp; edge defaults ---------- */
+    node [shape=diamond, style=rounded, fontname=&quot;Helvetica&quot;];   // decisions
+    edge [fontname=&quot;Helvetica&quot;];
+
+    /* ---------- main loop ---------- */
+    Start  [shape=circle, label=&quot;Start\nturn&quot;];
+    End    [shape=circle, label=&quot;End\nturn&quot;];
+
+    Start -&gt; Action;
+
+    Action [label=&quot;Choose action:\n• Give Hint\n• Play Card\n• Discard Card&quot;];
+
+    /* ---- Give-Hint branch ---- */
+    Action       -&gt; GiveHint     [label=&quot;Give Hint&quot;];
+    GiveHint     [label=&quot;Select teammate\nto hint&quot;];
+    GiveHint     -&gt; HintType;
+    HintType     [label=&quot;Choose hint content:\n• Color\n• Number&quot;];
+    HintType     -&gt; End          [label=&quot;Reveal hint&quot;];
+
+    /* ---- Play-Card branch ---- */
+    Action       -&gt; PlayCard     [label=&quot;Play Card&quot;];
+    PlayCard     [label=&quot;Select card\nto play&quot;];
+    PlayCard     -&gt; End          [label=&quot;Attempt play&quot;];
+
+    /* ---- Discard-Card branch ---- */
+    Action       -&gt; DiscardCard  [label=&quot;Discard Card&quot;];
+    DiscardCard  [label=&quot;Select card\nto discard&quot;];
+    DiscardCard  -&gt; End          [label=&quot;Discard + draw&quot;];
+
+    /* ---- Loop to next player ---- */
+    End -&gt; Start  [style=dashed, label=&quot;Next player's turn&quot;];
+}" class="graphviz" /></div>
+<p>As of the moment of writing general board game programming often follows the same pattern (not necessarily executed in the presented order).</p>
+<ul class="simple">
+<li><p><strong>The datastructures of the game are implemented</strong>, such as decks of cards, the board of the game, the resources available to players…</p></li>
+<li><p><strong>The game sequences are implemented</strong>, which manipulate the content of the game datastructures. A game sequence may be a rule that tells you to roll a dice, and if the roll results in a 6, you can select a player and take a point from them.</p></li>
+<li><p><strong>The UI is assembled</strong>, deciding which game components are shown where, and deciding how game sequences are displayed.</p></li>
+<li><p><strong>The UI is fitted with art</strong>, where the art is usually at least partially avaiable due to the existance of the phisical board game implementation.</p></li>
+</ul>
+<p>Here are a couple of examples that show the same pattern.</p>
+<ul class="simple">
+<li><p>The implementation of <a class="reference external" href="https://github.com/quietmint/bga-coupcitystate">coup on board game arena</a>, which has the datastructures written in <strong>SQL</strong>, the game sequeces written in <strong>PHP</strong>, the UI written in <strong>javascript</strong> and the images taken from the original game.</p></li>
+<li><p>The implementation of <a class="reference external" href="https://github.com/google-deepmind/hanabi-learning-environment">hanabi by google deep mind</a> for the purpose of testing machine learning systems, which implements the datastructures of the game as <strong>CPP</strong> classes, the game sequences as <strong>CPP</strong> state machines, and then specifies the UI as a mere printing function.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="the-pressure-on-game-sequences">
+<h2>The pressure on Game Sequences.<a class="headerlink" href="#the-pressure-on-game-sequences" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="4hammer.html" class="btn btn-neutral float-left" title="4Hammer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="language-reference.html" class="btn btn-neutral float-right" title="Rulebook Language" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Massimo Fioravanti.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

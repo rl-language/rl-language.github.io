@@ -67,6 +67,7 @@ UI, Controller and Gameplay Programming
 
    ui_gameplay.md 
    4hammer.md
+   board_games.md
 
 
 .. toctree::
