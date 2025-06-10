@@ -73,6 +73,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ui_gameplay.html">UI, Controller, and Gameplay</a></li>
 <li class="toctree-l1"><a class="reference internal" href="4hammer.html">4Hammer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="board_games.html">Board games</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
@@ -123,9 +124,9 @@
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
 <p>You can install the <code class="docutils literal notranslate"><span class="pre">RL</span></code> compiler, autocomplete support, and machine learning dependencies by opening a terminal and running:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>rl_example
-<span class="nb">cd</span><span class="w"> </span>rl_example
-python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>rl_example<span class="w"> </span><span class="c1"># or simply create a folder in windows</span>
+<span class="nb">cd</span><span class="w"> </span>rl_example<span class="w"> </span><span class="c1"># or open a vscode in that folder</span>
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="c1"># from vscode shell, or another shell</span>
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 pip<span class="w"> </span>install<span class="w"> </span>rl_language
 </pre></div>
@@ -151,7 +152,7 @@ pip<span class="w"> </span>install<span class="w"> </span>rl_language
 </section>
 <section id="training-and-running">
 <h2>Training and Running<a class="headerlink" href="#training-and-running" title="Link to this heading"></a></h2>
-<p>Now that you’ve ensured your system works, download the <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">jack</span></code> example from <a class="reference external" href="https://github.com/rl-language/rlc/tool/rlc/test/examples/black_jack.rl">here</a> and save it in a file in the directory we created at the start of this example.</p>
+<p>Now that you’ve ensured your system works, download the <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">jack</span></code> example from <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/tool/rlc/test/examples/black_jack.rl">here</a> and save it in a file in the directory we created at the start of this example.</p>
 <p>Black jack is example that shows how to handle games with randomness and imperfect information. Indeed the actions taken by the real user are usually just one or two, while most of the game is spent by the <code class="docutils literal notranslate"><span class="pre">randomness</span> <span class="pre">player</span></code> shuffling the deck, which is a fake player that performs actions at random.</p>
 <p>After you have copied it, let us make sure we can run generate a random game.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">random</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span>

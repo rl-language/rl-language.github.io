@@ -18,9 +18,9 @@ Optionally, you can install:
 ## Installation
 You can install the `RL` compiler, autocomplete support, and machine learning dependencies by opening a terminal and running:
 ```bash
-mkdir rl_example
-cd rl_example
-python3 -m venv .venv
+mkdir rl_example # or simply create a folder in windows
+cd rl_example # or open a vscode in that folder
+python3 -m venv .venv # from vscode shell, or another shell
 source .venv/bin/activate
 pip install rl_language
 ```
@@ -51,7 +51,7 @@ rlc example.rl -o executable
 
 ## Training and Running
 
-Now that you've ensured your system works, download the `black jack` example from [here](https://github.com/rl-language/rlc/tool/rlc/test/examples/black_jack.rl) and save it in a file in the directory we created at the start of this example.
+Now that you've ensured your system works, download the `black jack` example from [here](https://github.com/rl-language/rlc/blob/master/tool/rlc/test/examples/black_jack.rl) and save it in a file in the directory we created at the start of this example.
 
 Black jack is example that shows how to handle games with randomness and imperfect information. Indeed the actions taken by the real user are usually just one or two, while most of the game is spent by the `randomness player` shuffling the deck, which is a fake player that performs actions at random.
 
