@@ -176,7 +176,7 @@ You can visualize what is happeing with</p>
 </div>
 <p>From there, you should see a website that looks like this:</p>
 <p><img alt="tensorboard example" src="_images/tensorboard.png" /></p>
-<p>In the search bar, write <code class="docutils literal notranslate"><span class="pre">episode_reward_mean</span></code>.</p>
+<p>In the search bar, write <code class="docutils literal notranslate"><span class="pre">EpRewMean</span></code>.</p>
 <p>You should see a graph that looks similar to the following:</p>
 <p><img alt="tensorboard example" src="_images/mean_reward.png" /></p>
 <p>The x-axis is the number of actions played. In the case of our game, it means the number of <code class="docutils literal notranslate"><span class="pre">hits</span></code> and <code class="docutils literal notranslate"><span class="pre">stand</span></code> executed, the y-axis is instead the average score obtained. As exepected the average score is increasing, that is: it is learning to play.</p>
@@ -229,7 +229,7 @@ You can visualize what is happeing with</p>
 
     <span class="n">state</span><span class="o">.</span><span class="n">pretty_print</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Your final score is: </span><span class="si">{</span><span class="n">program</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Your final score is: </span><span class="si">{</span><span class="n">program</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can run this program with the following command, using a shell with the activated environment:</p>

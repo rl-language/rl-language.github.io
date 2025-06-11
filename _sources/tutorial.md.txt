@@ -90,7 +90,7 @@ From there, you should see a website that looks like this:
 
 ![tensorboard example](./imgs/tensorboard.png)
 
-In the search bar, write `episode_reward_mean`.
+In the search bar, write `EpRewMean`.
 
 You should see a graph that looks similar to the following:
 
@@ -155,7 +155,7 @@ while not state.is_done():
 
     state.pretty_print()
 
-print(f"Your final score is: {program.score(state.state, 0)}")
+print(f"Your final score is: {program.module.score(state.state, 0)}")
 ```
 
 You can run this program with the following command, using a shell with the activated environment:
