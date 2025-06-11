@@ -500,10 +500,10 @@ fun main() -> Int:
 This example shows how to share state between two subactions. The inner vending machines have their `target_cost` variable marked as `ctx`, and thus owned by the caller. The caller, `vending_machine_first_times_two`, uses two `subaction*` to execute both actions until the `target_cost` reaches 0. Since `target_cost` is zero, they will reach zero at the same time, so when the `first_machine` terminates, so immediately does `second_machine`, and thus `vending_machine_times_two`. The significant improvement is that with the syntax `subaction*(first)`, we are forwarding `first` to every invocation of methods of the subactions, removing the requirement for the function `main` to do so. `main` can simply invoke `state.insert_5_coin()`, unaware of how the state is organized within vending machines.
 
 #### Alternative subaction statement
-Sometimes you may require to execute one subaction among meny depending on the state of the program. For example, maybe the user can select it they wish to play tic tac toe or chess, and then they play the selected game. In this case you can use a subaction statement on a alternative type, provided that all the types of the alternative describe a action function.
+Sometimes you may require to execute one subaction among many depending on the state of the program. For example, maybe the user can select it they wish to play tic tac toe or chess, and then they play the selected game. In this case you can use a subaction statement on a alternative type, provided that all the types of the alternative describe a action function.
 
 Here is a example
-```
+```rlc
 act tic_tac_toe() -> TicTacToe:
     # omitted
 
