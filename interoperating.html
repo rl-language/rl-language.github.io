@@ -124,7 +124,7 @@
 <section id="calling-rulebook-from-c">
 <h3>Calling rulebook from C<a class="headerlink" href="#calling-rulebook-from-c" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Each Rulebook class is mapped onto a C struct. Each alternative is mapped on a struct with a union and a integer inside. You have to manually invoke the init, assign and drop method whenever you allocate, copy or destroy a rlc dastructure (unless the method is not available at all, which means that the datastruture is trivially initializable, copiable or destructible).</p></li>
+<li><p>Each Rulebook class is mapped onto a C struct. Each alternative is mapped on a struct with a union and a integer inside. You have to manually invoke the init, assign and drop method whenever you allocate, copy or destroy a rlc datastructure (unless the method is not available at all, which means that the datastructure is trivially initializable, copiable or destructible).</p></li>
 <li><p>Every enum is mapped on a struct with a integer inside.</p></li>
 <li><p>Every Action Function frame is mapped on a struct with the frm variables and a integer inside.</p></li>
 <li><p>All arguments of functions are taken by pointer, the return value is passed as first argument. The return value does not need to be initialized by the caller, but it must be destroyed by the caller.</p></li>
@@ -141,11 +141,11 @@
 rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </span>header.h<span class="w"> </span>--header
 </pre></div>
 </div>
-<p>Then you can use the header from C by inlcuding it, with a couple of macro definitions to specify what you want in particular from the header.</p>
+<p>Then you can use the header from C by including it, with a couple of macro definitions to specify what you want in particular from the header.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// file.c</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
-<span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function delcs</span>
+<span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function decls</span>
 <span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the types.</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
 
@@ -161,7 +161,7 @@ rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </s
 ./executable
 </pre></div>
 </div>
-<p>Here is a example that uses the most imporant features of rlc:</p>
+<p>Here is a example that uses the most important features of rlc:</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.rl</span>
 <span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
 <span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
@@ -183,7 +183,7 @@ rlc<span class="w"> </span>file.rl<span class="w"> </span>-o<span class="w"> </s
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 <span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function</span>
-<span class="w">                               </span><span class="c1">// delcs</span>
+<span class="w">                               </span><span class="c1">// decls</span>
 <span class="cp">#define RLC_GET_TYPE_DECLS</span>
 <span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the wrapper.</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
@@ -215,7 +215,7 @@ rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>/tmp/lib.a<span c
 /tmp/exec<span class="w"> </span><span class="c1"># [15]</span>
 </pre></div>
 </div>
-<p>This example shows most of the functinalities you may need in C, there is only one missing thing, which is how do you call C from rulebook.</p>
+<p>This example shows most of the functionalities you may need in C, there is only one missing thing, which is how do you call C from rulebook.</p>
 </section>
 <section id="calling-c-from-rulebook">
 <h3>Calling C from rulebook<a class="headerlink" href="#calling-c-from-rulebook" title="Link to this heading"></a></h3>
@@ -238,7 +238,7 @@ rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>/tmp/lib.a<span c
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 <span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function</span>
-<span class="w">                               </span><span class="c1">// delcs</span>
+<span class="w">                               </span><span class="c1">// decls</span>
 <span class="cp">#define RLC_GET_TYPE_DECLS</span>
 <span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the wrapper.</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
@@ -258,8 +258,8 @@ rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>/tmp/lib.a<span c
 </section>
 <section id="interop-with-cpp">
 <h2>Interop with CPP<a class="headerlink" href="#interop-with-cpp" title="Link to this heading"></a></h2>
-<p>The interop with cpp is identical to the one with C, except the generated header detects cpp is available so it will remove the need for manual managment of constructors and destructors.</p>
-<p>Let us revisig the previous example in cpp.</p>
+<p>The interop with cpp is identical to the one with C, except the generated header detects cpp is available so it will remove the need for manual management of constructors and destructors.</p>
+<p>Let us revisit the previous example in cpp.</p>
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># file.rl</span>
 <span class="kn">import</span> <span class="n">collections</span><span class="p">.</span><span class="n">vector</span>
 <span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
@@ -281,7 +281,7 @@ rlc<span class="w"> </span>/tmp/file.rl<span class="w"> </span>/tmp/lib.a<span c
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdbool.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 <span class="cp">#define RLC_GET_FUNCTION_DECLS </span><span class="c1">// required or the header does not emit function</span>
-<span class="w">                               </span><span class="c1">// delcs</span>
+<span class="w">                               </span><span class="c1">// decls</span>
 <span class="cp">#define RLC_GET_TYPE_DECLS</span>
 <span class="cp">#define RLC_GET_TYPE_DEFS </span><span class="c1">// required or the header does not emit the wrapper.</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;./header.h&quot;</span>
@@ -403,11 +403,11 @@ Relevant files are:</p>
 </section>
 <section id="interop-with-unreal">
 <h2>Interop with unreal<a class="headerlink" href="#interop-with-unreal" title="Link to this heading"></a></h2>
-<p>Unfortunatelly there is no way for a unreal engine plugin to hook inside the the build system of unreal. We have no way to package Rulebook in a way that can be hot reloaded from Unreal without the unreal programmer providing some code themselves. For unreal you have to start from the CPP interop and build from there.</p>
+<p>Unfortunately there is no way for an Unreal engine plugin to hook into the build system of Unreal. We have no way to package Rulebook in a way that can be hot reloaded from Unreal without the Unreal programmer providing some code themselves. For Unreal you have to start from the CPP interop and build from there.</p>
 </section>
 <section id="cmake">
 <h2>CMake<a class="headerlink" href="#cmake" title="Link to this heading"></a></h2>
-<p>We expose typical actions one my wish to perform from cmake as a cmake config file. This includes correct managment of imported files in rulebook for incremental builds, the various wrappers generators and so on. You can see examples in the <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/CMakeLists.txt">godot plugin cmake file</a> of 4hammer.</p>
+<p>We expose typical actions one may wish to perform from CMake as a CMake config file. This includes correct management of imported files in Rulebook for incremental builds, the various wrapper generators and so on. You can see examples in the <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/CMakeLists.txt">godot plugin CMake file</a> of 4hammer.</p>
 </section>
 <section id="cross-compiling">
 <h2>Cross compiling<a class="headerlink" href="#cross-compiling" title="Link to this heading"></a></h2>

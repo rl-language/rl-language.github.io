@@ -150,45 +150,9 @@
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">init()</span> </code></p></li>
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">insert(KeyType</span> <span class="pre">key,</span> <span class="pre">ValueType</span> <span class="pre">value)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Bool</span></code></p></li>
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">get(KeyType</span> <span class="pre">key)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">ValueType</span></code></p></li>
-</ul>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> Add safety counter
- Create local copies of key and value to avoid modifying the input parameters
- Add safety check to prevent infinite loops
- Update the actual entry in entries
- Update the actual entry in entries
- Update the swapped entry
-</pre></div>
-</div>
-<ul class="simple">
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">contains(KeyType</span> <span class="pre">key)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Bool</span></code></p></li>
-</ul>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> Quick return for empty dictionary
- Add safety counter
- Add safety check to prevent infinite loops
-</pre></div>
-</div>
-<ul class="simple">
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">remove(KeyType</span> <span class="pre">key)</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Bool</span></code></p></li>
-</ul>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> Quick return for empty dictionary
- Add safety counter
- Add safety check to prevent infinite loops
-</pre></div>
-</div>
-<ul class="simple">
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">keys()</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Vector&lt;KeyType&gt;</span></code></p></li>
-</ul>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> Add safety counter
- Add safety check to prevent infinite loops
- Perform backward-shift operation
- Shift elements until we find an empty slot or an element with probe distance 0
- Calculate probe distance of the next element
- If probe distance is 0, it&#39;s already at its ideal position
- Move the element back
- Move to next positions
-</pre></div>
-</div>
-<ul class="simple">
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">values()</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Vector&lt;ValueType&gt;</span></code></p></li>
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">empty()</span>&#160; <span class="pre">-&gt;</span> <span class="pre">Bool</span></code></p></li>
 </ul>
@@ -215,14 +179,6 @@
 <ul class="simple">
 <li><p><strong>Function</strong>: <code class="docutils literal notranslate"><span class="pre">drop()</span> </code></p></li>
 </ul>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span> Create new, larger entries array
- Ensures growth by at least 1
- Initialize new entries
- Copy old entries to new array, but only scan up to old_capacity
- Insert directly without triggering another growth
- Clean up old entries
-</pre></div>
-</div>
 </section>
 </section>
 </section>

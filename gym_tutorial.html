@@ -133,7 +133,7 @@
 <li><p>Checking for the end of a game.</p></li>
 <li><p>Managing secret information and handling randomness.</p></li>
 </ul>
-<p>Since there are too many GYM-like wrappers, we provide general functions that you can reuse to write the wrapper with the right interface for your usecase.</p>
+<p>Since there are many Gym-like wrappers, we provide general functions that you can reuse to implement a wrapper with the interface that best fits your use case.</p>
 <section id="installing-rl-language-core">
 <h2>Installing <code class="docutils literal notranslate"><span class="pre">rl_language_core</span></code><a class="headerlink" href="#installing-rl-language-core" title="Link to this heading"></a></h2>
 <p>This section assumes that you want to replace the default tools provided by RLC. The standard <code class="docutils literal notranslate"><span class="pre">rlc</span></code> pip package includes a dependency on PyTorch to allow users to quickly test their RLC programs. However, this setup may not be suitable if you plan to use a custom version of PyTorch or a different machine learning framework altogether.</p>
@@ -147,11 +147,11 @@
 <section id="example-program">
 <h2>Example Program<a class="headerlink" href="#example-program" title="Link to this heading"></a></h2>
 <p>Let’s begin with a simple RLC program and build on top of it. Below is an implementation of the classic game <em>rock-paper-scissors</em>. Note that this example does not define the number of players or specify how the game state maps to the current player—these details are left implicit.</p>
-<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># rockpaperscizzor.rl</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># rockpaperscissor.rl</span>
 <span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">paper</span>
     <span class="n">rock</span>
-    <span class="n">scizzor</span>
+    <span class="n">scissor</span>
 
 <span class="p">@</span><span class="n">classes</span>
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
@@ -182,16 +182,16 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">rlc</span><span class="w"> </span><span class="kn">import</span> <span class="nb">compile</span>
 
-<span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
 </pre></div>
 </div>
-<p>This snippet compiles the <code class="docutils literal notranslate"><span class="pre">rockpaperscizzor.rl</span></code> file on the fly and returns a <code class="docutils literal notranslate"><span class="pre">Program</span></code> object—a wrapper that provides useful utilities like string conversions and formatted printing.</p>
+<p>This snippet compiles the <code class="docutils literal notranslate"><span class="pre">rockpaperscissor.rl</span></code> file on the fly and returns a <code class="docutils literal notranslate"><span class="pre">Program</span></code> object—a wrapper that provides useful utilities like string conversions and formatted printing.</p>
 <p>If you prefer not to use just-in-time (JIT) compilation—for example, if you don’t want to include the RLC compiler with your distribution—you can precompile the Rulebook program ahead of time and load it directly. <em>(TODO: Show how to do this.)</em></p>
 <p>However, our goal is not just to load the program and access its functions directly. Instead, we want to interact with it through a GYM-compatible interface. For that, we wrap it in a <code class="docutils literal notranslate"><span class="pre">SingleRLCEnvironment</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rlc</span><span class="w"> </span><span class="kn">import</span> <span class="nb">compile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ml.env</span><span class="w"> </span><span class="kn">import</span> <span class="n">SingleRLCEnvironment</span><span class="p">,</span> <span class="n">exit_on_invalid_env</span>
 
-<span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -233,7 +233,7 @@
 <section id="dumping-the-state">
 <h2>Dumping the State<a class="headerlink" href="#dumping-the-state" title="Link to this heading"></a></h2>
 <p>You can print the current game state as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
@@ -243,7 +243,7 @@
 </pre></div>
 </div>
 <p>To obtain a tensor serialization of the state, use <code class="docutils literal notranslate"><span class="pre">get_state()</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get_state</span><span class="p">())</span>
@@ -267,7 +267,7 @@
 </section>
 <section id="all-actions">
 <h2>All Actions<a class="headerlink" href="#all-actions" title="Link to this heading"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Here are the game actions:&quot;</span><span class="p">)</span>
@@ -276,13 +276,13 @@
 </div>
 <p>Running this program will print:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Here</span> <span class="n">are</span> <span class="n">the</span> <span class="n">game</span> <span class="n">actions</span><span class="p">:</span>
-<span class="p">[</span><span class="s1">&#39;player1_move {g1: paper} &#39;</span><span class="p">,</span> <span class="s1">&#39;player1_move {g1: rock} &#39;</span><span class="p">,</span> <span class="s1">&#39;player1_move {g1: scizzor} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: paper} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: rock} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: scizzor} &#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;player1_move {g1: paper} &#39;</span><span class="p">,</span> <span class="s1">&#39;player1_move {g1: rock} &#39;</span><span class="p">,</span> <span class="s1">&#39;player1_move {g1: scissor} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: paper} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: rock} &#39;</span><span class="p">,</span> <span class="s1">&#39;player2_move {g2: scissor} &#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
 <section id="valid-actions">
 <h2>Valid Actions<a class="headerlink" href="#valid-actions" title="Link to this heading"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Here is a NumPy array indicating which actions are currently valid:&quot;</span><span class="p">)</span>
@@ -297,8 +297,8 @@
 </section>
 <section id="applying-actions">
 <h2>Applying actions<a class="headerlink" href="#applying-actions" title="Link to this heading"></a></h2>
-<p>To advance the state, there is a very simple function, <code class="docutils literal notranslate"><span class="pre">step</span></code> which accepts the index of the action to execute and returns the reward of that action, measure as the different between the score before the action has been executed and the score after the action has been executed.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<p>To advance the state, there is a very simple function, <code class="docutils literal notranslate"><span class="pre">step</span></code> which accepts the index of the action to execute and returns the reward of that action, measured as the difference between the score before the action has been executed and the score after the action has been executed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
@@ -307,14 +307,14 @@
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">paper</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">paper</span><span class="p">}</span>
-<span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">scizzor</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">paper</span><span class="p">}</span>
+<span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">scissor</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">paper</span><span class="p">}</span>
 </pre></div>
 </div>
 </section>
 <section id="score">
 <h2>Score<a class="headerlink" href="#score" title="Link to this heading"></a></h2>
 <p>You can view the total score using:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -324,12 +324,12 @@
 </pre></div>
 </div>
 <p>This prints an array where the <em>i</em>-th element represents the total score of player <em>i</em>. In the example, player 0 plays rock, player 1 plays scissors, and player 0 receives a score of 1.0:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">rock</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">scizzor</span><span class="p">}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">resume_index</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">g1</span><span class="p">:</span> <span class="n">rock</span><span class="p">,</span> <span class="n">g2</span><span class="p">:</span> <span class="n">scissor</span><span class="p">}</span>
 <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>You can also query the score obtained in the most recent step, instead of the cumulative score:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscizzor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;./rockpaperscissor.rl&quot;</span><span class="p">])</span> <span class="k">as</span> <span class="n">program</span><span class="p">:</span>
     <span class="n">exit_on_invalid_env</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
     <span class="n">env</span> <span class="o">=</span> <span class="n">SingleRLCEnvironment</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">solve_randomness</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">last_score</span><span class="p">)</span>
@@ -460,7 +460,7 @@ Only after <code class="docutils literal notranslate"><span class="pre">is_done_
 <span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">paper</span>
     <span class="n">rock</span>
-    <span class="n">scizzor</span>
+    <span class="n">scissor</span>
 
 <span class="p">@</span><span class="n">classes</span>
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>

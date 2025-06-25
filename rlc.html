@@ -53,6 +53,13 @@
 <p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">RLC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-options">Command line options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introspection-options">Introspection options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-generation">Output generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compilation-flags">Compilation flags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#rlc-lsp-and-autocomplete">rlc-lsp and autocomplete</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#vscode">VSCODE</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vim-with-youcompleteme">VIM with YouCompleteMe</a></li>
@@ -175,6 +182,94 @@
 <li><p>native libraries to reuse in other languages.</p></li>
 <li><p>a wrapper to use the library in that language.</p></li>
 </ul>
+<section id="command-line-options">
+<h2>Command line options<a class="headerlink" href="#command-line-options" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">rlc</span></code> executable supports a large number of command line flags.  Most of
+them mirror the options of typical C/C++ compilers.  The options can be grouped
+in a few categories: <strong>introspection</strong>, <strong>output generation</strong>, <strong>compilation</strong> and
+<strong>miscellaneous</strong> features.  Below is a short description of every available
+flag.</p>
+<section id="introspection-options">
+<h3>Introspection options<a class="headerlink" href="#introspection-options" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--token</span></code> – lex the input file and print the token stream.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dot</span></code> – dump the action graph in GraphViz format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--graph</span></code> – dump a machine parsable description of the action graph.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--graph-filter</span> <span class="pre">&lt;regex&gt;</span></code> – print only actions whose name matches the regular
+expression.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--graph-only-actions</span></code> – omit non action functions from the dumped graphs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--graph-inline</span></code> – inline calls inside the graph visualization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--unchecked</span></code> – print the AST before type checking and exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--type-checked</span></code> – print the AST after type checking but before template
+expansion and exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--before-template</span></code> – dump the IR just before templates are instantiated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--after-implicit</span></code> – dump the IR after implicit instantiation has completed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--flattened</span></code> – dump the IR after control flow has been flattened.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rlc</span></code> – print the final RLC IR and exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--ir</span></code> – dump the generated LLVM IR.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--mlir</span></code> – dump the MLIR representation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--print-ir-on-failure</span></code> – if compilation fails, print the IR that caused the
+failure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--timing</span></code> – print the time taken by each compiler pass.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hide-position</span></code> – do not print file and line information in IR dumps.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hide-dl</span></code> – do not print the module data layout in IR dumps.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--print-included-files</span></code> – instead of compiling, print the contents of all
+files included during parsing.  Use <code class="docutils literal notranslate"><span class="pre">--hide-standard-lib-files</span></code> to omit files
+coming from the standard library.</p></li>
+</ul>
+</section>
+<section id="output-generation">
+<h3>Output generation<a class="headerlink" href="#output-generation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--header</span></code> – emit a C header describing the compiled module and exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--c-sharp</span></code> – emit a C# wrapper and exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--python</span></code> – emit a Python wrapper and exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--godot</span></code> – emit a wrapper for Godot and exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--compile</span></code> – generate an object file without linking.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--shared</span></code> – produce a shared library instead of an executable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">&lt;file&gt;</span></code> – path of the output file to generate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--clang</span> <span class="pre">&lt;path&gt;</span></code> – path to the <code class="docutils literal notranslate"><span class="pre">clang</span></code> binary used for linking.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rpath</span> <span class="pre">&lt;path&gt;</span></code> – add an rpath entry to the produced binary (may be repeated).</p></li>
+</ul>
+</section>
+<section id="compilation-flags">
+<h3>Compilation flags<a class="headerlink" href="#compilation-flags" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-O2</span></code> – enable optimizations and disable runtime checks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-g</span></code> – generate debug information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--emit-precondition-checks</span></code> – insert checks for function preconditions
+(enabled by default, disabled by <code class="docutils literal notranslate"><span class="pre">-O2</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--emit-bound-checks</span></code> – insert array bounds checks (enabled by default,
+disabled by <code class="docutils literal notranslate"><span class="pre">-O2</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--sanitize</span></code> – enable runtime sanitizer instrumentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--fuzzer</span></code> – build the program as a fuzzer; implies <code class="docutils literal notranslate"><span class="pre">--sanitize</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--fuzzer-lib</span> <span class="pre">&lt;path&gt;</span></code> – path to the library implementing the fuzzer runtime.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pylib</span></code> – link against the Python interpreter.  When enabled assertions use
+the symbol <code class="docutils literal notranslate"><span class="pre">rl_py_abort</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pyrlc-lib</span> <span class="pre">&lt;path&gt;</span></code> – path to the Python wrapper support library; enables
+<code class="docutils literal notranslate"><span class="pre">--pylib</span></code> automatically.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--runtime-lib</span> <span class="pre">&lt;path&gt;</span></code> – path to the Rulebook runtime library.  If omitted the
+compiler uses the runtime distributed with <code class="docutils literal notranslate"><span class="pre">rlc</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">&lt;triple&gt;</span></code> – override the default target triple.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--abort-symbol</span> <span class="pre">&lt;name&gt;</span></code> – specify the symbol to call when an assertion fails.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--MD</span></code> – generate a makefile style dependency file alongside the output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--expect-fail</span></code> – return exit code 0 if compilation fails and 1 on success
+(useful in tests).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>/<code class="docutils literal notranslate"><span class="pre">-v</span></code> – print verbose information while invoking external tools.</p></li>
+</ul>
+</section>
+<section id="miscellaneous">
+<h3>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">&lt;dir&gt;</span></code> – additional include directories searched when resolving imports.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pylib</span></code> and <code class="docutils literal notranslate"><span class="pre">--pyrlc-lib</span></code> – support linking against Python as described
+above.</p></li>
+<li><p>Extra object files or additional <code class="docutils literal notranslate"><span class="pre">.rl</span></code> sources can be passed on the command
+line after the main input file.  Directories specified with <code class="docutils literal notranslate"><span class="pre">-i</span></code> are searched
+for imported files.</p></li>
+</ul>
+</section>
+</section>
 <section id="rlc-lsp-and-autocomplete">
 <h2>rlc-lsp and autocomplete<a class="headerlink" href="#rlc-lsp-and-autocomplete" title="Link to this heading"></a></h2>
 <p>rlc-lsp is a <a class="reference external" href="https://en.wikipedia.org/wiki/Language_Server_Protocol">language server</a> for the Rulebook language. It allows users to get autocomplete in their ide.</p>
@@ -185,7 +280,7 @@
 </section>
 <section id="vim-with-youcompleteme">
 <h3>VIM with YouCompleteMe<a class="headerlink" href="#vim-with-youcompleteme" title="Link to this heading"></a></h3>
-<p>On <code class="docutils literal notranslate"><span class="pre">vim</span></code>, if you use <code class="docutils literal notranslate"><span class="pre">YouCompleteMe</span></code> you can get access to automplete by adding the followings to your .vimrc file.</p>
+<p>On <code class="docutils literal notranslate"><span class="pre">vim</span></code>, if you use <code class="docutils literal notranslate"><span class="pre">YouCompleteMe</span></code> you can get access to automplete by adding the following to your .vimrc file.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">au</span> <span class="n">BufRead</span><span class="p">,</span><span class="n">BufNewFile</span> <span class="o">*.</span><span class="n">rl</span> <span class="nb">set</span> <span class="n">filetype</span><span class="o">=</span><span class="n">rl</span>
 
 <span class="n">let</span> <span class="n">g</span><span class="p">:</span><span class="n">ycm_language_server</span> <span class="o">=</span> <span class="p">[</span> <span class="p">{</span>
@@ -213,13 +308,83 @@
 <section id="rlc-random">
 <h2>rlc-random<a class="headerlink" href="#rlc-random" title="Link to this heading"></a></h2>
 <p>rlc-random runs random actions on a program with a finite amount of actions, and does until it reaches the end of the program. It prints the selected actions.</p>
-<p>This tool is usefull as a command line utility to quickly test a interactive program, or to produce a trace usefull to some other program.</p>
+<p>This tool is useful as a command line utility to quickly test a interactive program, or to produce a trace useful to some other program.</p>
 <p>To be usable with rlc-random, a program just requires that to have a entry point with the following signature <code class="docutils literal notranslate"><span class="pre">act</span> <span class="pre">play()</span> <span class="pre">-&gt;</span> <span class="pre">Game</span></code>, and that all <code class="docutils literal notranslate"><span class="pre">action</span> <span class="pre">statements</span></code> that appear in <code class="docutils literal notranslate"><span class="pre">play</span></code> are enumerable.</p>
 <p>This program is only available in a pip installation.</p>
 </section>
 <section id="rlc-learn">
 <h2>rlc-learn<a class="headerlink" href="#rlc-learn" title="Link to this heading"></a></h2>
-<p>rlc-learn uses a off-the-shelf implmentation of PPO to maximize some metric in a given Rulebook program. This tool is intended to be used to perform sanity checks by those that wish to roll out their own machine learning algorithm, or by those that do not have knowledge of reinforcement learning and wish to use a acceptable off-the-shelf implementation. A basic tutorial is shown <a class="reference internal" href="tutorial.html"><span class="std std-doc">here</span></a>.</p>
+<p>rlc-learn uses an off-the-shelf implementation of PPO to maximize some metric in a given Rulebook program. This tool is intended to be used to perform sanity checks by those that wish to roll out their own machine learning algorithm, or by those that do not have knowledge of reinforcement learning and wish to use an acceptable off-the-shelf implementation. A basic tutorial is shown <a class="reference internal" href="tutorial.html"><span class="std std-doc">here</span></a>.</p>
+<p>The command accepts a number of options controlling how the program is
+compiled and how the training loop behaves.  All options from
+<code class="docutils literal notranslate"><span class="pre">make_rlc_argparse</span></code> are available together with a set of flags specific to
+reinforcement learning.  The following list explains each option in depth:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--include</span></code>/<code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">&lt;dir&gt;</span></code> – add <code class="docutils literal notranslate"><span class="pre">&lt;dir&gt;</span></code> to the search path for additional
+<code class="docutils literal notranslate"><span class="pre">.rl</span></code> files when compiling the environment.  Use this when your Rulebook
+program imports modules stored in other directories.  The flag may appear
+multiple times and each directory is forwarded to the compiler.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--stdlib</span> <span class="pre">&lt;dir&gt;</span></code> – path to an alternative Rulebook standard library.
+By default the version bundled with the installed package is used.  Specify
+this option if you maintain a custom copy of the standard library or if you
+are experimenting with modifications.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pyrlc</span> <span class="pre">&lt;path&gt;</span></code> – location of the Python wrapper runtime library.
+The wrapper produced by <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--python</span></code> depends on this support library.
+Normally it is found automatically but installations in unusual locations may
+require setting this path explicitly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rlc</span></code>/<code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">&lt;path&gt;</span></code> – path to the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> compiler executable.  If the compiler
+is not available in your <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, for instance when using a development build,
+point this flag to the desired executable so <code class="docutils literal notranslate"><span class="pre">rlc-learn</span></code> can invoke it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--runtime</span></code>/<code class="docutils literal notranslate"><span class="pre">-rt</span> <span class="pre">&lt;path&gt;</span></code> – path to a custom Rulebook runtime library to link
+against.  Use this to train with an instrumented runtime or an experimental
+build instead of the one shipped with the package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--extra-rlc-args</span> <span class="pre">&lt;args&gt;</span></code> – additional command line arguments forwarded
+verbatim to <code class="docutils literal notranslate"><span class="pre">rlc</span></code>.  Any string placed here is appended to the compilation
+command.  Typical uses include enabling optimizations (<code class="docutils literal notranslate"><span class="pre">-O2</span></code>) or runtime
+sanitizers without modifying the learning script.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--output</span></code>/<code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">&lt;file&gt;</span></code> – file where the trained network is written.  After
+training completes the model parameters are saved in PyTorch format at this
+location.  The resulting file can be passed to <code class="docutils literal notranslate"><span class="pre">rlc-play</span></code> or <code class="docutils literal notranslate"><span class="pre">rlc-probs</span></code> and
+defaults to <code class="docutils literal notranslate"><span class="pre">network</span></code> when omitted.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--no-tensorboard</span></code> – do not launch the TensorBoard server.  By default
+<code class="docutils literal notranslate"><span class="pre">rlc-learn</span></code> starts TensorBoard on port <code class="docutils literal notranslate"><span class="pre">6006</span></code> and logs reward and loss curves
+for real‑time monitoring.  Disable it in headless or resource constrained
+setups.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--total-steps</span> <span class="pre">&lt;n&gt;</span></code> – total number of environment interactions collected
+before training ends.  Increasing this budget allows the algorithm to gather
+more experience and usually yields a stronger policy, albeit at the cost of
+longer training time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--lr</span> <span class="pre">&lt;value&gt;</span></code> – learning rate used by the optimizer.  This controls the
+step size of gradient updates and heavily influences training stability.
+Values are typically between <code class="docutils literal notranslate"><span class="pre">1e-3</span></code> and <code class="docutils literal notranslate"><span class="pre">1e-5</span></code> depending on the environment.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--entropy-coeff</span> <span class="pre">&lt;value&gt;</span></code> – weight of the entropy bonus encouraging
+exploration.  A larger coefficient drives the agent to sample actions more
+uniformly, helping exploration but delaying convergence if set too high.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--clip-param</span> <span class="pre">&lt;value&gt;</span></code> – PPO clipping threshold.  This bounds the change in
+action probabilities between successive updates.  Small values lead to very
+conservative updates while larger ones allow faster but less stable learning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--league-play</span></code> – periodically save networks and pit the agent against older
+versions to prevent forgetting.  This self-play mechanism exposes the model to
+past behaviors so new strategies do not overwrite previously learned skills.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--load</span> <span class="pre">&lt;file&gt;</span></code> – start training from the checkpoint in <code class="docutils literal notranslate"><span class="pre">&lt;file&gt;</span></code> rather than
+from scratch.  Use this option to continue a previous run or fine tune an
+existing model on a new task.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--steps-per-env</span> <span class="pre">&lt;n&gt;</span></code> – number of steps collected in each environment before
+a gradient update (default <code class="docutils literal notranslate"><span class="pre">100</span></code>).  Larger values increase the batch size used
+for optimization and can improve stability, but they also raise memory
+requirements.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hypersearch</span></code> – run a predefined hyperparameter search over learning rate,
+entropy coefficient, clip parameter and the number of steps per environment.
+Results for each configuration are stored in separate directories to simplify
+comparison.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--model-save-frequency</span> <span class="pre">&lt;n&gt;</span></code> – write a checkpoint every <code class="docutils literal notranslate"><span class="pre">&lt;n&gt;</span></code> iterations
+(default <code class="docutils literal notranslate"><span class="pre">20</span></code>).  Frequent checkpoints let you inspect intermediate policies
+or resume training after unexpected interruptions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--envs</span> <span class="pre">&lt;n&gt;</span></code> – number of parallel environments used to gather experience.
+Each environment runs in its own process and contributes samples
+simultaneously.  Higher values speed up data collection but demand more CPU
+time and memory.</p></li>
+</ul>
 <p>This program is only available in a pip installation.</p>
 </section>
 <section id="rlc-play">
@@ -235,12 +400,40 @@
 </section>
 <section id="rlc-action">
 <h2>rlc-action<a class="headerlink" href="#rlc-action" title="Link to this heading"></a></h2>
-<p>Applies a execution trace to a rulebook program, and then prints the final result. This tool is usefull to check if a trace is valid, if the traced program is correct.</p>
+<p>Applies a execution trace to a rulebook program, and then prints the final result. This tool is useful to check if a trace is valid, if the traced program is correct.</p>
+<p>The command accepts the standard compilation flags exposed by
+<code class="docutils literal notranslate"><span class="pre">make_rlc_argparse</span></code> together with a few options controlling how the trace is
+executed.  Below is a description of every available flag:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">source_file</span></code> – path to the <code class="docutils literal notranslate"><span class="pre">.rl</span></code> source file (or a Python wrapper produced
+with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--python</span></code>) to run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">action_file</span></code> – text file containing one action per line.  Use <code class="docutils literal notranslate"><span class="pre">-</span></code> to read
+from standard input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--load</span></code>/<code class="docutils literal notranslate"><span class="pre">-l</span> <span class="pre">&lt;file&gt;</span></code> – load a previously saved binary state before applying
+the actions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--output</span></code>/<code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">&lt;file&gt;</span></code> – write the final state to <code class="docutils literal notranslate"><span class="pre">&lt;file&gt;</span></code> in binary format
+instead of printing it on screen.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--ignore-invalid</span></code>/<code class="docutils literal notranslate"><span class="pre">-ii</span></code> – skip actions that fail to parse or cannot be
+applied rather than stopping with an error.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--print-all</span></code>/<code class="docutils literal notranslate"><span class="pre">-all</span></code> – echo each line from the trace before executing it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pretty-print</span></code>/<code class="docutils literal notranslate"><span class="pre">-pp</span></code> – pause after each action and pretty print the current
+state, waiting for user input to continue.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--show-actions</span></code>/<code class="docutils literal notranslate"><span class="pre">-a</span></code> – list all available actions defined in the program and
+exit.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--include</span></code>/<code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">&lt;dir&gt;</span></code> – additional include directories used when compiling
+the Rulebook program.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--stdlib</span> <span class="pre">&lt;dir&gt;</span></code> – path to a custom standard library.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pyrlc</span> <span class="pre">&lt;path&gt;</span></code> – location of the Python wrapper runtime library.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rlc</span></code>/<code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">&lt;path&gt;</span></code> – explicit path to the <code class="docutils literal notranslate"><span class="pre">rlc</span></code> compiler.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--runtime</span></code>/<code class="docutils literal notranslate"><span class="pre">-rt</span> <span class="pre">&lt;path&gt;</span></code> – alternative runtime library to link against.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--extra-rlc-args</span> <span class="pre">&lt;args&gt;</span></code> – extra command line arguments forwarded verbatim
+to <code class="docutils literal notranslate"><span class="pre">rlc</span></code> during compilation.</p></li>
+</ul>
 <p>This program is only available in a pip installation.</p>
 </section>
 <section id="tools-for-compiler-people">
 <h2>Tools for compiler people<a class="headerlink" href="#tools-for-compiler-people" title="Link to this heading"></a></h2>
-<p>This section of the document talks about the internal components of RLC, and is meant for compiler developers, not users of the language. If you are confused about what this means and you are wondering if this section is for your, it is not, altough you can still read it if you are interested in knowing what goes on under rlc hood.</p>
+<p>This section of the document talks about the internal components of RLC, and is meant for compiler developers, not users of the language. If you are confused about what this means and you are wondering if this section is for your, it is not, although you can still read it if you are interested in knowing what goes on under rlc hood.</p>
 </section>
 <section id="rlc-internals">
 <h2>RLC internals<a class="headerlink" href="#rlc-internals" title="Link to this heading"></a></h2>
@@ -301,7 +494,7 @@
 </section>
 <section id="unchecked-ast">
 <h3>Unchecked AST<a class="headerlink" href="#unchecked-ast" title="Link to this heading"></a></h3>
-<p>Before typechecking the AST of the language is unchecked, it means that almost every non trivial operation is marked as having unkown type.</p>
+<p>Before typechecking the AST of the language is unchecked, it means that almost every non trivial operation is marked as having unknown type.</p>
 <p>You can see the token stream with <code class="docutils literal notranslate"><span class="pre">rlc</span> <span class="pre">--unchecked</span> <span class="pre">file.rl</span></code></p>
 </section>
 <section id="typechecked-ast">
@@ -341,7 +534,7 @@
 </section>
 <section id="making-ir-more-readable">
 <h3>Making IR more readable<a class="headerlink" href="#making-ir-more-readable" title="Link to this heading"></a></h3>
-<p>When priting the RLC IR you can pass <code class="docutils literal notranslate"><span class="pre">--hide-positions</span></code> and <code class="docutils literal notranslate"><span class="pre">--hide-dl</span></code> to omit the module data layout and the module debug positions. That makes the IR slightly more readable.</p>
+<p>When printing the RLC IR you can pass <code class="docutils literal notranslate"><span class="pre">--hide-positions</span></code> and <code class="docutils literal notranslate"><span class="pre">--hide-dl</span></code> to omit the module data layout and the module debug positions. That makes the IR slightly more readable.</p>
 </section>
 <section id="mlir">
 <h3>MLIR<a class="headerlink" href="#mlir" title="Link to this heading"></a></h3>
@@ -354,7 +547,7 @@
 <li><p>the textual serializers for MLIR</p></li>
 <li><p>mlir-opt which runs single passes of mlir</p></li>
 <li><p>some basic type interfaces</p></li>
-<li><p>MLIR dataflow analisys</p></li>
+<li><p>MLIR dataflow analysis</p></li>
 </ul>
 </section>
 <section id="running-single-rlc-passes">

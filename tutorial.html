@@ -107,7 +107,7 @@
              
   <section id="tutorial-for-rl-people">
 <h1>Tutorial for RL people<a class="headerlink" href="#tutorial-for-rl-people" title="Link to this heading"></a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language is designed, among other things, to help you use reinforcement learning techniques. It does so by helping you write simulated environments in which machine learning agents can learn, without requiring the user to write any code related to machine learning, beside specificing minimal and maximal bounds of variables.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Rulebook</span></code> language is designed, among other things, to help you use reinforcement learning techniques. It does so by helping you write simulated environments in which machine learning agents can learn, without requiring the user to write any code related to machine learning, beside specifying minimal and maximal bounds of variables.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">RL</span></code> language does not provide new reinforcement learning methods; instead, it concerns itself with the issue of writing simulations only. You can use any learning algorithm you wish when using an <code class="docutils literal notranslate"><span class="pre">RL</span></code> language simulation.</p>
 <p>Of course, included in the <code class="docutils literal notranslate"><span class="pre">RL</span></code> language package are off-the-shelf machine learning algorithms for those who do not have the skill required to write a custom solution. We will see how a user with no machine learning knowledge can still use <code class="docutils literal notranslate"><span class="pre">RL</span></code> and obtain solutions for their own optimization problems.</p>
 <section id="requirements">
@@ -152,20 +152,20 @@ pip<span class="w"> </span>install<span class="w"> </span>rl_language
 </section>
 <section id="training-and-running">
 <h2>Training and Running<a class="headerlink" href="#training-and-running" title="Link to this heading"></a></h2>
-<p>Now that you’ve ensured your system works, download the <code class="docutils literal notranslate"><span class="pre">black</span> <span class="pre">jack</span></code> example from <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/tool/rlc/test/examples/black_jack.rl">here</a> and save it in a file in the directory we created at the start of this example.</p>
-<p>Black jack is example that shows how to handle games with randomness and imperfect information. Indeed the actions taken by the real user are usually just one or two, while most of the game is spent by the <code class="docutils literal notranslate"><span class="pre">randomness</span> <span class="pre">player</span></code> shuffling the deck, which is a fake player that performs actions at random.</p>
-<p>After you have copied it, let us make sure we can run generate a random game.</p>
+<p>Now that you’ve ensured your system works, download the <code class="docutils literal notranslate"><span class="pre">Blackjack</span></code> example from <a class="reference external" href="https://github.com/rl-language/rlc/blob/master/tool/rlc/test/examples/black_jack.rl">here</a> and save it in the directory we created at the start of this example.</p>
+<p>Blackjack is an example that shows how to handle games with randomness and imperfect information. Indeed, the actions taken by the real user are usually just one or two, while most of the game is spent by the <code class="docutils literal notranslate"><span class="pre">randomness</span> <span class="pre">player</span></code> shuffling the deck—a fake player that performs actions at random.</p>
+<p>After you have copied it, let us make sure we can generate a random game.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">random</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span>
 </pre></div>
 </div>
-<p>You will see that it prints the actions to be executed in a game, this include the shuffling of the deck.
-You can visualize what is happeing with</p>
+<p>You will see that it prints the actions to be executed in a game, this includes the shuffling of the deck.
+You can visualize what is happening with</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlc</span><span class="o">-</span><span class="n">random</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span> <span class="o">-</span><span class="n">o</span> <span class="n">game</span><span class="o">.</span><span class="n">log</span>
 <span class="n">rlc</span><span class="o">-</span><span class="n">action</span> <span class="n">black_jack</span><span class="o">.</span><span class="n">rl</span> <span class="n">game</span><span class="o">.</span><span class="n">log</span> <span class="o">-</span><span class="n">pp</span>
 </pre></div>
 </div>
-<p>You will be able to visualize the evolution of the deck while it is being suffled, and then see which action the player will take.</p>
-<p>Now that we have visualized a random game, we can start learning! Tou can run <code class="docutils literal notranslate"><span class="pre">rlc-learn</span></code> to do so:</p>
+<p>You will be able to visualize the evolution of the deck while it is being shuffled, and then see which action the player will take.</p>
+<p>Now that we have visualized a random game, we can start learning! You can run <code class="docutils literal notranslate"><span class="pre">rlc-learn</span></code> to do so:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rlc-learn<span class="w"> </span>black_jack.rl<span class="w"> </span><span class="p">|&amp;</span><span class="w"> </span>tee<span class="w"> </span>log.txt
 </pre></div>
 </div>
@@ -179,8 +179,8 @@ You can visualize what is happeing with</p>
 <p>In the search bar, write <code class="docutils literal notranslate"><span class="pre">EpRewMean</span></code>.</p>
 <p>You should see a graph that looks similar to the following:</p>
 <p><img alt="tensorboard example" src="_images/mean_reward.png" /></p>
-<p>The x-axis is the number of actions played. In the case of our game, it means the number of <code class="docutils literal notranslate"><span class="pre">hits</span></code> and <code class="docutils literal notranslate"><span class="pre">stand</span></code> executed, the y-axis is instead the average score obtained. As exepected the average score is increasing, that is: it is learning to play.</p>
-<p>Of course, the machine will never achieve a average score of one, because there is no guarantee you can always hit 21 points, not even if you knew the order of the cards in the deck. Furthermore, the size of the neural network has been defaulted to a reasonable size, but there is no guarantee that the problem is solvable given the default size.</p>
+<p>The x-axis is the number of actions played. In the case of our game, it means the number of <code class="docutils literal notranslate"><span class="pre">hits</span></code> and <code class="docutils literal notranslate"><span class="pre">stand</span></code> executed, the y-axis is instead the average score obtained. As expected the average score is increasing, that is: it is learning to play.</p>
+<p>Of course, the machine will never achieve an average score of one, because there is no guarantee you can always hit 21 points—even if you knew the order of the cards in the deck. Furthermore, the size of the neural network has been defaulted to a reasonable value, but there is no guarantee that the problem is solvable given the default size.</p>
 <p>Still, with very few commands and a very simple <code class="docutils literal notranslate"><span class="pre">.rl</span></code> file, we managed to have a reasonably configured network up and learning.</p>
 <p>Let it train for as long as you wish. We stopped the training after ~500.000 moves, at around 0.75 mean return. That is, the network learned when it should keep drawing more cards and when not to.</p>
 <p><img alt="tensorboard example" src="_images/tensorboard2.png" /></p>
@@ -196,7 +196,7 @@ You can visualize what is happeing with</p>
 </section>
 <section id="building-on-top-of-it">
 <h2>Building on Top of It<a class="headerlink" href="#building-on-top-of-it" title="Link to this heading"></a></h2>
-<p>Until now, we have seen how to write, train, run, and visualize a game. Of course, this is not the end of the road. After you have trained a network, you probably wish to use the rules you have written in a real environment. Let us see how to do so by writing a Python script that can interact with the <code class="docutils literal notranslate"><span class="pre">RL</span></code> black jack implementation.</p>
+<p>Until now, we have seen how to write, train, run, and visualize a game. Of course, this is not the end of the road. After you have trained a network, you probably wish to use the rules you have written in a real environment. Let us see how to do so by writing a Python script that can interact with the <code class="docutils literal notranslate"><span class="pre">RL</span></code> Blackjack implementation.</p>
 <p>Create a file called <code class="docutils literal notranslate"><span class="pre">example.py</span></code>, and write the following content:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rlc</span><span class="w"> </span><span class="kn">import</span> <span class="nb">compile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
@@ -204,7 +204,7 @@ You can visualize what is happeing with</p>
 <span class="c1"># load the rl file</span>
 <span class="n">program</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">([</span><span class="s2">&quot;black_jack.rl&quot;</span><span class="p">])</span>
 <span class="c1"># starts a rlc program invoking the user defined play</span>
-<span class="c1"># function and wraps it in object for with some usefull methods</span>
+<span class="c1"># function and wraps it in object for with some useful methods</span>
 <span class="n">state</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
 <span class="c1"># invokes directly the user defined function on the real state object</span>
@@ -236,7 +236,7 @@ You can visualize what is happeing with</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>example.py
 </pre></div>
 </div>
-<p>As you can see, you are able to play black jack driven by a Python script. Of course, you could already do so with the <code class="docutils literal notranslate"><span class="pre">rlc-action</span></code> command provided by the <code class="docutils literal notranslate"><span class="pre">rl_language</span></code> package, but this example shows that <code class="docutils literal notranslate"><span class="pre">RL</span></code> programs can be easily used from other languages such as Python or C++. This allows you to reuse the same <code class="docutils literal notranslate"><span class="pre">RL</span></code> code you have written to train the network in production too, building other tools on top of it!</p>
+<p>As you can see, you are able to play Blackjack driven by a Python script. Of course, you could already do so with the <code class="docutils literal notranslate"><span class="pre">rlc-action</span></code> command provided by the <code class="docutils literal notranslate"><span class="pre">rl_language</span></code> package, but this example shows that <code class="docutils literal notranslate"><span class="pre">RL</span></code> programs can be easily used from other languages such as Python or C++. This allows you to reuse the same <code class="docutils literal notranslate"><span class="pre">RL</span></code> code you have written to train the network in production too, building other tools on top of it!</p>
 <p>You can also load the network you have trained and use it to play games, but such a setup is a little too complex to include in this introductory document and will be shown later.</p>
 </section>
 <section id="performance">

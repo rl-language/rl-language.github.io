@@ -800,7 +800,7 @@ A random number between <code class="docutils literal notranslate"><span class="
 <span class="w">        </span><span class="n">is_non_cp_rerollable</span><span class="p">(</span><span class="n">is_non_cp_rerollable</span><span class="p">),</span>
 <span class="w">        </span><span class="n">current_player</span><span class="p">(</span><span class="n">current_player</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">roll</span><span class="p">(</span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">Dice</span><span class="w"> </span><span class="n">dice</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">assert</span><span class="p">(</span><span class="n">can_roll</span><span class="p">(</span><span class="n">state</span><span class="p">),</span><span class="w"> </span><span class="n">sate</span><span class="p">);</span>
+<span class="w">        </span><span class="n">assert</span><span class="p">(</span><span class="n">can_roll</span><span class="p">(</span><span class="n">state</span><span class="p">),</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
 <span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dice</span><span class="p">;</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">){</span><span class="w"> </span><span class="c1">// if this is the first time we roll the dice</span>
 <span class="w">            </span><span class="n">is_non_cp_rerollable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_reroll</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="n">can_reroll_1s</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="c1">// figure out if we can reroll for free</span>
@@ -830,7 +830,7 @@ A random number between <code class="docutils literal notranslate"><span class="
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">can_keep_it</span><span class="p">(</span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">Bool</span><span class="w"> </span><span class="n">do_it</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">suspensionPoint</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ActionRoll</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// a class that rappresents a action, in a way that can be stored and executed later</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ActionRoll</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// a class that rappresents an action, in a way that can be stored and executed later</span>
 <span class="w">        </span><span class="n">Dice</span><span class="w"> </span><span class="n">roll</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">RerollableDiceRoll</span><span class="w"> </span><span class="n">rollBeingResolved</span><span class="p">,</span><span class="w"> </span><span class="n">GameState</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">           </span><span class="n">rollBeingResolved</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">roll</span><span class="p">);</span>
@@ -918,7 +918,7 @@ Since the rules are the same between the engine and python, python can connect o
 </section>
 <section id="self-configuring-ui">
 <h2>Self configuring UI<a class="headerlink" href="#self-configuring-ui" title="Link to this heading"></a></h2>
-<p>One of the objective of the Rulebook is to be able to modify rules and have the UI automatically adapt to them. We achieve this using the language <a class="reference internal" href="language_tour.html#action-statements-classes"><span class="std std-ref">action classes</span></a>. Here is a example, the godot script that handles the <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/scripts/boardl.gd#L22">game board</a> so that whenever a action related to selecting the board is possible, the elegible locations glow yellow.</p>
+<p>One of the objective of the Rulebook is to be able to modify rules and have the UI automatically adapt to them. We achieve this using the language <a class="reference internal" href="language_tour.html#action-statements-classes"><span class="std std-ref">action classes</span></a>. Here is a example, the godot script that handles the <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/scripts/boardl.gd#L22">game board</a> so that whenever an action related to selecting the board is possible, the eligible locations glow yellow.</p>
 <div class="highlight-godot notranslate"><div class="highlight"><pre><span></span># triggers after every action
 func on_state_changed():
 	for quad in quads.values():
@@ -937,9 +937,9 @@ func on_state_changed():
 		quads[board_position.get_x().get_value() * 100 + board_position.get_y().get_value()].visible = true
 </pre></div>
 </div>
-<p>The UI only can introspect valid actions, make sure that they have the expected shape of only requring a single <code class="docutils literal notranslate"><span class="pre">BoardPosition</span></code> argument, and then highlight that particular board location.</p>
-<p>This meas that the rule writer can write rules such as the current implementation of moving a game piece on the board</p>
-<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># core rules movement rules, including the possiblity</span>
+<p>The UI only can introspect valid actions, make sure that they have the expected shape of only requiring a single <code class="docutils literal notranslate"><span class="pre">BoardPosition</span></code> argument, and then highlight that particular board location.</p>
+<p>This means that the rule writer can write rules such as the current implementation of moving a game piece on the board</p>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># core rules movement rules, including the possibility</span>
 <span class="c1"># of advancing and the triggering of overwatches</span>
 <span class="kn">act</span> <span class="n">move</span><span class="p">(</span><span class="kn">ctx</span> <span class="nc">Board</span> <span class="n">board</span><span class="p">,</span> <span class="kn">ctx</span> <span class="nc">UnitID</span> <span class="n">unit</span><span class="p">,</span> <span class="kn">frm</span> <span class="nc">StatModifier</span> <span class="n">additional_movement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nc">Move</span><span class="p">:</span>
     <span class="kr">if</span> <span class="n">board</span><span class="p">[</span><span class="n">unit</span><span class="p">.</span><span class="n">get</span><span class="p">()].</span><span class="n">models</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -951,24 +951,24 @@ func on_state_changed():
     <span class="p">...</span>
 </pre></div>
 </div>
-<p>Without knowing anything related to the UI, the user declared a <code class="docutils literal notranslate"><span class="pre">move_to</span></code> action, never referenced by any godot specific code. Since it accepts a <code class="docutils literal notranslate"><span class="pre">BoardPosion</span></code>, it is auto detected by the UI code.</p>
-<p>Of course, this is very inefficient. In practice it does not matter since the objective of 4hammer is not to draw billions of polygons on screen, but it one wished to make it more efficient it could have enumerated all possible types of valid actions instead of introspecting actions at run time, and then checked if those particular actions where valid.</p>
-<p>A even more efficient, but less flexible implementation would have been to to directly invoke a call back from RLC code yielding the most optimal implementation, but that would require some extra trickery to make sure machine learning stuff still works.</p>
+<p>Without knowing anything related to the UI, the user declared a <code class="docutils literal notranslate"><span class="pre">move_to</span></code> action, never referenced by any Godot-specific code. Since it accepts a <code class="docutils literal notranslate"><span class="pre">BoardPosition</span></code>, it is auto detected by the UI code.</p>
+<p>Of course, this is very inefficient. In practice it does not matter since the objective of 4hammer is not to draw billions of polygons on screen, but if one wished to make it more efficient it could have enumerated all possible types of valid actions instead of introspecting actions at run time, and then checked if those particular actions were valid.</p>
+<p>An even more efficient, but less flexible implementation would have been to directly invoke a callback from RLC code yielding the most optimal implementation, but that would require some extra trickery to make sure machine learning stuff still works.</p>
 <section id="supported-autoconfigurations">
 <h3>Supported autoconfigurations<a class="headerlink" href="#supported-autoconfigurations" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>all actions that accepts a single BoardPosition are interpreted as the user being allowed to click on the board.</p></li>
-<li><p>all actions that accept a UnitID are interpred as the user wishing to click on a unit. All valid units glow and can be clicked.</p></li>
-<li><p>all actions taht accept a ModelID display the model glowing and allow the user to click on it. The rule writer must specify which unit that model belongs to, to be able to tell them apart.</p></li>
-<li><p>all actions that accepts 2 UnitID are interpretd as the user wishing to make interact the first unit with the second unit. For example shooting with a unit onto another. The UI allows to drag a arrow from the start unit torward the target unit.</p></li>
-<li><p>actions that accept a single bool display to the user the name of the action phraased as a question.</p></li>
-<li><p>actions that accept a enum display the valid choises on screen for the player to select.</p></li>
+<li><p>all actions that accept a UnitID are interpreted as the user wishing to click on a unit. All valid units glow and can be clicked.</p></li>
+<li><p>all actions that accept a ModelID display the model glowing and allow the user to click on it. The rule writer must specify which unit that model belongs to, to be able to tell them apart.</p></li>
+<li><p>all actions that accept 2 UnitID are interpreted as the user wishing to make the first unit interact with the second unit. For example shooting with a unit onto another. The UI allows you to drag an arrow from the start unit toward the target unit.</p></li>
+<li><p>actions that accept a single bool display to the user the name of the action phrased as a question.</p></li>
+<li><p>actions that accept an enum display the valid choices on screen for the player to select.</p></li>
 </ul>
 </section>
 </section>
 <section id="remote-execution">
 <h2>Remote execution<a class="headerlink" href="#remote-execution" title="Link to this heading"></a></h2>
-<p>Since the entirety of the game rules are writte into Rulebook action functions, we obtain for free remote execution. <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/scripts/server.gd#L1">Here</a> is the trivial implementation of the server component on the side of godot, that waits for connections that then issue server commands. Some special server commands are handle nativelly by godot, such as exfiltrating the current image on screen and send it over network or stopping the rendering of the screen entirelly.</p>
+<p>Since the entirety of the game rules are written into Rulebook action functions, we obtain for free remote execution. <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/scripts/server.gd#L1">Here</a> is the trivial implementation of the server component on the side of Godot, that waits for connections that then issue server commands. Some special server commands are handled natively by Godot, such as exfiltrating the current image on screen and sending it over the network or stopping the rendering of the screen entirely.</p>
 <p>Every other action is simply a rulebook action implied by the rules of the game. Every time a rule programmer changes one of those rules, the remote execution mechanism updates itself automatically. Furthermore, since the network is issuing commands exactly like in process graphical elements are, the only thing that cannot be tested over network is the act on interacting on ui elements themselves.</p>
 </section>
 <section id="id1">

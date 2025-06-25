@@ -135,7 +135,7 @@
   <section id="language-tour">
 <h1>Language Tour<a class="headerlink" href="#language-tour" title="Link to this heading"></a></h1>
 <p><a class="reference external" href="https://github.com/rl-language/rlc">Rulebook</a> is a compiled and statically checked language.</p>
-<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># rlc hellow world</span>
+<div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="c1"># rlc hello world</span>
 <span class="kn">import</span> <span class="n">serialization</span><span class="p">.</span><span class="n">print</span>
 
 <span class="kn">cls</span> <span class="nc">SimpleRegularCode</span><span class="p">:</span>
@@ -210,7 +210,7 @@
 </pre></div>
 </div>
 <p>In Rulebook, <strong>suspension points</strong> inside action functions are called <strong>action statements</strong>. These can take arguments and may include a <strong>boolean condition</strong> that defines when the action is valid. By using the <code class="docutils literal notranslate"><span class="pre">can</span></code> operator, the framework can check whether a given user input is valid <strong>before</strong> applying it—without complicating the action function with manual validation logic.</p>
-<p>Beside <code class="docutils literal notranslate"><span class="pre">can</span></code> operator invocations, the spirit of Rulebook is to be used by other languages, so depending on your use case you configure how rulebook behaves when a precondition is not met but a function is called anyway.</p>
+<p>Besides <code class="docutils literal notranslate"><span class="pre">can</span></code> operator invocations, the spirit of Rulebook is to be used by other languages, so depending on your use case you configure how Rulebook behaves when a precondition is not met but a function is called anyway.</p>
 <ul class="simple">
 <li><p>By default rulebook emits checks that invoke <code class="docutils literal notranslate"><span class="pre">rlc_abort</span></code>, a function that can be customized. The customization allows us for example to print a python stack trace when rulebook is used with full python interoperability. In our <a class="reference external" href="https://github.com/rl-language/4Hammer/blob/master/src/gdexample.cpp#L30">4Hammer example</a> we customize for linux only the stack printing mechanism so we can see what is going on inside godot.</p></li>
 <li><p>If you need maximum speed, or you know that the caller will never invoke wrong actions by construction (for example,the c# wrapper checks for preconditions too and emits a exception if they are not met), you can disable checks from within rulebook code.</p></li>
@@ -225,7 +225,7 @@
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">rock</span>
     <span class="n">paper</span>
-    <span class="n">scizor</span>
+    <span class="n">scissor</span>
 
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
     <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player1</span><span class="p">)</span>
@@ -243,7 +243,7 @@
     <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">rock</span><span class="p">)</span>   <span class="c1"># you lose</span>
 
     <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
-    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">scizor</span><span class="p">)</span> <span class="c1"># you lose</span>
+    <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">scissor</span><span class="p">)</span> <span class="c1"># you lose</span>
 
     <span class="n">copy</span> <span class="o">=</span> <span class="n">state</span>
     <span class="n">copy</span><span class="p">.</span><span class="n">select</span><span class="p">(</span><span class="nc">Gesture</span><span class="p">::</span><span class="n">paper</span><span class="p">)</span>  <span class="c1"># you win</span>
@@ -259,7 +259,7 @@
 <div class="highlight-rlc notranslate"><div class="highlight"><pre><span></span><span class="kn">enum</span> <span class="nc">Gesture</span><span class="p">:</span>
     <span class="n">rock</span>
     <span class="n">paper</span>
-    <span class="n">scizor</span>
+    <span class="n">scissor</span>
 
 <span class="kn">act</span> <span class="n">play</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nc">Game</span><span class="p">:</span>
     <span class="kn">act</span> <span class="n">select</span><span class="p">(</span><span class="kn">frm</span> <span class="nc">Gesture</span> <span class="n">player1</span><span class="p">)</span>
